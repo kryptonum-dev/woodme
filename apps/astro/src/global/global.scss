@@ -27,12 +27,46 @@
 }
 
 :root {
-  --gap: clamp(96px, calc(132vw / 7.68), 152px);
+  --neutral-100: #f2faf6;
+  --neutral-200: #e9f2ed;
+  --neutral-300: #d0e1d7;
+  --neutral-400: #c1d1c8;
+  --neutral-600: #87988b;
+  --neutral-700: #5f6d62;
+  --neutral-800: #48514a;
+  --neutral-900: #141915;
 
-  --pageMargin: clamp(16px, calc(40vw / 7.68), 40px);
-  @media (max-width: 899px) and (min-width: 600px) {
-    --pageMargin: clamp(40px, calc(80vw / 7.68), 80px);
+  --secondary-300: #e3dfd3;
+  --secondary-400: #d2cdbf;
+  --secondary-500: #b6b2a5;
+  --secondary-600: #9e9781;
+  --secondary-700: #5f583f;
+  --secondary-800: #474335;
+  --secondary-900: #403d33;
+
+  --tertiary-200: #ccdde9;
+  --tertiary-400: #acc1cf;
+  --tertiary-600: #4a5f6e;
+
+  --gap: clamp(6rem, calc(8.25vw / 0.48), 9.5rem);
+
+  --pageMargin: clamp(1rem, calc(2.5vw / 0.48), 2.5rem);
+  @media (max-width: calc(56.26rem - 1px)) and (min-width: 37.5rem) {
+    --pageMargin: clamp(2.5rem, calc(5vw / 0.48), 5rem);
   }
+
+  --typography-body-2xl: clamp(1.125rem, calc(1.125vw / 0.48), 1.5rem);
+  --typography-body-xl: clamp(1.125rem, calc(1.125vw / 0.48), 1.25rem);
+  --typography-body-l: clamp(1rem, calc(1vw / 0.48), 1.125rem);
+  --typography-body-m: 0.875rem;
+  --typography-body-s: 0.75rem;
+  --typography-body-xs: 0.625rem;
+
+  --typography-heading-3xl: clamp(2.5rem, calc(3vw / 0.48), 3.625rem);
+  --typography-heading-2xl: clamp(2.25rem, calc(2.75vw / 0.48), 3.25rem);
+  --typography-heading-l: clamp(1.75rem, calc(2.5vw / 0.48), 2.625rem);
+  --typography-heading-m: clamp(1.375rem, calc(1.5vw / 0.48), 1.75rem);
+  --typography-heading-s: clamp(1.25rem, calc(1.375vw / 0.48), 1.375rem);
 }
 
 svg {
