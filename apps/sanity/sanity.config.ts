@@ -10,7 +10,6 @@ export default defineConfig({
   title: 'woodme',
   projectId: '7fuzao96',
   dataset: 'production',
-
   plugins: [structureTool({ structure }), media(), visionTool()],
 
   schema: {
