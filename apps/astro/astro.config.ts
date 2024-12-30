@@ -30,5 +30,9 @@ export default defineConfig({
   },
   redirects: redirects,
   output: isPreviewDeployment ? 'server' : 'hybrid',
-  adapter: vercel(),
+  adapter: vercel({
+    isr: {
+      bypassToken: process.env.VERCEL_DEPLOYMENT_ID,
+    },
+  }),
 })
