@@ -35,7 +35,7 @@ export const defineSlugForDocument = ({ prefix = '', slug }: { prefix?: string; 
     ),
     ...(!!slug && {
       initialValue: { current: slug },
-      readOnly: true,
+      readOnly: false,
     }),
     options: {
       source: 'title',

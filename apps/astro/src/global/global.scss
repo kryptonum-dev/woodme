@@ -158,14 +158,13 @@ html {
   scroll-padding-top: 123px;
 }
 body {
-  overflow: clip;
   min-width: 320px;
   -webkit-tap-highlight-color: transparent;
-  background: var(--background-100, #fffcf9);
-  color: var(--primary-900, #001b19);
-  font-family: 'Poppins', sans-serif;
-  font-size: 1rem;
-  line-height: 158%;
+  background-color: var(--neutral-200, #e9f2ed);
+  color: var(--neutral-800, #48514a);
+  font-family: 'Inter', sans-serif;
+  font-size: var(--typography-body-l, 1.125rem);
+  line-height: 1.55;
 }
 
 main,
@@ -174,11 +173,6 @@ main,
   width: calc(100% - var(--pageMargin) * 2);
   margin: 0 auto;
   height: 100%;
-}
-main {
-  display: grid;
-  row-gap: var(--gap);
-  margin: clamp(32px, calc(80vw / 7.68), 80px) auto var(--gap);
 }
 
 h1,
@@ -194,23 +188,9 @@ h5,
 h6,
 .h6 {
   overflow-wrap: anywhere;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 128%;
-  color: var(--primary-800, #01403b);
-  strong {
-    font-weight: 400;
-    color: var(--primary-900, #001b19);
-  }
-}
-h1,
-.h1,
-h2,
-.h2 {
-  font-size: clamp(calc(28rem / 16), calc(42vw / 7.68), calc(42rem / 16));
-}
-h3,
-.h3 {
-  font-size: clamp(calc(18rem / 16), calc(24vw / 7.68), calc(24rem / 16));
+  font-family: 'Cabinet Grotesk', sans-serif;
 }
 
 .link {

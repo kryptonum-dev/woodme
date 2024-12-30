@@ -1,16 +1,27 @@
 import type { StructureResolver } from 'sanity/structure'
+import { createCollection } from '../utils/create-collection'
 import { createSingleton } from '../utils/create-singleton'
-import { createCollection } from '../utils/create-collection';
 
 export const structure: StructureResolver = (S) =>
   S.list()
     .id('root')
     .title('Content')
     .items([
-      createSingleton(S, "global"),
-      createSingleton(S, "redirects"),
+      createSingleton(S, 'global'),
+      createSingleton(S, 'redirects'),
       S.divider(),
-      createSingleton(S, "Index_Page"),
+      createSingleton(S, 'Index_Page'),
+      createSingleton(S, 'About_Page'),
+      createSingleton(S, 'Contact_Page'),
+      createSingleton(S, 'ArchitectsZone_Page'),
+      createSingleton(S, 'InteriorDesign_Page'),
+      createSingleton(S, 'PersonalizedFurniture_Page'),
+      createSingleton(S, 'BusinessServices_Page'),
+      createSingleton(S, 'NotFound_Page'),
       S.divider(),
-      createCollection(S, "Faq_Collection"),
+      createSingleton(S, 'Projects_Page'),
+      S.divider(),
+      createSingleton(S, 'Blog_Page'),
+      S.divider(),
+      createCollection(S, 'Faq_Collection'),
     ])
