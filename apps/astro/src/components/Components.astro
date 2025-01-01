@@ -1,9 +1,11 @@
 ---
 import type { ComponentProps } from 'astro/types'
 import FullWidthPhoto, { FullWidthPhoto_Query } from '@/components/global/FullWidthPhoto.astro'
+import CircleSwiper, { CircleSwiper_Query } from './global/CircleSwiper.astro'
 
 const components = {
   FullWidthPhoto,
+  CircleSwiper,
 }
 
 type ComponentsMap = {
@@ -26,6 +28,7 @@ export const Components_Query = /* groq */ `
     _type,
     sectionId,
     ${FullWidthPhoto_Query}
+    ${CircleSwiper_Query}
   },
 `
 ---

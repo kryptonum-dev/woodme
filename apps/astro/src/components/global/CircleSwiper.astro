@@ -1,0 +1,61 @@
+---
+import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
+import Button from '../ui/button/Button.astro';
+import { ImageDataQuery, type ImageDataProps } from '../ui/image';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
+
+
+export const CircleSwiper_Query = `
+  _type == "CircleSwiper" => {
+  ${PortableTextQuery('heading')}
+  swiper[]{
+    ${ImageDataQuery('img')}
+    title,
+  },
+  ${PortableTextQuery('paragraph')}
+  ${ButtonDataQuery('cta')}
+  ${PortableTextQuery('additionalParagraph')}
+  downloadPdf,
+  },
+`
+
+type Props = {index: number, heading: PortableTextValue, sectionId?: string, swiper: {img: ImageDataProps, title: PortableTextValue}[], paragraph: PortableTextValue, cta: ButtonDataProps, additionalParagraph: PortableTextValue, downloadPdf: string};
+
+const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, downloadPdf } = Astro.props
+
+    console.log(index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, downloadPdf);
+
+---
+
+<section class="CircleSwiper" id={sectionId}>
+    <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading h2" />
+    <Button {...cta} id="button" shade="light" />
+    <button id="loading">Loading</button>
+</section>
+
+
+<style lang="scss">
+.CircleSwiper{
+  h1,h1{
+    margin-bottom: 1.5rem;
+  }
+}
+</style>
+
+<script>
+
+  const button = document.getElementById('loading')
+  const primButton = document.getElementById('button')
+  button?.addEventListener('click', () => {
+    console.log(primButton);
+    const isLoading = primButton?.getAttribute('data-is-loading')
+console.log(isLoading);
+setTimeout(() => {
+  primButton?.setAttribute('data-is-loading', isLoading == 'true' ? 'false' : 'true')
+}, 1000);
+
+  })
+
+
+</script>
+
