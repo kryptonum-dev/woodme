@@ -15,9 +15,6 @@
   "devDependencies": {
     "turbo": "^2.3.3"
   },
-  "engines": {
-    "node": ">=18"
-  },
   "packageManager": "bun@1.1.26",
   "workspaces": [
     "apps/*"
