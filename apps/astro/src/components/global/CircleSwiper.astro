@@ -48,7 +48,7 @@ type Props = {
 const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, downloadPdf } = Astro.props;
 ---
 
-<section class="CircleSwiper" id={sectionId}>
+<section class="CircleSwiper max-width" id={sectionId}>
   <header><PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" /></header>
   <div class="container">
     <div class="cities">

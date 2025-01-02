@@ -1,15 +1,27 @@
-import { defineField } from 'sanity'
-import { slugify } from './slugify'
-import { isUniqueSlug } from './is-unique-slug'
+import { defineField } from 'sanity';
+import { isUniqueSlug } from './is-unique-slug';
+import { slugify } from './slugify';
 
-export const defineSlugForDocument = ({ prefix = '', slug }: { prefix?: string; slug?: string }) => [
-  defineField({
-    name: 'title',
-    type: 'string',
-    title: 'Title',
-    description: 'The title of the document, used for display in the Breadcrumbs.',
-    validation: (Rule) => Rule.required(),
-  }),
+export const defineSlugForDocument = ({
+  source,
+  prefix = '',
+  slug,
+}: {
+  source?: string;
+  prefix?: string;
+  slug?: string;
+}) => [
+  ...(source
+    ? []
+    : [
+        defineField({
+          name: 'name',
+          type: 'string',
+          title: 'Name',
+          description: 'The name of the document, used for display in the Breadcrumbs.',
+          validation: (Rule) => Rule.required(),
+        }),
+      ]),
   defineField({
     name: 'slug',
     type: 'slug',
@@ -38,16 +50,16 @@ export const defineSlugForDocument = ({ prefix = '', slug }: { prefix?: string; 
       readOnly: false,
     }),
     options: {
-      source: 'title',
+      source: source || 'title',
       slugify: (slug: string) => `${prefix || '/'}${slugify(slug)}`,
       isUnique: isUniqueSlug,
     },
     validation: (Rule) =>
       Rule.required().custom((value) => {
         if (prefix && value?.current && !value.current.startsWith(prefix)) {
-          return `Slug should start with ${prefix}`
+          return `Slug should start with ${prefix}`;
         }
-        return true
+        return true;
       }),
   }),
-]
+];

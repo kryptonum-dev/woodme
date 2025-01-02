@@ -25,8 +25,6 @@ type Props = {
 };
 
 const { index, sectionId, heading, image, paragraph, cta, additionalImages } = Astro.props;
-
-console.log(additionalImages);
 ---
 
 <section class="SplitContentSection" id={sectionId}>
@@ -167,10 +165,11 @@ console.log(additionalImages);
 </style>
 
 <script>
+  const threshold = window.innerWidth < 1024 ? 0.4 : 0.8;
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        console.log('visible');
         if (entry.isIntersecting) {
           entry.target.querySelectorAll('.additionalImages img').forEach((img) => {
             img.classList.add('visible');
@@ -178,7 +177,7 @@ console.log(additionalImages);
         }
       });
     },
-    { threshold: 0.8 }
+    { threshold }
   );
 
   observer.observe(document.querySelector('.SplitContentSection')! as HTMLElement);
