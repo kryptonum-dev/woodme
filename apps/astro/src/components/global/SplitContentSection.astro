@@ -1,0 +1,184 @@
+---
+import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
+import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
+import Button from '../ui/button/Button.astro';
+
+export const SplitContentSection_Query = `
+  _type == "SplitContentSection" => {
+    ${ImageDataQuery('image')}
+    ${ImageDataQuery('additionalImages[]')}
+    ${PortableTextQuery('paragraph')}
+    ${PortableTextQuery('heading')}
+    ${ButtonDataQuery('cta')}
+  },
+`;
+
+type Props = {
+  index: number;
+  heading: PortableTextValue;
+  sectionId?: string;
+  image: ImageDataProps;
+  paragraph: PortableTextValue;
+  cta: ButtonDataProps;
+  additionalImages: ImageDataProps[];
+};
+
+const { index, sectionId, heading, image, paragraph, cta, additionalImages } = Astro.props;
+---
+
+<section class="SplitContentSection" id={sectionId}>
+  <div class="imagesContainer">
+    <Image
+      {...image}
+      sizes="(max-width: 816px) 100vw, (max-width: 1024px) 816px, 790px"
+      priority={index === 0}
+      loading={index === 0 ? 'eager' : 'lazy'}
+      class="mainImage"
+    />
+    <div class="additionalImages">
+      {
+        additionalImages.map((img, i) => (
+          <Image
+            {...img}
+            sizes={`${i === 0 ? '(max-width: 420px) 137px, (max-width: 768px) 32vw, 244px' : '(max-width: 420px) 91px, (max-width: 768px) 22vw, 162px'}`}
+            loading="lazy"
+          />
+        ))
+      }
+    </div>
+  </div>
+  <div class="content">
+    <header><PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" /></header>
+    <PortableText class="paragraph" value={paragraph} />
+    <Button shade="dark" {...cta} />
+  </div>
+</section>
+
+<style lang="scss">
+  .SplitContentSection {
+    max-width: 85.375rem;
+    margin: 0 auto;
+    display: flex;
+    margin-bottom: 120px;
+
+    .imagesContainer {
+      max-width: clamp(25rem, calc(28vw / 0.48), 49.375rem);
+      width: 100%;
+      aspect-ratio: 1/1;
+      position: relative;
+      flex-shrink: 0;
+      overflow: hidden;
+      .mainImage {
+        width: 100%;
+        height: 100%;
+      }
+
+      .additionalImages {
+        position: absolute;
+        bottom: clamp(0.75rem, calc(1.25vw / 0.48), 1.25rem);
+        right: clamp(0.75rem, calc(1.25vw / 0.48), 1.25rem);
+        display: flex;
+        gap: clamp(0.75rem, calc(1.25vw / 0.48), 1.25rem);
+        align-items: flex-end;
+
+        img {
+          aspect-ratio: 4/5;
+          width: 100%;
+          opacity: 0;
+
+          &:last-child {
+            height: clamp(113px, calc(202vw / 7.68), 202px);
+            transform: translateY(15px);
+            transition:
+              opacity 0.6s var(--easing),
+              transform 0.6s var(--easing);
+          }
+
+          &:first-child {
+            height: clamp(171px, calc(305vw / 7.68), 305px);
+            transform: translateY(20px);
+            transition:
+              opacity 0.75s var(--easing),
+              transform 0.75s var(--easing);
+          }
+        }
+
+        > .visible {
+          opacity: 1;
+          transform: translateY(0) !important;
+        }
+      }
+    }
+
+    .content {
+      padding: clamp(2rem, calc(4vw / 0.48), 4rem) 4.5rem clamp(2.25rem, calc(4vw / 0.48), 4rem);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end;
+
+      header {
+        margin-bottom: clamp(2rem, calc(4.5vw / 0.48), 4.5rem);
+        max-width: 26.5rem;
+
+        h1,
+        h2 {
+          &::before {
+            position: relative;
+            content: '';
+            display: inline-block;
+            width: 37px;
+            height: 25px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzNyIgaGVpZ2h0PSIyNSIgZmlsbD0ibm9uZSI+PHBhdGggZmlsbD0iIzY4NzQ2QiIgZD0ibTM1LjgzIDguMTgzLTMuMjQtMy43MDYtMy41ODEtMi45NDVBNS4wMDYgNS4wMDYgMCAwIDAgMjUuNDE5IDBIMTEuNThhNS4wMTEgNS4wMTEgMCAwIDAtMy41OSAxLjUzMkw0LjQxIDQuNDc3IDEuMTcgOC4xODNDLjIxNiA5LjE2MiAwIDEwLjQ5MyAwIDExLjg3N3YxMi43NTRjMCAuMjAzLjE2LjM2Ny4zNTcuMzY3aDMuNzFhLjM2Mi4zNjIgMCAwIDAgLjM1Ny0uMzY3VjYuNzI2YzAtLjk1OC41OTktMS44NTYgMS41ODMtMi4xNTMuMTkxLS4wNTcuMzkyLS4wNzkuNTkxLS4wNzloMTEuNzI5TDE1LjEgOC4xODNjLS45NTMuOTgtMS4xNjkgMi4zMS0xLjE2OSAzLjY5NHYxMi43NTRjMCAuMjAzLjE2LjM2Ny4zNTcuMzY3aDMuNzFhLjM2Mi4zNjIgMCAwIDAgLjM1Ny0uMzY3VjYuNzI2YzAtLjk1OC41OTktMS44NTYgMS41ODQtMi4xNTMuMTktLjA1Ny4zOTEtLjA3OS41OS0uMDc5aDkuODcyYy4xOTkgMCAuNC4wMjIuNTkuMDhhMi4yMyAyLjIzIDAgMCAxIDEuNTg0IDIuMTUydjE3LjkwN2MwIC4yMDMuMTYuMzY3LjM1Ny4zNjdoMy43MWEuMzYyLjM2MiAwIDAgMCAuMzU3LS4zNjdWMTEuODhjMC0xLjM4NC0uMjE2LTIuNzE1LTEuMTctMy42OTR2LS4wMDJaIi8+PC9zdmc+')
+              center / contain no-repeat;
+            margin-right: 0.7rem;
+          }
+        }
+      }
+
+      div.paragraph {
+        margin-bottom: clamp(2rem, calc(3vw / 0.48), 3rem);
+
+        :global(p):not(:last-child) {
+          margin-bottom: 2rem;
+        }
+      }
+    }
+
+    @media (max-width: 64rem) {
+      flex-direction: column;
+      align-items: center;
+      margin-left: 0;
+
+      .imagesContainer {
+        max-width: 51rem;
+      }
+
+      .content {
+        max-width: calc(38rem + 2 * var(--pageMargin));
+        padding-right: var(--pageMargin);
+        padding-left: var(--pageMargin);
+      }
+    }
+  }
+</style>
+
+<script>
+  const threshold = window.innerWidth < 1024 ? 0.4 : 0.8;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.additionalImages img').forEach((img) => {
+            img.classList.add('visible');
+          });
+        }
+      });
+    },
+    { threshold }
+  );
+
+  observer.observe(document.querySelector('.SplitContentSection')! as HTMLElement);
+</script>

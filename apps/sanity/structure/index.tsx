@@ -1,6 +1,6 @@
-import type { StructureResolver } from 'sanity/structure'
-import { createCollection } from '../utils/create-collection'
-import { createSingleton } from '../utils/create-singleton'
+import type { StructureResolver } from 'sanity/structure';
+import { createCollection } from '../utils/create-collection';
+import { createSingleton } from '../utils/create-singleton';
 
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -22,6 +22,7 @@ export const structure: StructureResolver = (S) =>
       createSingleton(S, 'Projects_Page'),
       S.divider(),
       createSingleton(S, 'Blog_Page'),
+      createCollection(S, 'BlogPost_Collection'),
       S.divider(),
       createCollection(S, 'Faq_Collection'),
-    ])
+    ]);

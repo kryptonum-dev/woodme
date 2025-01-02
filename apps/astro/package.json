@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.3",
+    "@astrojs/preact": "^4.0.1",
     "@astrojs/sitemap": "^3.1.6",
     "@astrojs/vercel": "^8.0.1",
     "@sanity/client": "^6.21.3",
+    "animejs": "^3.2.2",
     "astro": "^4.15.5",
     "astro-portabletext": "^0.10.0",
     "autoprefixer": "^10.4.20",
@@ -25,6 +27,7 @@
   "devDependencies": {
     "@typescript-eslint/parser": "^8.5.0",
     "eslint": "^9.10.0",
+    "prettier-plugin-astro": "^0.14.1",
     "eslint-plugin-astro": "^1.2.4",
     "eslint-plugin-jsx-a11y": "^6.10.0",
     "sass": "^1.78.0"
