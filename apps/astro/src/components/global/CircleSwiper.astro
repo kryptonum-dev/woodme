@@ -52,14 +52,14 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
   <header><PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" /></header>
   <div class="container">
     <div class="cities">
-      <AstroImage src={background} alt="" />
+      <AstroImage src={background} alt="" loading={index === 0 ? 'eager' : 'lazy'} />
       <div class="track">
         <div class="indicator" style={`width: ${100 / swiper.length}%`}></div>
       </div>
       <div class="swiper">
         <div class="wrapper">
           {
-            swiper.map(({ img, title }, i) => (
+            swiper.map(({ img, title }, i: number) => (
               <Image
                 {...img}
                 sizes="(max-width: 619px) 92vw, (max-width: 699px) 82vw, (max-width: 1024px) 504px, 480px"
@@ -74,7 +74,7 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
         </div>
       </div>
       <div class="nav">
-        <button class="arrow arrow_left" disabled
+        <button class="arrow arrow_left" disabled aria-label="Poprzednie miasto"
           ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
             ><path
               stroke="currentColor"
@@ -85,7 +85,7 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
           >
         </button>
         <div class="name">{swiper[0].title}</div>
-        <button class="arrow_right arrow"
+        <button class="arrow_right arrow" aria-label="Następne miasto"
           ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
             ><path
               stroke="currentColor"
