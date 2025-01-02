@@ -1,27 +1,29 @@
 ---
-import type { ComponentProps } from 'astro/types'
-import FullWidthPhoto, { FullWidthPhoto_Query } from '@/components/global/FullWidthPhoto.astro'
-import CircleSwiper, { CircleSwiper_Query } from './global/CircleSwiper.astro'
+import type { ComponentProps } from 'astro/types';
+import FullWidthPhoto, { FullWidthPhoto_Query } from '@/components/global/FullWidthPhoto.astro';
+import CircleSwiper, { CircleSwiper_Query } from '@/components/global/CircleSwiper.astro';
+import SplitContentSection, { SplitContentSection_Query } from './global/SplitContentSection.astro';
 
 const components = {
   FullWidthPhoto,
   CircleSwiper,
-}
+  SplitContentSection,
+};
 
 type ComponentsMap = {
   [Component in keyof typeof components]: {
-    _type: Component
-  } & ComponentProps<(typeof components)[Component]>
-}
+    _type: Component;
+  } & ComponentProps<(typeof components)[Component]>;
+};
 
-export type ComponentsProps = Array<ComponentsMap[keyof typeof components]>
+export type ComponentsProps = Array<ComponentsMap[keyof typeof components]>;
 
 type Props = {
-  data: ComponentsProps
-  indexStart?: number
-}
+  data: ComponentsProps;
+  indexStart?: number;
+};
 
-const { data, indexStart = 0 } = Astro.props
+const { data, indexStart = 0 } = Astro.props;
 
 export const Components_Query = /* groq */ `
   components[] {
@@ -29,16 +31,17 @@ export const Components_Query = /* groq */ `
     sectionId,
     ${FullWidthPhoto_Query}
     ${CircleSwiper_Query}
+    ${SplitContentSection_Query}
   },
-`
+`;
 ---
 
 {
   data?.map((item, i) => {
     // NOTE: Using 'as any' is not ideal for type safety, but it's used here to simplify
     // the implementation and avoid creating separate typed interfaces for each component.
-    const DynamicComponent = components[item._type] as any
-    if (!DynamicComponent) return null
-    return <DynamicComponent {...item} index={indexStart + i} />
+    const DynamicComponent = components[item._type] as any;
+    if (!DynamicComponent) return null;
+    return <DynamicComponent {...item} index={indexStart + i} />;
   })
 }

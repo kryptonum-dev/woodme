@@ -1,11 +1,12 @@
-import { defineType } from 'sanity'
-import CircleSwiper from './components/CircleSwiper'
+import { defineType } from 'sanity';
+import CircleSwiper from './components/CircleSwiper';
+import SplitContentSection from './components/SplitContentSection';
 
 export default defineType({
   name: 'components',
   type: 'array',
   title: 'Components',
-  of: [CircleSwiper],
+  of: [CircleSwiper, SplitContentSection],
   options: {
     insertMenu: {
       filter: true,
@@ -16,4 +17,4 @@ export default defineType({
       ],
     },
   },
-})
+});

@@ -1,20 +1,20 @@
 ---
-import type { HTMLAttributes } from 'astro/types'
-import { PortableText } from 'astro-portabletext'
-import type { PortableTextProps } from 'astro-portabletext/types'
-import Mark from './Mark.astro'
-import Block from './Block.astro'
+import type { HTMLAttributes } from 'astro/types';
+import { PortableText } from 'astro-portabletext';
+import type { PortableTextProps } from 'astro-portabletext/types';
+import Mark from './Mark.astro';
+import Block from './Block.astro';
 
-export type PortableTextValue = PortableTextProps['value']
+export type PortableTextValue = PortableTextProps['value'];
 
 type Props = {
-  value: PortableTextValue
-  heading?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
-} & HTMLAttributes<'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'>
+  value: PortableTextValue;
+  heading?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+} & HTMLAttributes<'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'>;
 
-const { heading: HeadingTag, value, ...props } = Astro.props
+const { heading: HeadingTag, value, ...props } = Astro.props;
 
-const valueArray = Array.isArray(value) ? value : [value]
+const valueArray = Array.isArray(value) ? value : [value];
 ---
 
 {

@@ -1,19 +1,19 @@
 ---
-import Image, { ImageDataQuery, type ImageDataProps } from '@/components/ui/image'
+import Image, { ImageDataQuery, type ImageDataProps } from '@/components/ui/image';
 
 export const FullWidthPhoto_Query = `
   _type == "FullWidthPhoto" => {
     ${ImageDataQuery('img')}
   },
-`
+`;
 
 type Props = {
-  index: number
-  sectionId?: string
-  img: ImageDataProps
-}
+  index: number;
+  sectionId?: string;
+  img: ImageDataProps;
+};
 
-const { index, sectionId, img } = Astro.props
+const { index, sectionId, img } = Astro.props;
 ---
 
 <section class="FullWidthPhoto" id={sectionId}>

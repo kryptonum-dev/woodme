@@ -1,11 +1,11 @@
-import { defineField } from 'sanity'
-import sectionId from '../ui/sectionId'
-import { toPlainText } from '../../utils/to-plain-text'
-import { sectionPreview } from '../../utils/section-preview'
+import { defineField } from 'sanity';
+import { sectionPreview } from '../../utils/section-preview';
+import { toPlainText } from '../../utils/to-plain-text';
+import sectionId from '../ui/sectionId';
 
-const name = 'CircleSwiper'
-const title = 'Circle Swiper'
-const icon = () => '🔄'
+const name = 'CircleSwiper';
+const title = 'Circle Swiper';
+const icon = () => '🔄';
 
 export default defineField({
   name,
@@ -68,7 +68,7 @@ export default defineField({
     }),
     defineField({
       name: 'additionalParagraph',
-      type: 'PortableText',
+      type: 'string',
       title: 'Additional Paragraph (optional)',
       description: 'This is additional paragraph that will be displayed on the bottom left of the container.',
     }),
@@ -79,7 +79,7 @@ export default defineField({
       fields: [
         defineField({
           name: 'downloadText',
-          type: 'PortableText',
+          type: 'string',
           title: 'Download Text',
           validation: (Rule) => Rule.required(),
         }),
@@ -107,4 +107,4 @@ export default defineField({
       ...sectionPreview({ imgUrl: `/static/components/test.webp`, icon: icon() }),
     }),
   },
-})
+});
