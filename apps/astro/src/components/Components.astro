@@ -4,11 +4,14 @@ import FullWidthPhoto, { FullWidthPhoto_Query } from '@/components/global/FullWi
 import CircleSwiper, { CircleSwiper_Query } from '@/components/global/CircleSwiper.astro';
 import SplitContentSection, { SplitContentSection_Query } from './global/SplitContentSection.astro';
 import BlogReference, { BlogReference_Query } from './global/BlogReference.astro';
+import CtaSection, { CtaSection_Query } from './global/CtaSection.astro';
+
 const components = {
   FullWidthPhoto,
   CircleSwiper,
   SplitContentSection,
   BlogReference,
+  CtaSection,
 };
 
 type ComponentsMap = {
@@ -34,6 +37,7 @@ export const Components_Query = /* groq */ `
     ${CircleSwiper_Query}
     ${SplitContentSection_Query}
     ${BlogReference_Query}
+    ${CtaSection_Query}
   },
 `;
 ---

@@ -2,11 +2,13 @@ import { defineType } from 'sanity';
 import BlogReference from './components/BlogReference';
 import CircleSwiper from './components/CircleSwiper';
 import SplitContentSection from './components/SplitContentSection';
+import CtaSection from './components/CtaSection';
+
 export default defineType({
   name: 'components',
   type: 'array',
   title: 'Components',
-  of: [CircleSwiper, SplitContentSection, BlogReference],
+  of: [CircleSwiper, SplitContentSection, BlogReference, CtaSection],
   options: {
     insertMenu: {
       filter: true,
