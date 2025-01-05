@@ -83,10 +83,8 @@ const letters = ['W', 'O', 'O', 'D', 'M', 'E'];
             {
               global.footer.highlitedProjects.map((project) => (
                 <a href={project.slug}>
-                  <>
-                    <Image {...project.image} sizes="65px" />
-                    <span>{project.name}</span>
-                  </>
+                  <Image {...project.image} sizes="65px" />
+                  <span>{project.name}</span>
                 </a>
               ))
             }
