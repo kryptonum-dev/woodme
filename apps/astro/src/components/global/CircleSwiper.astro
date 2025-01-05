@@ -1,8 +1,6 @@
 ---
-import { Image as AstroImage } from 'astro:assets';
 import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
 import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
-import background from '@/assets/texture.webp';
 import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
 import Button from '../ui/button/Button.astro';
 import { DOMAIN } from '@/src/global/constants';
@@ -57,7 +55,6 @@ console.log(downloadPdf.pdf.asset.assetId);
   <header><PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" /></header>
   <div class="container">
     <div class="cities">
-      <AstroImage src={background} alt="" loading={index === 0 ? 'eager' : 'lazy'} />
       <div class="track">
         <div class="indicator" style={`width: ${100 / swiper.length}%`}></div>
       </div>
@@ -154,6 +151,7 @@ console.log(downloadPdf.pdf.asset.assetId);
     .container {
       display: flex;
       align-items: stretch;
+
       .cities {
         width: 33rem;
         min-height: 33rem;
@@ -166,6 +164,13 @@ console.log(downloadPdf.pdf.asset.assetId);
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
+        &::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image: url('data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAAAyVBMVEUAAABWVlYbGxtiYmJcXFwhISH7+/sNDQ13d3c4ODgpKSkPDw8AAADz8/Pg4OC0tLSwsLCjo6OTk5NpaWlOTk5KSkoAAADW1tbIyMjBwcG9vb24uLhBQUE9PT0yMjIWFhbc3NzLy8ufn5+Xl5d0dHQuLi7v7+/Y2Nitra2mpqaPj4+BgYF4eHjs7Ozn5+fExMSJiYl7e3v29vbQ0NDPz8/Nzc2/v7+Ojo6EhIR+fn5vb29FRUX9/f3p6enk5OTb29vT09PS0tKoqKhMgcZDAAAAQ3RSTlMAVhxiXCL7DHc4KREF8+C0sKOTaE9LCNbIwby4QD0yFtzLnpd0Lu/YraaQgnns58SIfPbQz82+joV/bkX96eTb09KoGQ/pDwAAA0pJREFUaN7V2WlTGkEQgOF3uQQMiqJREBXBCyUE7yue//9HpQxl9bI9zGzjhtKn/GBRHLvTM909szyjtNCeIFrE7A76eGzwJWzxroZYldcd2gA/ebf9/ucWMdUqcYcYrGLwh3kYAQwNY1BkBj9QTANWIWCP+cjjt+4YvIMBCT0mLDPJtlg3Sa3XxOeIpAtSu5J/T/Doyr9rmBR8oy5f2IxN0o8FvoJZF5EPJVodyQ4Op6RVRWm718dW7GevZBR0ZlpCSbO6lsmMnlMPKC3D1DBccxe7AxKGZG6k62mOCXUcGjhZE8k52fvF2AtaCWBzXJplXe7TTlFnfpt+Xovw2w5mVT0pX0LJrIqJhH+Bf8og/UrMraP8SdopySTax6MhCfSeecjxn0Wk15TiEdD+RHea0pFMu8+xN6cL00IV/njkL8gyBe+LKOblXZm1v15P38Xue2/MvrbD26fTZL0p7Ki4WB177k07wW7oGfFHPfrdXabqpF2qMmAbyaIidmRqxmN0HasQS4j2x03cECA5OPyuO7QHiXGyq8y5vn7Fu81uRLMt64pqCO2aZGTXmkwzs+9JA3k1s7LSR6mn2Nw1UO7CXWtYl5m0M90UtDxpqEdCzbUhrKr3a+GI/ggELfwhee3Et2+NVEeUU7cYVvYuoUdjRCN4gyq3hNhmsL6lFb6EDakWtqOfuioHBdNmxN6w5orMJJIk3whVMPupU1l1VPK69jy+oO/rch6nnQ1X5a65k1aZgNFsvXQZq+1YyWyQgSNMqlAjMwuELDkuV+rYgGkG8dlxOLXhfJIQuX81x/x1PMOg3aTrLl+PLU3glbQIy55Tmh3DhrIUXLRF4F5ygEk+vHJc7xvMOl8zPcS9TnkEv2g++rlO1Ue8BR/pNO1b8WMWLY1IiXRq4fi0iDnTjwW+uV0KqorIhHnVzVedsL2pkeoGPqBmaz/UxdRVxEKhdS+DTUMPMGTt09vrPPNQj/9eP5Fpc/4uqKMD2MNlFFnOCtZw683rublstEuhRzMyWsfqrMjuVoqbvWUqoskiW5xsO87MD2bPQ/UunQty7vbpfGd8CFQJHnteJivTQybr5SyRZTruM+bKjJuoXQlQCQrTrsHstAUsVLH5C0nvJwY9LwbLAAAAAElFTkSuQmCC');
+        }
 
         > img {
           position: absolute;

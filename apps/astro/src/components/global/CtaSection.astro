@@ -3,8 +3,6 @@ import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
 import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
 import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
 import Button from '../ui/button/Button.astro';
-import texture from '@/assets/texture.png';
-import { Image as AstroImage } from 'astro:assets';
 
 export const CtaSection_Query = `
   _type == "CtaSection" => {
@@ -30,10 +28,9 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
 <section class="CtaSection" id={sectionId}>
   <div class="background">
     <div class="container">
-      <AstroImage class="texture" draggable="false" loading={index === 0 ? 'eager' : 'lazy'} src={texture} alt="" />
       <div class="images">
         <div class="gradient"></div>
-        <div class="marquee" style={`animation-duration: ${imageList.length * 3}s;`}>
+        <div class="marquee" style={`animation-duration: ${imageList.length * 8}s;`}>
           <ul>
             {
               [...imageList, ...imageList].map((image, i) => (
@@ -67,36 +64,10 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
   .CtaSection {
     padding-top: 6rem;
     .background {
-      max-width: 1366px;
-      margin: 0 auto;
       position: relative;
-
-      &::before,
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        transform: translateX(-100%);
-        width: calc((100vw - 1326px) / 2);
-        height: 91.2%;
-        background-color: var(--neutral-700, #5f6d62);
-        clip-path: none;
-        z-index: -1;
-      }
-
-      &::after {
-        transform: translateX(100%);
-        left: unset;
-        right: 0;
-      }
-    }
-
-    .container {
-      clip-path: ellipse(122% 100% at 50% 100%);
       background-color: var(--neutral-700, #5f6d62);
+      clip-path: ellipse(122% 100% at 50% 100%);
       padding-top: clamp(1rem, calc(1vw / 0.48), 1rem);
-      position: relative;
 
       @media (max-width: 71.25rem) {
         clip-path: ellipse(160% 100% at 50% 100%);
@@ -108,6 +79,28 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
 
       @media (max-width: 34rem) {
         clip-path: ellipse(310% 100% at 50% 100%);
+      }
+    }
+
+    .container {
+      position: relative;
+      margin: 0 auto;
+      max-width: 1366px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        background-image: url('data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAAAYFBMVEUAAABlZWVXV1f9/f3p6enKysrGxsalpaV6enp2dnY5OTkoKCgjIyMcHBzy8vLf39/Y2NjQ0NDBwcG0tLSvr6+ZmZmJiYmAgIBxcXFaWlpMTExISEhBQUEwMDAAAAAAAAAI1bqEAAAAIHRSTlMAZlb96crGpXt1OCYgG/Lf2NDAtLCYiIFxW01HPzALBnzaBioAAACiSURBVGje7dlXEoJAEEXRCwoCYs55/7v0y8KiVIIMDMM7K+ivDq8Rl42Ql4QCAVJsh5vOFJggtlghmT1STsgwpADcqSIgb4aN7KxK6vIp6Yh8cSDndMOMmHaMsduCLlzI8RDpnyudmdM83Y7yiTXtOsVCMZX5iOM8GrBE5IeNiQ/LA+mTNW+miNS3pRmhQynJf4a7HirWMSIik9CRCANsHWRPj6cCUNfocgwAAAAASUVORK5CYII=');
+        left: 50%;
+        width: 200%;
+        height: 60%;
+        z-index: 10;
+        opacity: 0.4;
+        width: 100vw;
+        margin: 0 calc(-1 * 50vw);
+        max-width: 100vw;
+        pointer-events: none;
       }
     }
 
@@ -128,6 +121,16 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
       position: relative;
       overflow: hidden;
       clip-path: ellipse(95% 100% at 50% 100%);
+
+      &:hover,
+      &:has(a:focus-visible) {
+        .marquee {
+          animation-play-state: paused;
+          ul {
+            transform: translateX(-1rem);
+          }
+        }
+      }
 
       .gradient {
         position: absolute;
@@ -162,6 +165,19 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
         right: 0;
         transform: rotate(180deg);
       }
+      @media (min-width: 91.25rem) {
+        clip-path: ellipse(102% 100% at 50% 100%);
+      }
+      @media (min-width: 100rem) {
+        clip-path: ellipse(110% 100% at 50% 100%);
+      }
+      @media (min-width: 115rem) {
+        clip-path: ellipse(120% 100% at 50% 100%);
+      }
+
+      @media (min-width: 125rem) {
+        clip-path: ellipse(130% 100% at 50% 100%);
+      }
 
       @media (max-width: 71.25rem) {
         clip-path: ellipse(120% 100% at 50% 100%);
@@ -193,18 +209,11 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
         flex-shrink: 0;
         display: flex;
         gap: 0.75rem;
+        transition: transform 1200ms ease-out;
         li {
           flex-shrink: 0;
-          // flex-basis: clamp(228px, calc(304vw / 7.68), 304px);
           height: clamp(304px, calc(405vw / 7.68), 405px);
           width: clamp(228px, calc(304vw / 7.68), 304px);
-          &:first-child {
-            // padding-left: 0.75rem;
-          }
-
-          &:last-child {
-            // padding-right: 0.75rem;
-          }
         }
         img {
           flex-shrink: 0;
@@ -253,6 +262,7 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
         height: 210%;
         background-image: linear-gradient(0deg, rgba(95, 109, 98, 1) 50%, rgba(95, 109, 98, 0) 100%);
         z-index: 4;
+        pointer-events: none;
       }
       @media (max-width: 60rem) {
         flex-direction: column;
@@ -260,9 +270,22 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
 
         header {
           margin-bottom: 2rem;
+          max-width: none;
         }
         .cta {
           max-width: 20.5rem;
+          display: flex;
+          width: 100%;
+          max-width: none;
+          column-gap: 2rem;
+
+          .paragraph {
+            max-width: 21.875rem;
+          }
+
+          a {
+            flex-shrink: 0;
+          }
           .paragraph {
             text-align: start;
           }

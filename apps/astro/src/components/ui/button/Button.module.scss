@@ -52,6 +52,7 @@
         position: absolute;
         z-index: -2;
         inset: 0;
+        border-radius: 4px;
       }
       &::after {
         content: '';

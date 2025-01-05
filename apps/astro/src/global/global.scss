@@ -6,6 +6,11 @@
   font-weight: 500;
   font-display: swap;
   font-style: normal;
+  src: local('Arial');
+  ascent-override: 89.14%;
+  descent-override: 28.69%;
+  line-gap-override: 9.22%;
+  size-adjust: 97.59%;
 }
 
 @font-face {
@@ -16,6 +21,11 @@
   font-weight: 400;
   font-display: swap;
   font-style: normal;
+  src: local('Arial');
+  ascent-override: 91.59%;
+  descent-override: 22.81%;
+  line-gap-override: 0%;
+  size-adjust: 105.77%;
 }
 
 *,
@@ -213,8 +223,7 @@ h2 {
   position: relative;
   min-height: 2.75rem;
   z-index: 3;
-  transition: background-color 0.25s var(--easing);
-
+  transition: background-color 300ms;
   &::before {
     content: '';
     position: absolute;
@@ -224,8 +233,7 @@ h2 {
     height: 1.5%;
     transform: scaleX(0);
     transform-origin: right;
-    transition: transform 0.25s var(--easing);
-
+    transition: transform 1200ms var(--easing);
     background-color: var(--neutral-600, #87988b);
   }
 
@@ -252,7 +260,7 @@ h2 {
       margin-left: 4px;
       padding-top: 4px;
       vertical-align: middle;
-      transition: transform 0.3s var(--easing);
+      transition: transform 800ms var(--easing);
     }
   }
 
