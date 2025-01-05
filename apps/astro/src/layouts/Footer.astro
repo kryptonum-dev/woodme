@@ -46,8 +46,6 @@ const { global } = await sanityFetch<{
 }
   `,
 });
-
-const letters = ['W', 'O', 'O', 'D', 'M', 'E'];
 ---
 
 <footer class="footer" style={`background-color: ${background || '#e9f2ed'}`}>
@@ -83,7 +81,7 @@ const letters = ['W', 'O', 'O', 'D', 'M', 'E'];
             {
               global.footer.highlitedProjects.map((project) => (
                 <a href={project.slug}>
-                  <Image {...project.image} sizes="65px" />
+                  <Image {...project.image} sizes="65px" priority={false} />
                   <span>{project.name}</span>
                 </a>
               ))
@@ -177,7 +175,7 @@ const letters = ['W', 'O', 'O', 'D', 'M', 'E'];
           <a href="/polityka-prywatnosci" class="link link__s right">Polityka prywatności</a>
         </div>
         <div class="letters">
-          {letters.map((letter) => <span>{letter}</span>)}
+          {['W', 'O', 'O', 'D', 'M', 'E'].map((letter) => <span>{letter}</span>)}
         </div>
       </div>
     </div>

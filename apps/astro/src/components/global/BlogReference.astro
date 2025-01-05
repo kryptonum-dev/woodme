@@ -19,11 +19,11 @@ export const BlogReference_Query = `
 
 type Props = {
   index: number;
+  sectionId?: string;
   heading: PortableTextValue;
   paragraph: PortableTextValue;
-  highlightedBlogPosts: { image: ImageDataProps; name: string; slug: { current: string } }[];
   cta: ButtonDataProps;
-  sectionId?: string;
+  highlightedBlogPosts: { image: ImageDataProps; name: string; slug: { current: string } }[];
 };
 
 const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astro.props;
@@ -38,10 +38,15 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
     </header>
     <nav>
       {
-        highlightedBlogPosts.map(({ image, name, slug }) => (
+        highlightedBlogPosts.map(({ image, name, slug }, i) => (
           <a href={slug.current} class="blogPost">
             <div class="container">
-              <Image {...image} sizes="(max-width: 480px) 95vw, 480px" />
+              <Image
+                {...image}
+                loading={index === 0 ? 'eager' : 'lazy'}
+                fetchpriority={index === 0 && i === 0 ? 'high' : 'low'}
+                sizes="(max-width: 480px) 95vw, 480px"
+              />
               <div class="content">
                 {index === 0 ? <h2>{name}</h2> : <h3>{name}</h3>}
                 {/* TODO Add custom reading time component after completing blog post view */}
@@ -129,7 +134,7 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
           border-radius: 12px;
           background-color: var(--secondary-300, #e3dfd3);
           max-width: 437px;
-          transition: background-color 0.3s var(--easing);
+          transition: background-color 400ms;
           position: relative;
 
           .container {
@@ -199,7 +204,7 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
         border-radius: 999px;
         font-size: var(--typography-body-m, 0.875rem);
         opacity: 0;
-        transition: opacity 0.2s ease;
+        transition: opacity 200ms;
       }
       @media (max-width: 64rem) {
         flex-direction: column;
@@ -220,38 +225,40 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
 <script>
   import anime from 'animejs';
 
-  const blogPosts = document.querySelectorAll('.blogPost') as NodeListOf<HTMLAnchorElement>;
+  document.querySelectorAll<HTMLDivElement>('.BlogReference').forEach((section) => {
+    const blogPosts = section.querySelectorAll('.blogPost') as NodeListOf<HTMLAnchorElement>;
 
-  blogPosts.forEach((blogPost) => {
-    const readMore = blogPost.querySelector('.readMore') as HTMLElement;
-    let lastTime = 0;
+    blogPosts.forEach((blogPost) => {
+      const readMore = blogPost.querySelector('.readMore') as HTMLElement;
+      let lastTime = 0;
 
-    blogPost.addEventListener('mouseenter', () => {
-      readMore.style.opacity = '1';
-    });
+      blogPost.addEventListener('mouseenter', () => {
+        readMore.style.opacity = '1';
+      });
 
-    blogPost.addEventListener('mouseleave', () => {
-      readMore.style.opacity = '0';
-    });
+      blogPost.addEventListener('mouseleave', () => {
+        readMore.style.opacity = '0';
+      });
 
-    blogPost.addEventListener('mousemove', (e) => {
-      const now = Date.now();
-      if (now - lastTime < 11) return;
-      lastTime = now;
+      blogPost.addEventListener('mousemove', (e) => {
+        const now = Date.now();
+        if (now - lastTime < 11) return;
+        lastTime = now;
 
-      const rect = blogPost.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+        const rect = blogPost.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-      const offsetX = readMore.offsetWidth / 2;
-      const offsetY = readMore.offsetHeight / 2;
+        const offsetX = readMore.offsetWidth / 2;
+        const offsetY = readMore.offsetHeight / 2;
 
-      anime({
-        targets: readMore,
-        translateX: x - offsetX,
-        translateY: y - offsetY,
-        duration: 50,
-        easing: 'easeOutQuad',
+        anime({
+          targets: readMore,
+          translateX: x - offsetX,
+          translateY: y - offsetY,
+          duration: 50,
+          easing: 'easeOutQuad',
+        });
       });
     });
   });

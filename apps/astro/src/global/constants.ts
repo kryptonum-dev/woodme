@@ -4,7 +4,7 @@
  * @constant
  * @type {string}
  */
-export const THEME_COLOR: string = '#87988B'
+export const THEME_COLOR: string = '#87988B';
 
 /**
  * Global declaration of background color in HEX format.
@@ -12,7 +12,7 @@ export const THEME_COLOR: string = '#87988B'
  * @constant
  * @type {string}
  */
-export const BACKGROUND_COLOR: string = '#E3DFD3'
+export const BACKGROUND_COLOR: string = '#E3DFD3';
 
 /**
  * Global declaration of the locale (language) for the application.
@@ -20,7 +20,7 @@ export const BACKGROUND_COLOR: string = '#E3DFD3'
  * @constant
  * @type {string}
  */
-export const LOCALE: string = 'pl'
+export const LOCALE: string = 'pl';
 
 /**
  * Global declaration of the domain for the application.
@@ -28,7 +28,9 @@ export const LOCALE: string = 'pl'
  * @constant
  * @type {string}
  */
-export const DOMAIN: string = 'https://wood-me.pl'
+export const DOMAIN: string = 'http://localhost:4321';
+
+//TODO: Change to production domain
 
 /**
  * Global declaration of the default title for the application.
@@ -36,7 +38,7 @@ export const DOMAIN: string = 'https://wood-me.pl'
  * @constant
  * @type {string}
  */
-export const DEFAULT_TITLE: string = 'Woodme'
+export const DEFAULT_TITLE: string = 'Woodme';
 
 /**
  * Global declaration of the default description for the application.
@@ -45,7 +47,7 @@ export const DEFAULT_TITLE: string = 'Woodme'
  * @constant
  * @type {string}
  */
-export const DEFAULT_DESCRIPTION: string = 'Tworzymy przestrzenie, które inspirują i wspierają rozwój'
+export const DEFAULT_DESCRIPTION: string = 'Tworzymy przestrzenie, które inspirują i wspierają rozwój';
 
 /**
  * Object containing regular expressions for validation purposes.
@@ -59,11 +61,11 @@ export const REGEX: { email: RegExp; phone: RegExp; string: RegExp } = {
   email: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
   phone: /^(?:\+(?:\d{1,3}))?(?:[ -]?\(?\d{1,4}\)?[ -]?\d{1,5}[ -]?\d{1,5}[ -]?\d{1,6})$/,
   string: /^(?!\s+$)(.*?)\s*$/,
-}
+};
 
 /**
  * Global declaration of the easing function for JS animations.
  * @constant
  * @type {number[]}
  */
-export const EASING: number[] = [0.6, -0.15, 0.27, 1.15]
+export const EASING: number[] = [0.6, -0.15, 0.27, 1.15];
