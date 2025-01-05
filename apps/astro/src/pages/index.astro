@@ -1,28 +1,28 @@
 ---
-import sanityFetch from '../utils/sanity.fetch'
-import metadataFetch from '../utils/metadata.fetch'
-import Components, { Components_Query, type ComponentsProps } from '../components/Components.astro'
-import Layout from '../layouts/Layout.astro'
+import sanityFetch from '../utils/sanity.fetch';
+import metadataFetch from '../utils/metadata.fetch';
+import Components, { Components_Query, type ComponentsProps } from '../components/Components.astro';
+import Layout from '../layouts/Layout.astro';
 
 type QueryProps = {
-  slug: string
-  components: ComponentsProps
-}
+  slug: string;
+  footerBackground: string;
+  components: ComponentsProps;
+};
 
 const page = await sanityFetch<QueryProps>({
   query: `
     *[_type == "Index_Page"][0] {
       "slug": slug.current,
+      "footerBackground": components[-1].background,
       ${Components_Query}
     }
   `,
-})
+});
 
-
-const metadata = await metadataFetch(page.slug)
+const metadata = await metadataFetch(page.slug);
 ---
 
-
-<Layout {...metadata}>
+<Layout footerBackground={page.footerBackground} {...metadata}>
   <Components data={page.components} />
 </Layout>

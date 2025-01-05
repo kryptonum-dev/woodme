@@ -44,6 +44,13 @@ export default defineField({
       title: 'Call To Action',
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+      name: 'background',
+      type: 'string',
+      title: 'Background',
+      initialValue: '#5f6d62',
+      hidden: true,
+    }),
     ...sectionId,
   ],
   preview: {

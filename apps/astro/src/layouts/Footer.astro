@@ -1,0 +1,472 @@
+---
+import Image, { ImageDataQuery, type ImageDataProps } from '../components/ui/image';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '../components/ui/portable-text';
+import sanityFetch from '../utils/sanity.fetch';
+import { ButtonDataQuery, type ButtonDataProps } from '../components/ui/button';
+import Button from '../components/ui/button/Button.astro';
+
+type Props = {
+  background: string;
+};
+
+const { background } = Astro.props as Props;
+
+const { global } = await sanityFetch<{
+  global: {
+    socials: { instagram: string; tiktok: string; linkedin: string; facebook: string };
+    footer: {
+      highlitedProjects: { name: string; slug: string; heading: PortableTextValue; image: ImageDataProps }[];
+      internalLinks: { title: string; link: { slug: string } }[];
+      paragraph: PortableTextValue;
+      cta: ButtonDataProps;
+    };
+  };
+}>({
+  query: `
+    {
+    "global": *[_type == "global"][0]{
+     socials,
+     footer {
+     "highlitedProjects": highlitedProjects[]->{
+        ${ImageDataQuery('image')}
+        "slug": slug.current,
+        name,
+        ${PortableTextQuery('heading')}
+        },
+        "internalLinks": internalLinks[]{
+        title,
+        link-> {
+          "slug": slug.current,
+        },
+        },
+        ${PortableTextQuery('paragraph')}
+        ${ButtonDataQuery('cta')}
+    },
+},
+}
+  `,
+});
+
+const letters = ['W', 'O', 'O', 'D', 'M', 'E'];
+---
+
+<footer class="footer" style={`background-color: ${background || '#e9f2ed'}`}>
+  <div class="container">
+    <div class="content">
+      <div class="containers">
+        <div class="logoContainer">
+          <a class="logo" aria-label="Przejdź do strony głównej" href="/"
+            ><svg xmlns="http://www.w3.org/2000/svg" width="141" height="19" fill="none"
+              ><title>Logo Woodme</title><g
+                ><g
+                  ><path
+                    fill="#5F6D62"
+                    d="M26.52 6.313 24.12 3.648l-2.65-2.119A3.758 3.758 0 0 0 18.812.428H8.572c-.996 0-1.953.397-2.657 1.101L3.263 3.65.865 6.312C.16 7.017 0 7.975 0 8.97v9.174c0 .145.118.264.264.264H3.01a.264.264 0 0 0 .264-.264V5.265a1.61 1.61 0 0 1 1.172-1.548c.141-.041.29-.057.437-.057h8.681l-2.387 2.653c-.706.706-.865 1.662-.865 2.657v9.174c0 .145.118.264.264.264h2.746a.264.264 0 0 0 .264-.264V5.265a1.61 1.61 0 0 1 1.172-1.548c.141-.041.29-.057.437-.057h7.306c.147 0 .296.016.438.057a1.61 1.61 0 0 1 1.172 1.548v12.88c0 .146.118.264.264.264h2.746a.264.264 0 0 0 .264-.264V8.972c0-.996-.16-1.953-.866-2.657v-.002Z"
+                  ></path></g
+                ><path
+                  fill="#48514A"
+                  d="M42.297 17.962h-3.382a.307.307 0 0 1-.296-.226L34.45 2.597a.307.307 0 0 1 .296-.388h2.26c.14 0 .263.097.297.235l1.738 7.133c.44 2.026.88 3.964 1.263 5.985a.153.153 0 0 0 .15.124h.553a.153.153 0 0 0 .15-.126c.382-2.076.765-3.957 1.263-5.983l1.884-7.14a.306.306 0 0 1 .296-.228h2.967c.14 0 .262.095.297.23l1.855 7.168c.469 1.938.88 3.903 1.262 5.953a.154.154 0 0 0 .15.126h.496a.153.153 0 0 0 .15-.124c.383-1.994.823-3.932 1.263-5.986l1.709-7.132a.306.306 0 0 1 .297-.235h2.11c.201 0 .349.192.295.387l-4.11 15.138a.308.308 0 0 1-.297.227h-3.502a.305.305 0 0 1-.297-.234l-1.53-6.354c-.469-1.94-1.083-4.628-1.472-6.793a.151.151 0 0 0-.15-.125h-.315a.151.151 0 0 0-.15.123c-.42 2.167-1.062 4.855-1.531 6.795l-1.5 6.352a.307.307 0 0 1-.3.236ZM57.078 10.054c0-4.94 3.052-8.175 8.226-8.175 5.174 0 8.227 3.235 8.227 8.175 0 4.941-2.932 8.237-8.227 8.237s-8.226-3.325-8.226-8.237Zm13.791-.029c0-3.474-1.766-5.84-5.564-5.84s-5.563 2.366-5.563 5.84c0 3.474 1.735 5.96 5.563 5.96 3.829 0 5.564-2.366 5.564-5.96ZM74.578 10.054c0-4.94 3.052-8.175 8.226-8.175 5.174 0 8.227 3.235 8.227 8.175 0 4.941-2.932 8.237-8.227 8.237s-8.226-3.325-8.226-8.237Zm13.79-.029c0-3.474-1.765-5.84-5.563-5.84s-5.563 2.366-5.563 5.84c0 3.474 1.735 5.96 5.563 5.96 3.829 0 5.564-2.366 5.564-5.96ZM92.586 2.516c0-.169.138-.307.306-.307h6.215c5.654 0 8.317 2.756 8.317 7.757 0 5-3.141 7.996-8.288 7.996h-6.243a.308.308 0 0 1-.307-.307V2.515Zm2.691 2.062v11.014c0 .085.07.154.153.154h3.527c4.158 0 5.803-2.127 5.803-5.78 0-3.864-1.795-5.541-5.984-5.541H95.43a.154.154 0 0 0-.153.153h.001ZM110.854 17.961h-1.899a.308.308 0 0 1-.307-.307V2.515c0-.168.138-.306.307-.306h3.943c.126 0 .238.076.284.191l2.794 6.936c.411 1.027 1.108 3.118 1.643 4.864.02.065.078.108.146.108h.432a.15.15 0 0 0 .145-.108c.532-1.743 1.174-3.78 1.643-4.954l2.824-6.849a.306.306 0 0 1 .283-.19h3.706c.169 0 .307.138.307.307v15.139a.308.308 0 0 1-.307.307h-2.049a.308.308 0 0 1-.307-.307v-7.301c0-1.774.057-4.057.115-5.833a.152.152 0 0 0-.153-.156h-.326a.151.151 0 0 0-.146.107c-.596 1.926-1.418 4.245-2.21 6.333l-2.553 6.043a.307.307 0 0 1-.282.187h-2.284a.308.308 0 0 1-.284-.19l-2.524-6.13a106.085 106.085 0 0 1-2.092-6.243.151.151 0 0 0-.146-.107h-.239a.152.152 0 0 0-.153.155c.026 1.801-.003 4.03-.003 5.835v7.301a.308.308 0 0 1-.307.307h-.001ZM129.027 2.209h11.023c.168 0 .306.138.306.307v1.662a.308.308 0 0 1-.306.307h-8.485a.154.154 0 0 0-.153.153v4.155c0 .085.069.154.153.154h7.587c.168 0 .306.138.306.307v1.393a.308.308 0 0 1-.306.307h-7.587a.154.154 0 0 0-.153.153v4.395c0 .084.069.153.153.153h8.454c.169 0 .307.138.307.307v1.693a.308.308 0 0 1-.307.306h-10.994a.308.308 0 0 1-.306-.306V2.515c0-.168.138-.306.306-.306h.002Z"
+                ></path></g
+              ><defs
+                ><clipPath id="a"><path fill="#fff" d="M0 0h141v19H0z"></path></clipPath><clipPath id="b"
+                  ><path fill="#fff" d="M0 .428h27.385V18.41H0z"></path></clipPath
+                ></defs
+              ></svg
+            ></a
+          >
+          <PortableText class="paragraph" value={global.footer.paragraph} />
+          <Button shade="dark" {...global.footer.cta} />
+        </div>
+        <div class="linksContainer">
+          <nav class="projects">
+            <a class="link" href="/realizacje">Realizacje</a>
+            {
+              global.footer.highlitedProjects.map((project) => (
+                <a href={project.slug}>
+                  <>
+                    <Image {...project.image} sizes="65px" />
+                    <span>{project.name}</span>
+                  </>
+                </a>
+              ))
+            }
+          </nav>
+          <nav class="links__right">
+            {
+              global.footer.internalLinks.slice(0, 4).map((link) => (
+                <a class="link" href={link.link?.slug}>
+                  {link.title}
+                </a>
+              ))
+            }
+          </nav>
+          {
+            global.footer.internalLinks.length > 4 && (
+              <nav class="links__left">
+                {global.footer.internalLinks.slice(4).map((link) => (
+                  <a class="link" href={link.link?.slug}>
+                    {link.title}
+                  </a>
+                ))}
+              </nav>
+            )
+          }
+        </div>
+      </div>
+      <div class="row">
+        <div class="upper">
+          <div class="left">
+            <p>&copy; Woodme</p>
+            <a href="https://kryptonum.eu" class="link link__s" target="_blank" rel="noreferrer"
+              >Stworzone przez Kryptonum</a
+            >
+          </div>
+          <div class="socials">
+            <!-- TOFIX: waiting for designer info -->
+            {
+              Object.entries(global.socials).map(([key, value]) => (
+                <a href={value}>
+                  {key === 'facebook' ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
+                      <title>Facebook</title>
+                      <g clip-path="">
+                        <path
+                          fill="#87988B"
+                          d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.093 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.563V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10Z"
+                        />
+                        <path
+                          fill="#D0E1D7"
+                          d="m13.893 12.89.443-2.89h-2.774V8.125c0-.79.388-1.563 1.63-1.563h1.261v-2.46s-1.144-.196-2.238-.196c-2.285 0-3.777 1.385-3.777 3.89V10h-2.54v2.89h2.54v6.988c1.035.163 2.09.163 3.124 0v-6.987h2.33Z"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="a">
+                          <path fill="#fff" d="M0 0h20v20H0z" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  ) : key === 'instagram' ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
+                      <title>Instagram</title>
+                      <path
+                        fill-rule="evenodd"
+                        fill="#87988B"
+                        d="M11.027 0c1.126.002 1.696.008 2.19.022l.193.007c.224.008.446.018.712.03 1.064.05 1.79.218 2.428.465.659.254 1.216.598 1.771 1.154a4.907 4.907 0 0 1 1.154 1.771c.247.637.415 1.364.465 2.428l.03.712.006.194c.014.493.021 1.063.023 2.189v.746L20 10v1.027a78.845 78.845 0 0 1-.023 2.19l-.007.193c-.008.224-.017.446-.03.712-.05 1.065-.218 1.79-.465 2.428a4.882 4.882 0 0 1-1.154 1.772 4.914 4.914 0 0 1-1.771 1.153c-.638.247-1.364.415-2.428.465a72.11 72.11 0 0 1-.712.03l-.194.006c-.493.014-1.063.021-2.188.023l-.746.001h-1.31a78.436 78.436 0 0 1-2.189-.023l-.194-.006a63.048 63.048 0 0 1-.712-.031c-1.064-.05-1.79-.218-2.428-.465a4.888 4.888 0 0 1-1.771-1.153A4.904 4.904 0 0 1 .524 16.55C.277 15.912.11 15.186.06 14.122a74.095 74.095 0 0 1-.03-.712l-.005-.194A79.059 79.059 0 0 1 0 11.028V8.971c.002-1.126.008-1.696.022-2.189L.03 6.59c.008-.224.018-.445.03-.712.05-1.065.218-1.79.465-2.428a4.88 4.88 0 0 1 1.154-1.771A4.897 4.897 0 0 1 3.449.524C4.087.277 4.812.11 5.877.06l.712-.03.194-.005A79.003 79.003 0 0 1 8.972 0h2.056ZM10 5a5 5 0 1 0-.001 10 5 5 0 0 0 0-10Zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm5.25-3.5a1.25 1.25 0 0 0 0 2.499 1.25 1.25 0 0 0 0-2.5Z"
+                      />
+                    </svg>
+                  ) : key === 'linkedin' ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
+                      <title>Linkedin</title>
+                      <path
+                        fill-rule="evenodd"
+                        fill="#87988B"
+                        d="M18.524 0H1.476A1.476 1.476 0 0 0 0 1.476v17.048A1.476 1.476 0 0 0 1.476 20h17.048A1.476 1.476 0 0 0 20 18.524V1.476A1.476 1.476 0 0 0 18.524 0ZM5.96 17.038H2.954V7.486h3.007v9.552ZM4.456 6.162a1.726 1.726 0 1 1 1.736-1.724 1.702 1.702 0 0 1-1.736 1.724Zm12.588 10.884H14.04v-5.218c0-1.54-.654-2.014-1.499-2.014-.891 0-1.766.672-1.766 2.053v5.179H7.767V7.493h2.891v1.324h.04c.29-.588 1.306-1.592 2.858-1.592 1.677 0 3.49.996 3.49 3.912l-.002 5.909Z"
+                      />
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
+                      <title>Tiktok</title>
+                      <path
+                        fill="#87988B"
+                        d="M18.524 0H1.476A1.476 1.476 0 0 0 0 1.476v17.048A1.476 1.476 0 0 0 1.476 20h17.048A1.476 1.476 0 0 0 20 18.524V1.476A1.476 1.476 0 0 0 18.524 0ZM5.96 17.038H2.954V7.486h3.007v9.552ZM4.456 6.162a1.726 1.726 0 1 1 1.736-1.724 1.702 1.702 0 0 1-1.736 1.724Zm12.588 10.884H14.04v-5.218c0-1.54-.654-2.014-1.499-2.014-.891 0-1.766.672-1.766 2.053v5.179H7.767V7.493h2.891v1.324h.04c.29-.588 1.306-1.592 2.858-1.592 1.677 0 3.49.996 3.49 3.912l-.002 5.909Z"
+                      />
+                    </svg>
+                  )}
+                </a>
+              ))
+            }
+          </div>
+          <a href="/polityka-prywatnosci" class="link link__s right">Polityka prywatności</a>
+        </div>
+        <div class="letters">
+          {letters.map((letter) => <span>{letter}</span>)}
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style lang="scss">
+  .footer {
+    position: relative;
+    padding: clamp(3rem, calc(4vw / 0.48), 4rem) var(--pageMargin) 1.25rem;
+  }
+  .container {
+    background-color: var(--neutral-300, #d0e1d7);
+    border-radius: 8px;
+    padding-top: 1.75rem;
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      row-gap: clamp(2rem, calc(3vw / 0.48), 4rem);
+      max-width: 82.875rem;
+      margin: 0 auto;
+
+      .containers {
+        display: flex;
+        align-items: center;
+        padding: 0 1.75rem;
+        gap: clamp(2rem, calc(2.5vw / 0.48), 2.5rem);
+        justify-content: space-between;
+
+        .logoContainer {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          height: 100%;
+          flex-grow: 1;
+
+          .logo {
+            position: relative;
+            margin-bottom: auto;
+
+            &::before {
+              width: 100%;
+              height: 44px;
+              position: absolute;
+              content: '';
+              top: 50%;
+              left: 0;
+              transform: translateY(-50%);
+            }
+
+            svg {
+            }
+          }
+
+          .paragraph {
+            margin-top: 2rem;
+            font-size: var(--typography-body-m, 0.875rem);
+            max-width: 20.375rem;
+          }
+
+          > a:last-of-type {
+            margin-top: 2.25rem;
+          }
+        }
+
+        .linksContainer {
+          display: flex;
+          align-items: flex-start;
+          gap: 2rem;
+
+          > * {
+            width: clamp(8rem, calc(8.5vw / 0.48), 13.375rem);
+            border-top: 0.5px solid var(--neutral-400, #c1d1c8);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding-top: 1rem;
+            gap: 8px;
+          }
+          .projects {
+            > a:not(:first-of-type) {
+              font-size: var(--typography-body-m, 0.875rem);
+              display: flex;
+              gap: 1rem;
+              align-items: center;
+              min-height: 2.75rem;
+              max-width: 100%;
+
+              img {
+                width: 65px;
+                height: 36px;
+                border-radius: 2px;
+              }
+
+              span {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                position: relative;
+
+                &::before {
+                  content: '';
+                  position: absolute;
+                  left: 0;
+                  bottom: 0px;
+                  width: 100%;
+                  height: 1.5%;
+                  transform: scaleX(0);
+                  transform-origin: right;
+                  transition: transform 0.25s var(--easing);
+                  background-color: var(--neutral-600, #87988b);
+                }
+              }
+
+              &:hover {
+                span {
+                  &::before {
+                    transform: scaleX(1);
+                    transform-origin: left;
+                  }
+                }
+              }
+
+              &:focus-visible {
+                outline: 2px solid var(--neutral-700, #5f6d62);
+                outline-offset: 3px;
+                border-radius: 4px;
+              }
+            }
+          }
+
+          .links__right {
+          }
+          .links__left {
+          }
+        }
+
+        @media (max-width: 64rem) {
+          flex-direction: column;
+          align-items: flex-start;
+
+          .linksContainer {
+            flex-wrap: wrap;
+            > * {
+              width: 13.375rem;
+            }
+          }
+        }
+      }
+
+      .row {
+        padding: 1rem 1.75rem 0;
+        border-top: 1px solid var(--neutral-200, #e9f2ed);
+
+        .upper {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: center;
+          margin-bottom: clamp(0.75rem, calc(1vw / 0.48), 1rem);
+          .left {
+            display: flex;
+            column-gap: 2rem;
+            align-items: center;
+
+            p {
+              min-height: 2.75rem;
+              display: flex;
+              align-items: center;
+              font-size: var(--typography-body-s, 0.75rem);
+            }
+          }
+
+          .socials {
+            display: flex;
+            gap: 0.375rem;
+            align-items: center;
+
+            a {
+              width: 2.75rem;
+              height: 2.75rem;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              position: relative;
+              z-index: 2;
+
+              &::before,
+              &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                transform: scale(0);
+                background-color: var(--neutral-300, #d0e1d7);
+                transition: transform 0.25s var(--easing);
+                border-radius: 50%;
+                z-index: 1;
+              }
+
+              &::after {
+                background-color: var(--neutral-700, #5f6d62);
+              }
+
+              &:hover {
+                &::before {
+                  transform: scale(1);
+                }
+              }
+
+              &:focus:not(:focus-visible) {
+                &::after {
+                  transform: scale(1);
+                }
+              }
+
+              &:focus-visible {
+                outline: 2px solid var(--neutral-700, #5f6d62);
+                outline-offset: -2px;
+                border-radius: 50%;
+              }
+
+              svg {
+                position: relative;
+                z-index: 2;
+              }
+            }
+          }
+
+          .right {
+            justify-self: end;
+          }
+
+          @media (max-width: 56.25rem) {
+            grid-template-columns: 1fr auto;
+            .right {
+              grid-column: 1/3;
+              grid-row: 2/3;
+              justify-self: start;
+            }
+          }
+
+          @media (max-width: 32.5rem) {
+            grid-template-columns: 1fr;
+
+            .left {
+              grid-row: 2/3;
+              grid-column: 1/2;
+              flex-wrap: wrap;
+            }
+            .socials {
+              grid-row: 1/2;
+              grid-column: 1/2;
+            }
+            .right {
+              grid-row: 3/4;
+              grid-column: 1/2;
+            }
+          }
+        }
+
+        .letters {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+
+          span {
+            width: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: var(--typography-body-s, 0.75rem);
+            color: var(--neutral-400, #c1d1c8);
+            align-items: center;
+
+            &::after {
+              content: '';
+              width: 0.5px;
+              height: 1rem;
+              background-color: var(--neutral-400, #c1d1c8);
+            }
+          }
+        }
+      }
+
+      // @media (max-width: 64rem) {
+      //   max-width: 38rem;
+      // }
+    }
+  }
+</style>

@@ -43,7 +43,13 @@ export default defineField({
         },
       ],
     }),
-
+    defineField({
+      name: 'background',
+      type: 'string',
+      title: 'Background',
+      initialValue: '#d2cdbf',
+      hidden: true,
+    }),
     ...sectionId,
   ],
   preview: {

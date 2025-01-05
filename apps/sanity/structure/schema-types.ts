@@ -29,8 +29,9 @@ const singleTypes = [
 // Collections Types
 import Faq_Collection from '../schema/collectionTypes/Faq_Collection';
 import BlogPost_Collection from '../schema/collectionTypes/BlogPost_Collection';
+import Project_Collection from '../schema/collectionTypes/Project_Collection';
 
-const collectionTypes = [Faq_Collection, BlogPost_Collection];
+const collectionTypes = [Faq_Collection, BlogPost_Collection, Project_Collection];
 
 // Components
 import Components from '../schema/Components';

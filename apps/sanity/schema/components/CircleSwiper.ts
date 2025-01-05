@@ -94,7 +94,6 @@ export default defineField({
         }),
       ],
     }),
-
     ...sectionId,
   ],
   preview: {

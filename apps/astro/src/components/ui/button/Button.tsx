@@ -24,7 +24,6 @@ export default function Button({
   isLoading,
   ...props
 }: Props) {
-  console.log(shade);
   const Element = href ? 'a' : 'button';
   const isExternal = linkType === 'external';
   const renderedProps = {
