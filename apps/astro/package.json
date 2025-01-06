@@ -16,7 +16,6 @@
     "@astrojs/sitemap": "^3.2.1",
     "@astrojs/vercel": "^8.0.1",
     "@sanity/client": "^6.24.1",
-    "animejs": "^3.2.2",
     "astro": "^5.0.5",
     "astro-portabletext": "^0.10.1",
     "autoprefixer": "^10.4.20",

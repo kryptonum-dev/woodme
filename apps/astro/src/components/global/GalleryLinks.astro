@@ -24,7 +24,7 @@ type Props = {
   links: {
     image: ImageDataProps;
     title: string;
-    link: string;
+    slug: string;
   }[];
 };
 
@@ -51,11 +51,12 @@ const Subheading = index === 0 ? 'h2' : 'h3';
   <div class="content">
     <ul class="gallery max-width">
       {
-        links.map(({ title, link, image }, i) => (
+        links.map(({ title, slug, image }, i) => (
           <li class="item">
-            <a href={link} class="card">
+            <a href={slug} class="card">
               <Image
                 {...image}
+                draggable="false"
                 sizes="(max-width: 37.5rem) 95vw, (max-width: 48rem) 80vw, (max-width: 56.25rem) 608px, (max-width: 91.25rem) 32vw,432px"
                 loading={index === 0 ? 'eager' : 'lazy'}
                 fetchpriority={i === 0 && index === 0 ? 'high' : 'low'}
@@ -65,6 +66,18 @@ const Subheading = index === 0 ? 'h2' : 'h3';
                 <span class="indicator">{i + 1}</span>
               </div>
             </a>
+            <div class="showMore">
+              Sprawdź
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" fill="none">
+                <path
+                  stroke="#3e463a"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.25"
+                  d="M2.5 6h8m0 0-3-3m3 3-3 3"
+                />
+              </svg>
+            </div>
           </li>
         ))
       }
@@ -115,9 +128,35 @@ const Subheading = index === 0 ? 'h2' : 'h3';
           overflow: hidden;
           position: relative;
 
+          &:has(a:focus-visible) {
+            outline: 3px solid var(--neutral-700, #5f6d62);
+            outline-offset: 3px;
+            border-radius: 12px;
+          }
+
+          .showMore {
+            background-color: var(--secondary-400, #d2cdbf);
+            border-radius: 999px;
+            padding: 0.375rem 0.625rem;
+            position: absolute;
+            top: 0;
+            color: #3e463a;
+            left: 0;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: var(--typography-body-m, 0.875rem);
+            transition: opacity 100ms;
+            pointer-events: none;
+            cursor: none;
+          }
+
           .card {
             width: 100%;
             height: 100%;
+            display: block;
+            cursor: none;
 
             &::before {
               content: '';
@@ -127,7 +166,16 @@ const Subheading = index === 0 ? 'h2' : 'h3';
               left: 0;
               height: 50%;
               background: linear-gradient(180deg, rgba(28, 19, 17, 0) 0%, #1c1311 100%);
+              transform-origin: bottom;
+              transition: transform 400ms;
             }
+
+            &:focus:not(:focus-visible) {
+              &::before {
+                transform: scaleY(2);
+              }
+            }
+
             img {
               width: 100%;
               height: 100%;
@@ -203,3 +251,41 @@ const Subheading = index === 0 ? 'h2' : 'h3';
     }
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLDivElement>('.GalleryLinks').forEach((section) => {
+    const items = section.querySelectorAll('.item') as NodeListOf<HTMLAnchorElement>;
+
+    items.forEach((item) => {
+      const showMore = item.querySelector('.showMore') as HTMLElement;
+      let lastTime = 0;
+      let firstMove = false;
+
+      item.addEventListener('mouseenter', () => {
+        showMore.style.opacity = '1';
+        firstMove = false;
+      });
+
+      item.addEventListener('mouseleave', () => {
+        showMore.style.opacity = '0';
+      });
+
+      item.addEventListener('mousemove', (e) => {
+        const now = Date.now();
+        if (now - lastTime < 11) return;
+        lastTime = now;
+
+        const rect = item.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const offsetX = showMore.offsetWidth / 2;
+        const offsetY = showMore.offsetHeight / 2;
+
+        showMore.style.transform = `translate(${x - offsetX}px, ${y - offsetY}px)`;
+        showMore.style.transition = firstMove ? 'transform 30ms opacity 100ms' : 'opacity 100ms';
+        firstMove = true;
+      });
+    });
+  });
+</script>

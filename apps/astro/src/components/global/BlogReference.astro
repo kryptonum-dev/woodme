@@ -223,17 +223,17 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
 </style>
 
 <script>
-  import anime from 'animejs';
-
   document.querySelectorAll<HTMLDivElement>('.BlogReference').forEach((section) => {
     const blogPosts = section.querySelectorAll('.blogPost') as NodeListOf<HTMLAnchorElement>;
 
     blogPosts.forEach((blogPost) => {
       const readMore = blogPost.querySelector('.readMore') as HTMLElement;
       let lastTime = 0;
+      let firstMove = false;
 
       blogPost.addEventListener('mouseenter', () => {
         readMore.style.opacity = '1';
+        firstMove = false;
       });
 
       blogPost.addEventListener('mouseleave', () => {
@@ -252,13 +252,9 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
         const offsetX = readMore.offsetWidth / 2;
         const offsetY = readMore.offsetHeight / 2;
 
-        anime({
-          targets: readMore,
-          translateX: x - offsetX,
-          translateY: y - offsetY,
-          duration: 50,
-          easing: 'easeOutQuad',
-        });
+        readMore.style.transform = `translate(${x - offsetX}px, ${y - offsetY}px)`;
+        readMore.style.transition = firstMove ? 'transform 30ms opacity 100ms' : 'opacity 100ms';
+        firstMove = true;
       });
     });
   });

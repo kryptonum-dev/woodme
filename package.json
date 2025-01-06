@@ -1,26 +1,22 @@
 {
   "name": "woodme",
-  "private": true,
   "author": {
     "name": "Oliwier Sellig",
     "email": "oliwier@kryptonum.eu",
     "url": "https://kryptonum.eu"
   },
+  "devDependencies": {
+    "turbo": "^2.3.3"
+  },
+  "packageManager": "bun@1.1.26",
+  "private": true,
   "scripts": {
     "build": "turbo build",
     "dev": "dotenv -e .env -- turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
-  "devDependencies": {
-    "turbo": "^2.3.3"
-  },
-  "packageManager": "bun@1.1.26",
   "workspaces": [
     "apps/*"
-  ],
-  "dependencies": {
-    "@types/animejs": "^3.1.12",
-    "save-dev": "^0.0.1-security"
-  }
+  ]
 }
