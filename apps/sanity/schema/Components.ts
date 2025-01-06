@@ -4,12 +4,13 @@ import CircleSwiper from './components/CircleSwiper';
 import SplitContentSection from './components/SplitContentSection';
 import CtaSection from './components/CtaSection';
 import ExpandingImages from './components/ExpandingImages';
+import GalleryLinks from './components/GalleryLinks';
 
 export default defineType({
   name: 'components',
   type: 'array',
   title: 'Components',
-  of: [CircleSwiper, SplitContentSection, BlogReference, CtaSection, ExpandingImages],
+  of: [CircleSwiper, SplitContentSection, BlogReference, CtaSection, ExpandingImages, GalleryLinks],
   options: {
     insertMenu: {
       filter: true,

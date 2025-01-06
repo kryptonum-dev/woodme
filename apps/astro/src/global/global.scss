@@ -72,7 +72,7 @@
   --typography-heading-s: clamp(1.25rem, calc(1.375vw / 0.48), 1.375rem);
 
   --easing: cubic-bezier(0.19, 1, 0.22, 1);
-  --pageMargin: clamp(1rem, calc(1.5vw / 0.48), 1.5rem);
+  --pageMargin: clamp(1rem, calc(1.5vw / 0.48), 1.25rem);
 
   @media (max-width: calc(56.26rem - 1px)) and (min-width: 37.5rem) {
     --pageMargin: clamp(2.5rem, calc(5vw / 0.48), 5rem);
