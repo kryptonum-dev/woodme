@@ -6,12 +6,22 @@ import CtaSection from './components/CtaSection';
 import ExpandingImages from './components/ExpandingImages';
 import GalleryLinks from './components/GalleryLinks';
 import TestimonialsSlider from './components/TestimonialsSlider';
+import SingleTestimonialSection from './components/SingleTestimonialSection';
 
 export default defineType({
   name: 'components',
   type: 'array',
   title: 'Components',
-  of: [CircleSwiper, SplitContentSection, BlogReference, CtaSection, ExpandingImages, GalleryLinks, TestimonialsSlider],
+  of: [
+    CircleSwiper,
+    SplitContentSection,
+    BlogReference,
+    CtaSection,
+    ExpandingImages,
+    GalleryLinks,
+    TestimonialsSlider,
+    SingleTestimonialSection,
+  ],
   options: {
     insertMenu: {
       filter: true,

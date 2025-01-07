@@ -13,6 +13,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "../astro/src/utils/render-stars.ts"],
   "exclude": ["node_modules"]
 }

@@ -2,7 +2,8 @@
 import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
 import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
 import { formatDate } from '../../utils/format-date';
-import { Image as AstroImage } from 'astro:assets';
+import { renderStars } from '@/src/utils/render-stars';
+import VideoThumbnail from '../ui/VideoThumbnail.astro';
 
 export const TestimonialsSlider_Query = `
   _type == "TestimonialsSlider" => {
@@ -69,30 +70,6 @@ const countReviews = (number: number = 0) => {
   } else {
     return 'Brak opinii';
   }
-};
-
-const renderStars = (rating: number = 0) => {
-  const fixedRating = Number(rating.toFixed(1));
-  const fullStars = Math.floor(fixedRating);
-  const isHalfStar = (i: number) => i + 1 === fullStars && fixedRating - fullStars > 0.5;
-
-  const halfStar = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
-      <path stroke="#DBCDA3" stroke-linecap="round" stroke-linejoin="round" d="M7.522 2.303c.154-.311.23-.467.335-.517a.333.333 0 0 1 .287 0c.104.05.181.206.335.517l1.458 2.953c.045.092.068.138.1.174.03.031.065.057.104.075.045.02.095.028.197.043l3.26.477c.344.05.516.075.595.159.07.073.102.173.089.273-.015.114-.14.235-.388.477l-2.36 2.298a.732.732 0 0 0-.133.15.333.333 0 0 0-.04.122c-.006.048.003.099.02.2l.557 3.245c.059.342.088.513.033.615a.333.333 0 0 1-.232.168c-.114.022-.268-.06-.575-.22L8.25 11.977c-.09-.048-.136-.072-.184-.081a.334.334 0 0 0-.128 0c-.048.01-.094.033-.185.081l-2.915 1.533c-.307.162-.46.243-.574.222a.333.333 0 0 1-.233-.17c-.055-.1-.025-.272.033-.614l.557-3.245a.729.729 0 0 0 .02-.2.333.333 0 0 0-.04-.122.729.729 0 0 0-.134-.15L2.108 6.934c-.249-.242-.373-.363-.388-.477-.013-.1.019-.2.088-.273.08-.084.251-.11.595-.16l3.26-.476c.102-.015.153-.022.197-.043a.333.333 0 0 0 .103-.075c.034-.036.056-.082.102-.174l1.457-2.953Z"/><path fill="#DBCDA3" d="M8 1.754a.333.333 0 0 0-.143.032c-.104.05-.18.206-.335.517L6.065 5.256c-.046.092-.068.138-.102.174a.333.333 0 0 1-.103.075c-.044.02-.095.028-.196.043l-3.261.477c-.344.05-.515.075-.595.159a.333.333 0 0 0-.088.273c.015.114.14.235.388.477l2.358 2.298c.074.071.11.107.134.15.021.038.035.079.04.122a.729.729 0 0 1-.02.2l-.557 3.245c-.058.342-.088.513-.033.615.048.088.134.15.233.168.113.022.267-.06.574-.22l2.915-1.534c.091-.048.137-.072.185-.081A.33.33 0 0 1 8 11.891V1.754Z"/>
-    </svg>`;
-
-  const fullStar = (empty: boolean = false) => `
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
-      <path stroke="#DBCDA3" fill="${empty ? 'none' : '#DBCDA3'}" d="M7.522 2.303c.154-.311.23-.467.335-.517a.333.333 0 0 1 .287 0c.104.05.181.206.335.517l1.458 2.953c.045.092.068.138.1.174.03.031.065.057.104.075.045.02.095.028.197.043l3.26.477c.344.05.516.075.595.159.07.073.102.173.089.273-.015.114-.14.235-.388.477l-2.359 2.298a.73.73 0 0 0-.134.15.333.333 0 0 0-.04.122c-.006.048.003.099.02.2l.557 3.245c.059.342.088.513.033.615a.333.333 0 0 1-.232.168c-.114.022-.268-.06-.575-.22L8.25 11.977c-.09-.048-.136-.072-.184-.081a.334.334 0 0 0-.128 0c-.048.01-.094.033-.185.081l-2.915 1.533c-.307.162-.46.243-.574.222a.333.333 0 0 1-.233-.17c-.055-.1-.025-.272.033-.614l.557-3.245a.729.729 0 0 0 .02-.2.333.333 0 0 0-.04-.122.729.729 0 0 0-.134-.15L2.108 6.934c-.249-.242-.373-.363-.388-.477-.013-.1.019-.2.088-.273.08-.084.251-.11.595-.16l3.26-.476c.102-.015.153-.022.197-.043a.333.333 0 0 0 .103-.075c.034-.036.056-.082.102-.174l1.457-2.953Z"/>
-    </svg>
-    `;
-
-  return `
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
-      <path fill="#DBCDA3" d="M7.522 2.303c.154-.311.23-.467.335-.517a.333.333 0 0 1 .287 0c.104.05.181.206.335.517l1.458 2.953c.045.092.068.138.1.174.03.031.065.057.104.075.045.02.095.028.197.043l3.26.477c.344.05.516.075.595.159.07.073.102.173.089.273-.015.114-.14.235-.388.477l-2.359 2.298a.73.73 0 0 0-.134.15.333.333 0 0 0-.04.122c-.006.048.003.099.02.2l.557 3.245c.059.342.088.513.033.615a.333.333 0 0 1-.232.168c-.114.022-.268-.06-.575-.22L8.25 11.977c-.09-.048-.136-.072-.184-.081a.334.334 0 0 0-.128 0c-.048.01-.094.033-.185.081l-2.915 1.533c-.307.162-.46.243-.574.222a.333.333 0 0 1-.233-.17c-.055-.1-.025-.272.033-.614l.557-3.245a.729.729 0 0 0 .02-.2.333.333 0 0 0-.04-.122.729.729 0 0 0-.134-.15L2.108 6.934c-.249-.242-.373-.363-.388-.477-.013-.1.019-.2.088-.273.08-.084.251-.11.595-.16l3.26-.476c.102-.015.153-.022.197-.043a.333.333 0 0 0 .103-.075c.034-.036.056-.082.102-.174l1.457-2.953Z"/>
-    </svg>
-    ${[...Array(4)].map((_, i) => (isHalfStar(i) ? halfStar : fullStar(i + 2 > fullStars))).join('')}
-  `;
 };
 ---
 
@@ -171,24 +148,10 @@ const renderStars = (rating: number = 0) => {
               )}
               {!!video ? (
                 <>
-                  <div class="thumbnail">
-                    <AstroImage
-                      src={`https://image.mux.com/${video.asset.playbackId}/thumbnail.jpg`}
-                      alt="Miniaturka filmiku z opinii"
-                      width={274}
-                      height={234}
-                      sizes="274px"
-                    />
-                    <button class="showVideo">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none">
-                        <path
-                          fill="#9E9781"
-                          d="M2.5 2.495c0-.486 0-.729.101-.862a.5.5 0 0 1 .37-.198c.167-.01.369.125.773.394l5.258 3.505c.333.223.5.334.558.474a.5.5 0 0 1 0 .383c-.058.14-.225.252-.558.475L3.744 10.17c-.404.27-.606.404-.774.394a.5.5 0 0 1-.369-.198c-.101-.134-.101-.376-.101-.862v-7.01Z"
-                        />
-                      </svg>
-                      <span>Zobacz opinie</span>
-                    </button>
-                  </div>
+                  <VideoThumbnail
+                    image={{ width: 274, height: 234, sizes: '274px' }}
+                    playbackId={video.asset.playbackId}
+                  />
                   <div class="info">
                     <p class="name">{name}</p>
                     <p class="service">{service}</p>
@@ -377,78 +340,6 @@ const renderStars = (rating: number = 0) => {
           margin-bottom: clamp(1.25rem, calc(3vw / 0.48), 3rem);
         }
 
-        .thumbnail {
-          border-radius: 4px;
-          margin-bottom: auto;
-          overflow: hidden;
-          width: 100%;
-          height: 100%;
-          max-height: 344px;
-          position: relative;
-
-          &::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            bottom: 0;
-            left: 0;
-            height: 100%;
-            background: linear-gradient(180deg, rgba(28, 19, 17, 0) 0%, rgba(28, 19, 17, 0.5) 100%);
-            transform-origin: bottom;
-            transition: transform 400ms;
-          }
-
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          }
-
-          .showVideo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: var(--secondary-400, #d2cdbf);
-            border-radius: 999px;
-            padding: 0.375rem 0.625rem;
-            font-size: var(--typography-body-m, 0.875rem);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: transform 600ms var(--easing);
-
-            > * {
-              transition: transform 500ms var(--easing);
-            }
-
-            &:hover {
-              transform: translate(-50%, -50%) scale(1.1);
-            }
-
-            &:focus:not(:focus-visible) {
-              svg {
-                transform: translateX(2px);
-              }
-
-              span {
-                transform: translateX(-2px);
-              }
-            }
-
-            &::before {
-              content: '';
-              min-width: 2.75rem;
-              min-height: 2.75rem;
-              position: absolute;
-              width: 100%;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            }
-          }
-        }
-
         .player {
           position: fixed;
           top: -50%;
@@ -577,166 +468,125 @@ const renderStars = (rating: number = 0) => {
 <script>
   import EmblaCarousel, { type EmblaCarouselType, type EmblaOptionsType } from 'embla-carousel';
   import '@mux/mux-player';
+  import { openVideoPopup } from '@/src/utils/open-video-popup';
 
-  const addTogglePrevNextBtnsActive = (
-    emblaApi: EmblaCarouselType,
-    prevBtn: HTMLButtonElement,
-    nextBtn: HTMLButtonElement
-  ) => {
-    const togglePrevNextBtnsState = () => {
-      if (emblaApi.canScrollPrev()) prevBtn.removeAttribute('disabled');
-      else prevBtn.setAttribute('disabled', 'disabled');
+  document.querySelectorAll<HTMLDivElement>('.TestimonialsSlider').forEach((section) => {
+    const addTogglePrevNextBtnsActive = (
+      emblaApi: EmblaCarouselType,
+      prevBtn: HTMLButtonElement,
+      nextBtn: HTMLButtonElement
+    ) => {
+      const togglePrevNextBtnsState = () => {
+        if (emblaApi.canScrollPrev()) prevBtn.removeAttribute('disabled');
+        else prevBtn.setAttribute('disabled', 'disabled');
 
-      if (emblaApi.canScrollNext()) nextBtn.removeAttribute('disabled');
-      else nextBtn.setAttribute('disabled', 'disabled');
+        if (emblaApi.canScrollNext()) nextBtn.removeAttribute('disabled');
+        else nextBtn.setAttribute('disabled', 'disabled');
+      };
+
+      emblaApi
+        .on('select', togglePrevNextBtnsState)
+        .on('init', togglePrevNextBtnsState)
+        .on('reInit', togglePrevNextBtnsState);
+
+      return () => {
+        prevBtn.removeAttribute('disabled');
+        nextBtn.removeAttribute('disabled');
+      };
     };
 
-    emblaApi
-      .on('select', togglePrevNextBtnsState)
-      .on('init', togglePrevNextBtnsState)
-      .on('reInit', togglePrevNextBtnsState);
+    const addPrevNextBtnsClickHandlers = (
+      emblaApi: EmblaCarouselType,
+      prevBtn: HTMLButtonElement,
+      nextBtn: HTMLButtonElement
+    ) => {
+      console.log(emblaApi, prevBtn, nextBtn);
+      const scrollPrev = () => {
+        emblaApi.scrollPrev();
+      };
+      const scrollNext = () => {
+        emblaApi.scrollNext();
+      };
+      prevBtn.addEventListener('click', scrollPrev, false);
+      nextBtn.addEventListener('click', scrollNext, false);
 
-    return () => {
-      prevBtn.removeAttribute('disabled');
-      nextBtn.removeAttribute('disabled');
-    };
-  };
+      const removeTogglePrevNextBtnsActive = addTogglePrevNextBtnsActive(emblaApi, prevBtn, nextBtn);
 
-  const addPrevNextBtnsClickHandlers = (
-    emblaApi: EmblaCarouselType,
-    prevBtn: HTMLButtonElement,
-    nextBtn: HTMLButtonElement
-  ) => {
-    console.log(emblaApi, prevBtn, nextBtn);
-    const scrollPrev = () => {
-      emblaApi.scrollPrev();
-    };
-    const scrollNext = () => {
-      emblaApi.scrollNext();
-    };
-    prevBtn.addEventListener('click', scrollPrev, false);
-    nextBtn.addEventListener('click', scrollNext, false);
-
-    const removeTogglePrevNextBtnsActive = addTogglePrevNextBtnsActive(emblaApi, prevBtn, nextBtn);
-
-    return () => {
-      removeTogglePrevNextBtnsActive();
-      prevBtn.removeEventListener('click', scrollPrev, false);
-      nextBtn.removeEventListener('click', scrollNext, false);
-    };
-  };
-
-  const OPTIONS = { loop: true, align: 'start', skipSnaps: false };
-
-  const emblaNode = document.querySelector('.embla') as HTMLElement;
-  const viewportNode = emblaNode.querySelector('.embla__viewport') as HTMLElement;
-  const prevBtnNode = document.querySelector('.button__prev') as HTMLButtonElement;
-  const nextBtnNode = document.querySelector('.button__next') as HTMLButtonElement;
-
-  const setupIndicator = (emblaApi: EmblaCarouselType) => {
-    const indicator = emblaNode.querySelector('.indicator') as HTMLElement;
-    const track = emblaNode.querySelector('.embla__track') as HTMLElement;
-
-    const updateIndicator = () => {
-      const currentIndex = emblaApi.selectedScrollSnap();
-      const slideCount = emblaApi.scrollSnapList().length;
-      const slideWidth = 100 / slideCount;
-
-      indicator.style.transform = `translateX(${currentIndex * 100}%)`;
-      indicator.style.width = `${slideWidth}%`;
+      return () => {
+        removeTogglePrevNextBtnsActive();
+        prevBtn.removeEventListener('click', scrollPrev, false);
+        nextBtn.removeEventListener('click', scrollNext, false);
+      };
     };
 
-    const handleTrackClick = (e: MouseEvent) => {
-      const rect = track.getBoundingClientRect();
-      const clickPosition = e.clientX - rect.left;
-      const trackWidth = rect.width;
+    const OPTIONS = { loop: true, align: 'start', skipSnaps: false };
 
-      const slideCount = emblaApi.scrollSnapList().length;
-      const clickPercentage = clickPosition / trackWidth;
-      const slideIndex = Math.floor(clickPercentage * slideCount);
+    const emblaNode = section.querySelector('.embla') as HTMLElement;
+    const viewportNode = emblaNode.querySelector('.embla__viewport') as HTMLElement;
+    const prevBtnNode = section.querySelector('.button__prev') as HTMLButtonElement;
+    const nextBtnNode = section.querySelector('.button__next') as HTMLButtonElement;
 
-      emblaApi.scrollTo(slideIndex);
+    const setupIndicator = (emblaApi: EmblaCarouselType) => {
+      const indicator = emblaNode.querySelector('.indicator') as HTMLElement;
+      const track = emblaNode.querySelector('.embla__track') as HTMLElement;
+
+      const updateIndicator = () => {
+        const currentIndex = emblaApi.selectedScrollSnap();
+        const slideCount = emblaApi.scrollSnapList().length;
+        const slideWidth = 100 / slideCount;
+
+        indicator.style.transform = `translateX(${currentIndex * 100}%)`;
+        indicator.style.width = `${slideWidth}%`;
+      };
+
+      const handleTrackClick = (e: MouseEvent) => {
+        const rect = track.getBoundingClientRect();
+        const clickPosition = e.clientX - rect.left;
+        const trackWidth = rect.width;
+
+        const slideCount = emblaApi.scrollSnapList().length;
+        const clickPercentage = clickPosition / trackWidth;
+        const slideIndex = Math.floor(clickPercentage * slideCount);
+
+        emblaApi.scrollTo(slideIndex);
+      };
+
+      track.addEventListener('click', handleTrackClick);
+
+      emblaApi.on('select', updateIndicator).on('reInit', updateIndicator).on('init', updateIndicator);
+
+      return () => {
+        track.removeEventListener('click', handleTrackClick);
+      };
     };
 
-    track.addEventListener('click', handleTrackClick);
+    const emblaApi = EmblaCarousel(viewportNode, OPTIONS as Partial<EmblaOptionsType>);
+    const cleanup = setupIndicator(emblaApi);
+    const cleanupPrevNextBtns = addPrevNextBtnsClickHandlers(emblaApi, prevBtnNode, nextBtnNode);
 
-    emblaApi.on('select', updateIndicator).on('reInit', updateIndicator).on('init', updateIndicator);
+    emblaApi.on('destroy', cleanup);
+    emblaApi.on('destroy', cleanupPrevNextBtns);
 
-    return () => {
-      track.removeEventListener('click', handleTrackClick);
-    };
-  };
+    // ------------------------- Mux Video Setup -------------------------------
 
-  const emblaApi = EmblaCarousel(viewportNode, OPTIONS as Partial<EmblaOptionsType>);
-  const cleanup = setupIndicator(emblaApi);
-  const cleanupPrevNextBtns = addPrevNextBtnsClickHandlers(emblaApi, prevBtnNode, nextBtnNode);
+    function setupVideoPopup() {
+      const slides = section.querySelectorAll('.embla__slide[data-video="true"]');
 
-  emblaApi.on('destroy', cleanup);
-  emblaApi.on('destroy', cleanupPrevNextBtns);
+      slides.forEach((slide) => {
+        const showVideoBtn = slide.querySelector('.showVideo')! as HTMLElement;
+        const name = slide.querySelector('.name')?.textContent!;
+        const playbackId = slide.getAttribute('data-playback-id')!;
 
-  // ------------------------- Mux Video Setup -------------------------------
-
-  const setupVideoPopup = () => {
-    const slides = document.querySelectorAll('.embla__slide[data-video="true"]');
-
-    const videoContainer = document.createElement('div');
-    videoContainer.className = 'video-popup';
-    videoContainer.innerHTML = `
-      <div class="video-popup__overlay"></div>
-      <div class="video-popup__player"></div>
-    `;
-    document.body.appendChild(videoContainer);
-
-    const playerContainer = videoContainer.querySelector('.video-popup__player')! as HTMLElement;
-    const overlay = videoContainer.querySelector('.video-popup__overlay')!;
-
-    const closeVideo = () => {
-      videoContainer.classList.remove('is-visible');
-      playerContainer.innerHTML = '';
-      playerContainer.style.animation = '';
-    };
-
-    playerContainer.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      if (!target.hasAttribute('playback-id')) {
-        closeVideo();
-      }
-    });
-    overlay.addEventListener('click', closeVideo);
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeVideo();
-    });
-
-    slides.forEach((slide) => {
-      const showVideoBtn = slide.querySelector('.showVideo')!;
-      const name = slide.querySelector('.name')?.textContent;
-      const playbackId = slide.getAttribute('data-playback-id')!;
-
-      console.log(slide.getAttribute('data-aspect-ratio'));
-
-      showVideoBtn.addEventListener('click', () => {
-        const player = document.createElement('mux-player');
-        player.setAttribute('playback-id', playbackId);
-        player.setAttribute('autoplay', 'true');
-        player.setAttribute('metadata-video-title', `Filmik z opinią - ${name}`);
-        playerContainer.style.aspectRatio =
+        const aspectRatio =
           slide.getAttribute('data-aspect-ratio')!.split(':')[0] +
           '/' +
           slide.getAttribute('data-aspect-ratio')!.split(':')[1];
-        playerContainer.style.maxWidth = `${slide.getAttribute('data-max-width')}px`;
-        playerContainer.style.animation = 'fadeInPlayer 1400ms var(--easing)';
-        playerContainer.innerHTML = `
-        <button class="video-popup__close" aria-label="Zamknij filmik">            
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5 5 15M5 5l10 10"/>
-          </svg>
-        </button>
-        `;
-        playerContainer.appendChild(player);
-        videoContainer.classList.add('is-visible');
-      });
-    });
-  };
+        const maxWidth = Number(slide.getAttribute('data-max-width'));
 
-  setupVideoPopup();
+        openVideoPopup(showVideoBtn, playbackId, name, aspectRatio, maxWidth);
+      });
+    }
+
+    setupVideoPopup();
+  });
 </script>
