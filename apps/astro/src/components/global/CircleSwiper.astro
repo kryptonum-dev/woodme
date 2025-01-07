@@ -6,11 +6,11 @@ import Button from '../ui/button/Button.astro';
 import { DOMAIN } from '@/src/global/constants';
 
 export const CircleSwiper_Query = `
-  swiper[]{
+  _type == "CircleSwiper" => {
+    swiper[]{
     ${ImageDataQuery('img')}
     title,
   },
-  _type == "CircleSwiper" => {
   ${PortableTextQuery('heading')}
   ${PortableTextQuery('paragraph')}
   ${ButtonDataQuery('cta')}
@@ -47,12 +47,12 @@ type Props = {
 };
 
 const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, downloadPdf } = Astro.props;
-
-console.log(downloadPdf.pdf.asset.assetId);
 ---
 
 <section class="CircleSwiper max-width" id={sectionId}>
-  <header><PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" /></header>
+  <header>
+    <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
+  </header>
   <div class="container">
     <div class="cities">
       <div class="track">
@@ -188,7 +188,6 @@ console.log(downloadPdf.pdf.asset.assetId);
           margin: 1.375rem 0 0.875rem;
           width: 100%;
           z-index: 1;
-
           position: relative;
           border-radius: 12px;
 
@@ -198,7 +197,6 @@ console.log(downloadPdf.pdf.asset.assetId);
             position: absolute;
             top: -0.5px;
             left: 0;
-
             transition: transform 0.8s var(--easing);
             border-radius: 12px;
           }

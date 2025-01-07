@@ -73,7 +73,6 @@
 
   --easing: cubic-bezier(0.19, 1, 0.22, 1);
   --pageMargin: clamp(1rem, calc(1.5vw / 0.48), 1.25rem);
-
   @media (max-width: calc(56.26rem - 1px)) and (min-width: 37.5rem) {
     --pageMargin: clamp(2.5rem, calc(5vw / 0.48), 5rem);
   }
@@ -302,5 +301,137 @@ h2 {
 div.paragraph {
   & > *:not(:last-child) {
     margin-bottom: 1rem;
+  }
+}
+
+.video-popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  display: none;
+  padding: 6rem clamp(2rem, calc(4vw / 0.48), 6rem);
+  overflow: hidden;
+  isolation: isolate;
+  z-index: 999;
+
+  &.is-visible {
+    display: flex;
+  }
+  &__overlay {
+    background-color: var(--neutral-300, #d0e1d7);
+    opacity: 0.9;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    animation: fadeInOverlay 400ms;
+
+    @keyframes fadeInOverlay {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 0.9;
+      }
+    }
+  }
+
+  &__player {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: clamp(200px, 85vw, 1820px);
+    position: relative;
+
+    > mux-player {
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+    }
+
+    @keyframes fadeInPlayer {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+
+  &__close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    background-color: var(--neutral-100, #f2faf6);
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: 20;
+    animation: moveInCloseDesktop 1000ms var(--easing) 0ms forwards;
+    z-index: 5;
+
+    svg {
+      transition: transform 600ms var(--easing);
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--neutral-700, #5f6d62);
+      border-radius: 4px;
+      transform: scale(0);
+      transition: transform 600ms var(--easing);
+      color: var(--neutral-700, #5f6d62);
+    }
+    &:hover {
+      svg {
+        transform: rotate(-180deg);
+      }
+    }
+
+    &:focus:not(:focus-visible) {
+      color: var(--neutral-100, #f2faf6);
+      &::before {
+        transform: scale(1.5);
+      }
+    }
+
+    @media (max-width: 37.5rem) {
+      animation-name: moveInCloseMobile;
+    }
+
+    @keyframes moveInCloseDesktop {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(100%);
+      }
+    }
+
+    @keyframes moveInCloseMobile {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateY(-100%);
+      }
+    }
   }
 }

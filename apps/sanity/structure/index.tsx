@@ -25,5 +25,6 @@ export const structure: StructureResolver = (S) =>
       createSingleton(S, 'Blog_Page'),
       createCollection(S, 'BlogPost_Collection'),
       S.divider(),
+      createCollection(S, 'Testimonial_Collection'),
       createCollection(S, 'Faq_Collection'),
     ]);

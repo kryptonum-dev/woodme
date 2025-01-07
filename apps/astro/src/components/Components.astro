@@ -7,6 +7,7 @@ import BlogReference, { BlogReference_Query } from './global/BlogReference.astro
 import CtaSection, { CtaSection_Query } from './global/CtaSection.astro';
 import ExpandingImages, { ExpandingImages_Query } from './global/ExpandingImages.astro';
 import GalleryLinks, { GalleryLinks_Query } from './global/GalleryLinks.astro';
+import TestimonialsSlider, { TestimonialsSlider_Query } from './global/TestimonialsSlider.astro';
 
 const components = {
   FullWidthPhoto,
@@ -16,6 +17,7 @@ const components = {
   CtaSection,
   ExpandingImages,
   GalleryLinks,
+  TestimonialsSlider,
 };
 
 type ComponentsMap = {
@@ -44,6 +46,7 @@ export const Components_Query = /* groq */ `
     ${CtaSection_Query}
     ${ExpandingImages_Query}
     ${GalleryLinks_Query}
+    ${TestimonialsSlider_Query}
   },
 `;
 ---

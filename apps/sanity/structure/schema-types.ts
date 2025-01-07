@@ -30,8 +30,9 @@ const singleTypes = [
 import Faq_Collection from '../schema/collectionTypes/Faq_Collection';
 import BlogPost_Collection from '../schema/collectionTypes/BlogPost_Collection';
 import Project_Collection from '../schema/collectionTypes/Project_Collection';
+import Testimonials_Collection from '../schema/collectionTypes/Testimonial_Collection';
 
-const collectionTypes = [Faq_Collection, BlogPost_Collection, Project_Collection];
+const collectionTypes = [Faq_Collection, BlogPost_Collection, Project_Collection, Testimonials_Collection];
 
 // Components
 import Components from '../schema/Components';

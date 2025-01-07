@@ -15,11 +15,13 @@
     "@astrojs/preact": "^4.0.0",
     "@astrojs/sitemap": "^3.2.1",
     "@astrojs/vercel": "^8.0.1",
+    "@mux/mux-player": "^3.2.4",
     "@sanity/client": "^6.24.1",
     "astro": "^5.0.5",
     "astro-portabletext": "^0.10.1",
     "autoprefixer": "^10.4.20",
     "cssnano": "^7.0.6",
+    "embla-carousel": "^8.5.1",
     "sharp-ico": "^0.1.5",
     "typescript": "^5.7.2"
   },
