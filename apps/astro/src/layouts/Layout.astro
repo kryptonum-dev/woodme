@@ -5,7 +5,7 @@ import Head, { type HeadProps } from './Head.astro';
 import Footer from './Footer.astro';
 
 type Props = HeadProps & {
-  footerBackground: string;
+  footerBackground?: string;
 };
 
 const { footerBackground, ...props } = Astro.props;

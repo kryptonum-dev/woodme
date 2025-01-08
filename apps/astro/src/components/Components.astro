@@ -9,6 +9,9 @@ import ExpandingImages, { ExpandingImages_Query } from './global/ExpandingImages
 import GalleryLinks, { GalleryLinks_Query } from './global/GalleryLinks.astro';
 import TestimonialsSlider, { TestimonialsSlider_Query } from './global/TestimonialsSlider.astro';
 import SingleTestimonialSection, { SingleTestimonialSection_Query } from './global/SingleTestimonialSection.astro';
+import CenteredHeadingBackgroundImage, {
+  CenteredHeadingBackgroundImage_Query,
+} from './global/CenteredHeadingBackgroundImage.astro';
 
 const components = {
   FullWidthPhoto,
@@ -20,6 +23,7 @@ const components = {
   GalleryLinks,
   TestimonialsSlider,
   SingleTestimonialSection,
+  CenteredHeadingBackgroundImage,
 };
 
 type ComponentsMap = {
@@ -50,6 +54,7 @@ export const Components_Query = /* groq */ `
     ${GalleryLinks_Query}
     ${TestimonialsSlider_Query}
     ${SingleTestimonialSection_Query}
+    ${CenteredHeadingBackgroundImage_Query}
   },
 `;
 ---

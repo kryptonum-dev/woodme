@@ -1,0 +1,171 @@
+---
+import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
+import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
+import Button from '../ui/button/Button.astro';
+
+export const CenteredHeadingBackgroundImage_Query = `
+  _type == "CenteredHeadingBackgroundImage" => {
+    ${ImageDataQuery('image')}
+    ${PortableTextQuery('heading')}
+    ${PortableTextQuery('paragraph')}
+    ${PortableTextQuery('ctaText')}
+    ${ButtonDataQuery('ctas[]')}
+}
+`;
+
+type Props = {
+  index: number;
+  sectionId?: string;
+  image: ImageDataProps;
+  heading: PortableTextValue;
+  paragraph: PortableTextValue;
+  ctaText: PortableTextValue;
+  ctas: ButtonDataProps[];
+};
+
+const { index, sectionId, image, heading, paragraph, ctaText, ctas } = Astro.props;
+---
+
+<section class="CenteredHeadingBackgroundImage" id={sectionId}>
+  <div class="container max-width">
+    <Image class="background" {...image} sizes="" />
+    <header class="header">
+      <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
+    </header>
+    <div class="content">
+      <PortableText value={paragraph} class="paragraph" />
+      <div class="cta">
+        <PortableText value={ctaText} class="ctaText" />
+        <div class="links">
+          <Button {...ctas[0]} shade="light" />
+          {ctas.length > 1 && <Button {...ctas[1]} shade="light" />}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .CenteredHeadingBackgroundImage {
+    padding: 1.25rem 0 clamp(5rem, calc(8vw / 0.48), 8rem);
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 41.375rem;
+      gap: 8rem;
+      padding: 5.875rem clamp(1rem, calc(1.25vw / 0.48), 1.25rem) 1.25rem;
+    }
+
+    .background {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      height: 100%;
+    }
+
+    .header {
+      max-width: 23.125rem;
+      align-self: center;
+    }
+
+    .heading {
+      color: var(----neutral-900, #141915);
+      line-height: 1;
+      text-align: center;
+      font-size: var(--typography-heading-xl, 3.25rem);
+
+      :global(strong) {
+        color: var(--neutral-700, #5f6d62);
+      }
+    }
+
+    .content {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      gap: clamp(0.75rem, calc(1.25vw / 0.48), 1.25rem) 4rem;
+    }
+
+    .paragraph {
+      max-width: 27.375rem;
+      color: var(--neutral-100, #f2faf6);
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem 1.5rem;
+    }
+
+    .cta {
+      max-width: 21.875rem;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(1.5rem, calc(1.75vw / 0.48), 1.75rem);
+      align-self: flex-start;
+      .ctaText {
+        color: var(--neutral-100, #f2faf6);
+      }
+    }
+
+    @media (max-width: 56.25rem) {
+      padding-top: 0;
+
+      .container {
+        margin: 0;
+        width: 100%;
+        border-radius: 0;
+        padding-right: var(--pageMargin);
+        padding-left: var(--pageMargin);
+      }
+
+      .content {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .cta {
+        align-self: center;
+        max-width: 38rem;
+        align-items: center;
+        text-align: center;
+      }
+
+      .paragraph {
+        max-width: 38rem;
+      }
+
+      .links {
+        gap: 2rem;
+      }
+    }
+    @media (max-width: 27.5rem) {
+      .links {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+
+        > a[data-theme='primary'] {
+          width: 100%;
+          max-width: 23rem;
+          justify-content: stretch;
+
+          :global(div) {
+            width: 100%;
+            flex: 1;
+            justify-content: center;
+            max-width: 100%;
+          }
+        }
+      }
+    }
+  }
+</style>
