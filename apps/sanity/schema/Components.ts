@@ -8,6 +8,8 @@ import GalleryLinks from './components/GalleryLinks';
 import TestimonialsSlider from './components/TestimonialsSlider';
 import SingleTestimonialSection from './components/SingleTestimonialSection';
 import CenteredHeadingBackgroundImage from './components/CenteredHeadingBackgroundImage';
+import DualColumnSection from './components/DualColumnSection';
+
 export default defineType({
   name: 'components',
   type: 'array',
@@ -22,6 +24,7 @@ export default defineType({
     TestimonialsSlider,
     SingleTestimonialSection,
     CenteredHeadingBackgroundImage,
+    DualColumnSection,
   ],
   options: {
     insertMenu: {

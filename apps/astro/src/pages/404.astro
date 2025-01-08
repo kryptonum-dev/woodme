@@ -18,7 +18,9 @@ const page = await sanityFetch<QueryProps>({
       name,
       "slug": slug.current,
       ${Components_Query}
-      "firstItemType": components[0]._type
+      "firstItemType": components[0]._type,
+      "footerBackground": components[-1].background
+
     }
   `,
 });
