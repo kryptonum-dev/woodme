@@ -3,6 +3,7 @@ import sanityFetch from '../utils/sanity.fetch';
 import metadataFetch from '../utils/metadata.fetch';
 import Components, { Components_Query, type ComponentsProps } from '../components/Components.astro';
 import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../layouts/Breadcrumbs.astro';
 
 type QueryProps = {
   slug: string;
@@ -24,5 +25,6 @@ const metadata = await metadataFetch(page.slug);
 ---
 
 <Layout footerBackground={page.footerBackground} {...metadata}>
+  <Breadcrumbs />
   <Components data={page.components} />
 </Layout>

@@ -1,6 +1,7 @@
 ---
 import Components, { Components_Query, type ComponentsProps } from '../components/Components.astro';
 import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../layouts/Breadcrumbs.astro';
 import metadataFetch from '../utils/metadata.fetch';
 import sanityFetch from '../utils/sanity.fetch';
 
@@ -8,6 +9,7 @@ type QueryProps = {
   name: string;
   slug: string;
   components: ComponentsProps;
+  firstItemType: string;
 };
 
 const page = await sanityFetch<QueryProps>({
@@ -16,6 +18,7 @@ const page = await sanityFetch<QueryProps>({
       name,
       "slug": slug.current,
       ${Components_Query}
+      "firstItemType": components[0]._type
     }
   `,
 });
@@ -24,5 +27,6 @@ const metadata = await metadataFetch(page.slug);
 ---
 
 <Layout {...metadata}>
+  <Breadcrumbs data={[{ name: page.name, path: page.slug }]} firstItemType={page.firstItemType} />
   <Components data={page.components} />
 </Layout>
