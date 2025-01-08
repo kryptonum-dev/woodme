@@ -1,14 +1,15 @@
 import { defineType } from 'sanity';
 import BlogReference from './components/BlogReference';
+import CenteredHeadingBackgroundImage from './components/CenteredHeadingBackgroundImage';
+import ChartsSection from './components/ChartsSection';
 import CircleSwiper from './components/CircleSwiper';
-import SplitContentSection from './components/SplitContentSection';
 import CtaSection from './components/CtaSection';
+import DualColumnSection from './components/DualColumnSection';
 import ExpandingImages from './components/ExpandingImages';
 import GalleryLinks from './components/GalleryLinks';
-import TestimonialsSlider from './components/TestimonialsSlider';
 import SingleTestimonialSection from './components/SingleTestimonialSection';
-import CenteredHeadingBackgroundImage from './components/CenteredHeadingBackgroundImage';
-import DualColumnSection from './components/DualColumnSection';
+import SplitContentSection from './components/SplitContentSection';
+import TestimonialsSlider from './components/TestimonialsSlider';
 
 export default defineType({
   name: 'components',
@@ -25,6 +26,7 @@ export default defineType({
     SingleTestimonialSection,
     CenteredHeadingBackgroundImage,
     DualColumnSection,
+    ChartsSection,
   ],
   options: {
     insertMenu: {

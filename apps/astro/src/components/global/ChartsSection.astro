@@ -1,0 +1,298 @@
+---
+import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
+import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
+import Button from '../ui/button/Button.astro';
+
+export const ChartsSection_Query = `
+  _type == "ChartsSection" => {
+    ${PortableTextQuery('heading')}
+    charts[]{
+    value,
+    unit,
+    ${PortableTextQuery('heading')}
+    ${PortableTextQuery('paragraph')}
+    },
+    ${PortableTextQuery('ctaText')}
+    ${ButtonDataQuery('cta')}
+    },
+`;
+
+type Props = {
+  index: number;
+  sectionId?: string;
+  heading: PortableTextValue;
+  charts: {
+    value: string;
+    unit: string;
+    heading: PortableTextValue;
+    paragraph: PortableTextValue;
+  }[];
+  ctaText: PortableTextValue;
+  cta: ButtonDataProps;
+};
+
+const { index, sectionId, heading, charts, ctaText, cta } = Astro.props;
+---
+
+<section class="ChartsSection max-width" id={sectionId}>
+  <header class="header">
+    <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
+  </header>
+  <ul class="charts">
+    {
+      charts.map(({ value, unit, heading, paragraph }) => (
+        <li class="chart">
+          <div class="column">
+            <span class="value">{value}</span>
+            {unit && <span class="unit">{unit}</span>}
+          </div>
+          <div class="content">
+            <PortableText value={heading} heading={index === 0 ? 'h2' : 'h3'} class="chartHeading" />
+            <PortableText value={paragraph} class="paragraph" />
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+  <div class="cta">
+    <PortableText value={ctaText} class="ctaText" />
+    <Button {...cta} />
+  </div>
+</section>
+
+<style lang="scss">
+  .ChartsSection {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2rem, calc(3vw / 0.48), 3rem);
+    padding: 1.25rem 0;
+
+    .header {
+      max-width: 27.375rem;
+      align-self: flex-start;
+    }
+
+    .charts {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem 0.5rem;
+      margin-bottom: clamp(3rem, calc(4vw / 0.48), 6rem);
+
+      .chart {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(1rem, calc(1.5vw / 0.48), 1.5rem);
+        flex: 1;
+
+        .column {
+          display: flex;
+          align-items: flex-start;
+          padding: clamp(2rem, calc(2vw / 0.48), 2.5rem);
+          gap: 2rem;
+          justify-content: space-between;
+          color: var(--neutral-700, #5f6d62);
+          font-weight: 500;
+          font-family: 'Cabinet Grotesk', sans-serif;
+          transform: scaleY(0);
+          transform-origin: bottom;
+
+          .value {
+            font-size: var(--typography-heading-l, 2.625rem);
+            transform: translateX(-0.5rem);
+            opacity: 0;
+            transition:
+              transform 1400ms var(--easing),
+              opacity 800ms;
+          }
+
+          .unit {
+            font-size: var(--typography-heading-s, 2rem);
+            transform: translateX(0.5rem);
+            opacity: 0;
+            transition:
+              transform 1400ms var(--easing),
+              opacity 800ms;
+          }
+        }
+        &.visible .column {
+          transform: scaleY(1);
+
+          .value {
+            transform: translateX(0);
+            opacity: 1;
+          }
+
+          .unit {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+
+        .content {
+          max-width: 96%;
+          .chartHeading {
+            color: var(--neutral-900, #1a1a1a);
+            margin-bottom: 1rem;
+          }
+        }
+      }
+
+      :first-of-type {
+        .column {
+          background-color: var(--neutral-100, #f4f8f5);
+          min-height: 12rem;
+          margin-top: 12rem;
+          transition: transform 1400ms var(--easing);
+
+          .value,
+          .unit {
+            transition-delay: 600ms;
+          }
+        }
+      }
+      :nth-of-type(2) {
+        .column {
+          background-color: var(--secondary-300, #e3dfd3);
+          min-height: 18rem;
+          margin-top: 6rem;
+          transition: transform 1600ms var(--easing);
+
+          .value,
+          .unit {
+            transition-delay: 800ms;
+          }
+        }
+      }
+      :last-of-type {
+        .column {
+          background-color: var(--tertiary-200, #ccdde9);
+          min-height: 24rem;
+          transition: transform 1800ms var(--easing);
+          .value {
+            color: var(--tertiary-600, #4a5f6e);
+          }
+
+          .value,
+          .unit {
+            transition-delay: 1000ms;
+          }
+        }
+      }
+    }
+
+    .cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem 3rem;
+      padding: 1rem 1.25rem 0;
+      border-top: 1px solid var(--neutral-400, #c1d1c8);
+
+      .ctaText {
+        font-size: var(--typography-body-m, 0.875rem);
+      }
+    }
+
+    @media (max-width: 56.25rem) {
+      .charts {
+        flex-direction: column;
+
+        .chart {
+          flex-direction: row;
+
+          .column {
+            width: 100%;
+            max-width: clamp(14rem, calc(18.25vw / 0.48), 18.25rem);
+            flex-shrink: 0;
+          }
+
+          .content {
+            margin-top: auto;
+            max-width: 100%;
+            :global(.paragraph) {
+              padding: 0 0.25rem;
+            }
+          }
+          &:first-of-type {
+            .column {
+              min-height: 12rem;
+              margin-top: 0;
+            }
+          }
+          &:nth-of-type(2) {
+            .column {
+              min-height: 12rem;
+              margin-top: 0;
+            }
+          }
+          &:last-of-type {
+            .column {
+              min-height: 12rem;
+            }
+          }
+        }
+      }
+    }
+
+    @media (max-width: 31.25rem) {
+      .charts {
+        row-gap: 1.75rem;
+        .chart {
+          flex-direction: column;
+          max-width: 23rem;
+          // margin: 0 auto;
+          .column {
+            width: 100%;
+            max-width: 100%;
+          }
+
+          .content {
+            max-width: 100%;
+          }
+        }
+      }
+
+      .cta {
+        flex-direction: column;
+        align-items: flex-start;
+
+        > a[data-theme='primary'] {
+          width: 100%;
+          max-width: 18rem;
+          justify-content: stretch;
+
+          :global(div) {
+            width: 100%;
+            flex: 1;
+            justify-content: center;
+            max-width: 100%;
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLDivElement>('.ChartsSection').forEach((section) => {
+    const charts = section.querySelectorAll('.chart');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.6,
+      }
+    );
+
+    charts.forEach((chart) => {
+      observer.observe(chart);
+    });
+  });
+</script>

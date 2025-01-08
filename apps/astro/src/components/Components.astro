@@ -13,6 +13,7 @@ import CenteredHeadingBackgroundImage, {
   CenteredHeadingBackgroundImage_Query,
 } from './global/CenteredHeadingBackgroundImage.astro';
 import DualColumnSection, { DualColumnSection_Query } from './global/DualColumnSection.astro';
+import ChartsSection, { ChartsSection_Query } from './global/ChartsSection.astro';
 
 const components = {
   FullWidthPhoto,
@@ -26,6 +27,7 @@ const components = {
   SingleTestimonialSection,
   CenteredHeadingBackgroundImage,
   DualColumnSection,
+  ChartsSection,
 };
 
 type ComponentsMap = {
@@ -58,6 +60,7 @@ export const Components_Query = /* groq */ `
     ${SingleTestimonialSection_Query}
     ${CenteredHeadingBackgroundImage_Query}
     ${DualColumnSection_Query}
+    ${ChartsSection_Query}
   },
 `;
 ---

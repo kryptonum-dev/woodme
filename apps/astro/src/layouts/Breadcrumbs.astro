@@ -13,7 +13,6 @@ const { data = [], firstItemType } = Astro.props;
 
 const breadcrumbsData = [{ name: 'Strona główna', path: '/' }, ...data];
 
-console.log(firstItemType);
 
 const schema = JSON.stringify({
   '@context': 'https://schema.org',
@@ -137,6 +136,10 @@ const schema = JSON.stringify({
         height: max-content;
         z-index: 10;
 
+    }
+
+    &[data-first-item-type="DualColumnSection"] {
+      padding-top: 3rem;
     }
 
   }

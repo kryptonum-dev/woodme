@@ -337,7 +337,6 @@ const hasVideo = !!testimonial?.video;
     function setupVideoPopup() {
       const showVideoBtn = section.querySelector('.showVideo')! as HTMLElement;
       const container = section.querySelector('.container') as HTMLElement;
-      console.log(container);
       if (!container) return;
       const maxWidth = Number(container.getAttribute('data-max-width'));
       const aspectRatio =
