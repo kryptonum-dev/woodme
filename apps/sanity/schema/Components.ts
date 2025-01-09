@@ -13,6 +13,7 @@ import TestimonialsSlider from './components/TestimonialsSlider';
 import ListPointsMiddlePhoto from './components/ListPointsMiddlePhoto';
 import MiddleImageCtas from './components/MiddleImageCtas';
 import SingleHeadingSection from './components/SingleHeadingSection';
+import ImageHeadingColumns from './components/ImageHeadingColumns';
 
 export default defineType({
   name: 'components',
@@ -33,6 +34,7 @@ export default defineType({
     ListPointsMiddlePhoto,
     SingleHeadingSection,
     MiddleImageCtas,
+    ImageHeadingColumns,
   ],
   options: {
     insertMenu: {

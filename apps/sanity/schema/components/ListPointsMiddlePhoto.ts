@@ -17,7 +17,7 @@ export default defineField({
       name: 'heading',
       type: 'Heading',
       title: 'Heading',
-      validation: (Rule) => Rule.required().max(3),
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'image',

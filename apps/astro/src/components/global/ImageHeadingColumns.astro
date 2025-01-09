@@ -1,0 +1,218 @@
+---
+import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
+import Button from '../ui/button/Button.astro';
+import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
+
+export const ImageHeadingColumns_Query = `
+  _type == "ImageHeadingColumns" => {
+    ${ImageDataQuery('image')}
+    imagePosition,
+    ${PortableTextQuery('heading')}
+    ${PortableTextQuery('paragraph')}
+    ctaBox{
+        ${PortableTextQuery('ctaText')}
+        ${ButtonDataQuery('cta')}
+    },
+    backgroundColor,
+  },
+`;
+
+type Props = {
+  index: number;
+  sectionId?: string;
+  image: ImageDataProps;
+  imagePosition: string;
+  heading: PortableTextValue;
+  paragraph: PortableTextValue;
+  ctaBox: {
+    ctaText: PortableTextValue;
+    cta: ButtonDataProps;
+  };
+  backgroundColor: string;
+};
+
+const { index, sectionId, image, imagePosition, heading, paragraph, backgroundColor, ctaBox } = Astro.props;
+---
+
+<section
+  class="ImageHeadingColumns max-width"
+  id={sectionId}
+  data-image-position={imagePosition}
+  data-background-color={backgroundColor}
+  data-has-cta={ctaBox ? 'true' : 'false'}
+>
+  <header class="header">
+    <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
+    <PortableText value={paragraph} class="paragraph" />
+  </header>
+  <div class="imageContainer">
+    <Image
+      {...image}
+      class="image"
+      sizes="(max-width: 37.5rem) 95vw, (max-width: 56.25rem) 83vw, (max-width: 85.375rem) 67vw, 100vw, 916px"
+      priority={index === 0}
+    />
+    {
+      ctaBox && (
+        <div class="cta">
+          <>
+            <PortableText class="ctaText" value={ctaBox.ctaText} />
+            <Button {...ctaBox.cta} />
+          </>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style lang="scss">
+  .ImageHeadingColumns {
+    padding: 1.25rem 0;
+    display: flex;
+    align-items: stretch;
+    min-height: 45.125rem;
+    border-radius: 12px;
+    isolation: isolate;
+
+    .header {
+      max-width: 27.375rem;
+      width: 100%;
+      background-color: var(--secondary-300, #e3dfd3);
+      border-radius: 12px;
+      padding: clamp(1.25rem, calc(2.5vw / 0.48), 2.5rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 5;
+      gap: clamp(1.25rem, calc(2vw / 0.48), 2rem);
+
+      .heading {
+        font-size: var(--typography-heading-m, 1.75rem);
+        color: var(--secondary-900, #403d33);
+        line-height: 1.35;
+      }
+    }
+
+    .imageContainer {
+      width: 105%;
+      margin-left: -1.75rem;
+      position: relative;
+      z-index: 3;
+
+      .image {
+        height: 100%;
+        width: 100%;
+        border-radius: 0 12px 12px 0;
+      }
+
+      .cta {
+        position: absolute;
+        bottom: 1rem;
+        right: 1.75rem;
+        width: 100%;
+        background-color: var(--neutral-100, #f2faf6);
+        padding: 1.25rem clamp(1rem, calc(1.25vw / 0.48), 1.25rem);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        width: 100%;
+        max-width: 18.375rem;
+        border-radius: 2px;
+
+        .ctaText {
+          text-align: center;
+          font-size: var(--typography-body-m, 0.875rem);
+        }
+
+        a[data-theme='primary'] {
+          width: 100%;
+          max-width: 100%;
+          justify-content: stretch;
+
+          :global(div) {
+            width: 100%;
+            flex: 1;
+            justify-content: center;
+            max-width: 100%;
+          }
+        }
+      }
+    }
+
+    &[data-image-position='left'] {
+      .imageContainer {
+        order: 1;
+        margin-left: 0;
+        margin-right: -1.75rem;
+        .image {
+          border-radius: 12px 0 0 12px;
+        }
+      }
+
+      .header {
+        order: 2;
+      }
+    }
+
+    &[data-background-color='#ACC1CF'] {
+      .header {
+        background-color: var(--tertiary-400, #acc1cf);
+
+        .heading,
+        .paragraph {
+          color: var(--neutral-900, #141915);
+        }
+      }
+    }
+
+    @media (max-width: 56.25rem) {
+      flex-direction: column;
+      min-height: auto;
+
+      .header {
+        max-width: none;
+        border-radius: 10px;
+      }
+
+      .imageContainer {
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+        margin-top: -1.25rem;
+
+        .image {
+          height: clamp(262px, calc(486vw / 7.68), 486px);
+          border-radius: 0 0 10px 10px;
+        }
+      }
+
+      &[data-image-position='left'] {
+        .imageContainer {
+          order: 2;
+          .image {
+            border-radius: 0 0 10px 10px;
+          }
+        }
+
+        .header {
+          order: 1;
+        }
+      }
+    }
+    @media (max-width: 35rem) {
+      .imageContainer {
+        .cta {
+          left: 50%;
+          transform: translateX(-50%);
+          bottom: -6.25rem;
+        }
+      }
+
+      &[data-has-cta='true'] {
+        padding-bottom: 8.5rem;
+      }
+    }
+  }
+</style>
