@@ -1,0 +1,34 @@
+---
+import sanityFetch from '../../utils/sanity.fetch';
+import metadataFetch from '../../utils/metadata.fetch';
+import Components, { Components_Query, type ComponentsProps } from '../../components/Components.astro';
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../layouts/Breadcrumbs.astro';
+
+type QueryProps = {
+  name: string;
+  slug: string;
+  footerBackground: string;
+  firstItemType: string;
+  components: ComponentsProps;
+};
+
+const page = await sanityFetch<QueryProps>({
+  query: `
+    *[_type == "BusinessServices_Page"][0] {
+        "name": name,
+        "slug": slug.current,
+        "footerBackground": components[-1].background,
+        "firstItemType": components[0]._type,
+        ${Components_Query}
+    }
+  `,
+});
+
+const metadata = await metadataFetch(page.slug);
+---
+
+<Layout footerBackground={page.footerBackground} {...metadata}>
+  <Breadcrumbs data={[{ name: page.name, path: page.slug }]} firstItemType={page.firstItemType} />
+  <Components data={page.components} />
+</Layout>

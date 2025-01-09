@@ -11,6 +11,7 @@ import SingleTestimonialSection from './components/SingleTestimonialSection';
 import SplitContentSection from './components/SplitContentSection';
 import TestimonialsSlider from './components/TestimonialsSlider';
 import ListPointsMiddlePhoto from './components/ListPointsMiddlePhoto';
+import MiddleImageCtas from './components/MiddleImageCtas';
 import SingleHeadingSection from './components/SingleHeadingSection';
 
 export default defineType({
@@ -31,6 +32,7 @@ export default defineType({
     ChartsSection,
     ListPointsMiddlePhoto,
     SingleHeadingSection,
+    MiddleImageCtas,
   ],
   options: {
     insertMenu: {
