@@ -74,14 +74,11 @@ export default defineField({
   ],
   preview: {
     select: {
-      headingArray: 'headingArray',
+      heading: 'heading',
     },
-    prepare: ({ headingArray }) => ({
+    prepare: ({ heading }) => ({
       title,
-      subtitle: headingArray
-        ?.map((part: any) => toPlainText(part.partHeading))
-        .filter(Boolean)
-        .join(' '),
+      subtitle: toPlainText(heading),
       ...sectionPreview({ imgUrl: `/static/components/test.webp`, icon: icon() }),
     }),
   },

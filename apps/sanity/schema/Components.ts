@@ -11,6 +11,7 @@ import SingleTestimonialSection from './components/SingleTestimonialSection';
 import SplitContentSection from './components/SplitContentSection';
 import TestimonialsSlider from './components/TestimonialsSlider';
 import ListPointsMiddlePhoto from './components/ListPointsMiddlePhoto';
+import SingleHeadingSection from './components/SingleHeadingSection';
 
 export default defineType({
   name: 'components',
@@ -29,6 +30,7 @@ export default defineType({
     DualColumnSection,
     ChartsSection,
     ListPointsMiddlePhoto,
+    SingleHeadingSection,
   ],
   options: {
     insertMenu: {
