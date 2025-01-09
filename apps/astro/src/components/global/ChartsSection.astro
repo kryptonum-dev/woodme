@@ -100,14 +100,15 @@ const { index, sectionId, heading, charts, ctaText, cta } = Astro.props;
             font-size: var(--typography-heading-l, 2.625rem);
             transform: translateX(-0.5rem);
             opacity: 0;
-            transition:
-              transform 1400ms var(--easing),
-              opacity 800ms;
           }
 
           .unit {
             font-size: var(--typography-heading-s, 2rem);
             transform: translateX(0.5rem);
+          }
+
+          .value,
+          .unit {
             opacity: 0;
             transition:
               transform 1400ms var(--easing),
@@ -146,7 +147,7 @@ const { index, sectionId, heading, charts, ctaText, cta } = Astro.props;
 
           .value,
           .unit {
-            transition-delay: 600ms;
+            transition-delay: 500ms;
           }
         }
       }
@@ -159,7 +160,7 @@ const { index, sectionId, heading, charts, ctaText, cta } = Astro.props;
 
           .value,
           .unit {
-            transition-delay: 800ms;
+            transition-delay: 650ms;
           }
         }
       }
@@ -174,7 +175,7 @@ const { index, sectionId, heading, charts, ctaText, cta } = Astro.props;
 
           .value,
           .unit {
-            transition-delay: 1000ms;
+            transition-delay: 800ms;
           }
         }
       }

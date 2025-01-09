@@ -10,6 +10,7 @@ import GalleryLinks from './components/GalleryLinks';
 import SingleTestimonialSection from './components/SingleTestimonialSection';
 import SplitContentSection from './components/SplitContentSection';
 import TestimonialsSlider from './components/TestimonialsSlider';
+import ListPointsMiddlePhoto from './components/ListPointsMiddlePhoto';
 
 export default defineType({
   name: 'components',
@@ -27,6 +28,7 @@ export default defineType({
     CenteredHeadingBackgroundImage,
     DualColumnSection,
     ChartsSection,
+    ListPointsMiddlePhoto,
   ],
   options: {
     insertMenu: {
