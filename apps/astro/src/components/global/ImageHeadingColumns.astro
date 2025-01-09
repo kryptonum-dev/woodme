@@ -56,10 +56,8 @@ const { index, sectionId, image, imagePosition, heading, paragraph, backgroundCo
     {
       ctaBox && (
         <div class="cta">
-          <>
-            <PortableText class="ctaText" value={ctaBox.ctaText} />
-            <Button {...ctaBox.cta} />
-          </>
+          <PortableText class="ctaText" value={ctaBox.ctaText} />
+          <Button {...ctaBox.cta} />
         </div>
       )
     }
