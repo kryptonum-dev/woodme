@@ -15,6 +15,7 @@ import MiddleImageCtas from './components/MiddleImageCtas';
 import SingleHeadingSection from './components/SingleHeadingSection';
 import ImageHeadingColumns from './components/ImageHeadingColumns';
 import TextListWithImage from './components/TextListWithImage';
+import HeadingRowListCta from './components/HeadingRowListCta';
 export default defineType({
   name: 'components',
   type: 'array',
@@ -36,6 +37,7 @@ export default defineType({
     MiddleImageCtas,
     ImageHeadingColumns,
     TextListWithImage,
+    HeadingRowListCta,
   ],
   options: {
     insertMenu: {

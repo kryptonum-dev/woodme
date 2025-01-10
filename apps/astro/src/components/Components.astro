@@ -19,6 +19,7 @@ import SingleHeadingSection, { SingleHeadingSection_Query } from './global/Singl
 import MiddleImageCtas, { MiddleImageCtas_Query } from './global/MiddleImageCtas.astro';
 import ImageHeadingColumns, { ImageHeadingColumns_Query } from './global/ImageHeadingColumns.astro';
 import TextListWithImage, { TextListWithImage_Query } from './global/TextListWithImage.astro';
+import HeadingRowListCta, { HeadingRowListCta_Query } from './global/HeadingRowListCta.astro';
 const components = {
   FullWidthPhoto,
   CircleSwiper,
@@ -37,6 +38,7 @@ const components = {
   MiddleImageCtas,
   ImageHeadingColumns,
   TextListWithImage,
+  HeadingRowListCta,
 };
 
 type ComponentsMap = {
@@ -75,6 +77,7 @@ export const Components_Query = /* groq */ `
     ${MiddleImageCtas_Query}
     ${ImageHeadingColumns_Query}
     ${TextListWithImage_Query}
+    ${HeadingRowListCta_Query}
   },
 `;
 ---
