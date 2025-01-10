@@ -14,7 +14,7 @@ import ListPointsMiddlePhoto from './components/ListPointsMiddlePhoto';
 import MiddleImageCtas from './components/MiddleImageCtas';
 import SingleHeadingSection from './components/SingleHeadingSection';
 import ImageHeadingColumns from './components/ImageHeadingColumns';
-
+import TextListWithImage from './components/TextListWithImage';
 export default defineType({
   name: 'components',
   type: 'array',
@@ -35,6 +35,7 @@ export default defineType({
     SingleHeadingSection,
     MiddleImageCtas,
     ImageHeadingColumns,
+    TextListWithImage,
   ],
   options: {
     insertMenu: {
