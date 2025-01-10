@@ -16,6 +16,8 @@ import SingleHeadingSection from './components/SingleHeadingSection';
 import ImageHeadingColumns from './components/ImageHeadingColumns';
 import TextListWithImage from './components/TextListWithImage';
 import HeadingRowListCta from './components/HeadingRowListCta';
+import TimelineSection from './components/TimelineSection';
+
 export default defineType({
   name: 'components',
   type: 'array',
@@ -38,6 +40,7 @@ export default defineType({
     ImageHeadingColumns,
     TextListWithImage,
     HeadingRowListCta,
+    TimelineSection,
   ],
   options: {
     insertMenu: {

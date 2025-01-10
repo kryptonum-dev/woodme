@@ -1,5 +1,4 @@
 import { defineField } from 'sanity';
-import { InternalLinkableTypes } from '../../structure/internal-linkable-types';
 import { sectionPreview } from '../../utils/section-preview';
 import { toPlainText } from '../../utils/to-plain-text';
 import sectionId from '../ui/sectionId';

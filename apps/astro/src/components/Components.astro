@@ -20,6 +20,8 @@ import MiddleImageCtas, { MiddleImageCtas_Query } from './global/MiddleImageCtas
 import ImageHeadingColumns, { ImageHeadingColumns_Query } from './global/ImageHeadingColumns.astro';
 import TextListWithImage, { TextListWithImage_Query } from './global/TextListWithImage.astro';
 import HeadingRowListCta, { HeadingRowListCta_Query } from './global/HeadingRowListCta.astro';
+import TimelineSection, { TimelineSection_Query } from './global/TimelineSection.astro';
+
 const components = {
   FullWidthPhoto,
   CircleSwiper,
@@ -39,6 +41,7 @@ const components = {
   ImageHeadingColumns,
   TextListWithImage,
   HeadingRowListCta,
+  TimelineSection,
 };
 
 type ComponentsMap = {
@@ -78,6 +81,7 @@ export const Components_Query = /* groq */ `
     ${ImageHeadingColumns_Query}
     ${TextListWithImage_Query}
     ${HeadingRowListCta_Query}
+    ${TimelineSection_Query}
   },
 `;
 ---
