@@ -3,9 +3,9 @@ import { sectionPreview } from '../../utils/section-preview';
 import { toPlainText } from '../../utils/to-plain-text';
 import sectionId from '../ui/sectionId';
 
-const name = 'TimelineSection';
-const title = 'Timeline Section';
-const icon = () => '🕒';
+const name = 'TwoColumnsImageListCta';
+const title = 'Two Columns Image List CTA';
+const icon = () => '📣';
 
 export default defineField({
   name,
@@ -14,18 +14,44 @@ export default defineField({
   icon,
   fields: [
     defineField({
-      name: 'heading',
-      type: 'Heading',
-      title: 'Heading',
+      name: 'image',
+      type: 'image',
+      title: 'Image',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'backgroundImages',
+      name: 'heading',
+      type: 'Heading',
+      title: 'Heading',
+      description: 'Word "WoodMe" will be transformed into a logo icon',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'pointsList',
       type: 'array',
-      title: 'Background Images',
-      description: 'The background images will displayed side by side.',
-      of: [{ type: 'image' }],
-      validation: (Rule) => Rule.required().length(2),
+      title: 'Points List',
+
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { type: 'image', name: 'icon', title: 'Icon', validation: (Rule) => Rule.required() },
+            { type: 'string', name: 'text', title: 'Text', validation: (Rule) => Rule.required() },
+          ],
+        },
+      ],
+      validation: (Rule) =>
+        Rule.required()
+          .max(4)
+          .custom((items) => {
+            if (items && items.length < 4) {
+              return {
+                message: 'We encourage adding 4 points for optimal display',
+                level: 'warning',
+              };
+            }
+            return true;
+          }),
     }),
     defineField({
       name: 'ctaBox',
@@ -53,35 +79,11 @@ export default defineField({
       ],
     }),
     defineField({
-      name: 'timeline',
-      type: 'array',
-      title: 'Timeline',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            { type: 'string', name: 'title', title: 'Title', validation: (Rule) => Rule.required() },
-            {
-              name: 'description',
-              type: 'PortableText',
-              title: 'Description',
-              validation: (Rule) => Rule.required(),
-            },
-          ],
-          preview: {
-            select: {
-              title: 'title',
-            },
-            prepare: ({ title }) => {
-              return {
-                title,
-                media: () => '📌',
-              };
-            },
-          },
-        },
-      ],
-      validation: (Rule) => Rule.required().min(3),
+      name: 'background',
+      type: 'string',
+      title: 'Background',
+      initialValue: '#e3dfd3',
+      hidden: true,
     }),
     ...sectionId,
   ],
