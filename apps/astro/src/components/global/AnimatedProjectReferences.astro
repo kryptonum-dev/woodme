@@ -1,0 +1,314 @@
+---
+import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
+import { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
+import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
+import Button from '../ui/button/Button.astro';
+
+export const AnimatedProjectReferences_Query = `
+  _type == "AnimatedProjectReferences" => {
+    ${PortableTextQuery('heading')}
+    ${ButtonDataQuery('cta')}
+    highlightedProjects[]->{
+      ${ImageDataQuery('image')}
+      name,
+      slug,
+      category->{
+        name
+      }
+    },
+  },
+`;
+
+type Props = {
+  index: number;
+  sectionId?: string;
+  heading: PortableTextValue;
+  cta: ButtonDataProps;
+  highlightedProjects: { image: ImageDataProps; name: string; slug: { current: string }; category: { name: string } }[];
+};
+
+const { index, heading, highlightedProjects, cta, sectionId } = Astro.props;
+
+function getHeadingLetters(heading: any) {
+  const newBlock = heading.map((block: any) => {
+    return block.children.map((child: any) => {
+      return { text: child.text, marks: child.marks };
+    });
+  });
+
+  return newBlock
+    .flat()
+    .flatMap((block: any) => {
+      const words = block.text.split(' ');
+      return words.map((word: any) => ({
+        text: word,
+        marks: block.marks.includes('strong') ? ['strong'] : [],
+      }));
+    })
+    .filter((item: any) => item.text !== '');
+}
+
+const Heading = index === 0 ? 'h1' : 'h2';
+---
+
+<section class="AnimatedProjectReferences" id={sectionId}>
+  <div class="container">
+    <header class="header">
+      <Heading class="heading"
+        >{
+          getHeadingLetters(heading).map((item: any, i: number) => (
+            <>
+              {i === 0 ? '' : ' '}
+              {item.marks.includes('strong') ? (
+                <strong style={`transition-delay: ${i * 35 - i * 10}ms`}>{item.text}</strong>
+              ) : (
+                <span style={`transition-delay: ${i * 35 - i * 10}ms`}>{item.text}</span>
+              )}
+            </>
+          ))
+        }</Heading
+      >
+    </header>
+    {
+      highlightedProjects.map(({ image, name, slug, category }, i) => (
+        <a tabindex="-1" href={`/projekty${slug.current}`} class="project">
+          <div class="image">
+            <Image
+              {...image}
+              sizes="(max-width: 26.25rem) 92vw, (max-width: 37.5rem) 384px, (max-width: 47.75rem) 322px, (max-width: 53.375rem) 42vw, 432px"
+              fetchpriority={i === 0 && index === 0 ? 'high' : 'low'}
+              loading={index === 0 ? 'eager' : 'lazy'}
+            />
+          </div>
+          <span class="name">{name}</span>
+          <span class="category">{category.name}</span>
+        </a>
+      ))
+    }
+    <Button id="ctaButton" style={{ transitionDelay: `${getHeadingLetters(heading).length * 35 + 100}ms` }} {...cta} />
+  </div>
+</section>
+
+<style lang="scss">
+  .AnimatedProjectReferences {
+    background-color: var(--secondary-400, #d2cdbf);
+
+    .container {
+      max-width: 85.375rem;
+      height: 100%;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48rem;
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+      flex-direction: column;
+      .header {
+        margin: 19.875rem 0 auto;
+        max-width: 57.25rem;
+        padding: 0 1rem;
+        z-index: 2;
+
+        .heading {
+          text-align: center;
+          line-height: 1;
+          font-size: var(--typography-heading-xl, 3.25rem);
+          color: var(--neutral-800, #48514a);
+
+          span,
+          strong {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(3rem);
+            transition:
+              opacity 800ms,
+              transform 1800ms var(--easing);
+          }
+
+          &.headingVisible {
+            @media (min-width: 37.5rem) {
+              span,
+              strong {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+          }
+        }
+      }
+
+      > a:last-of-type {
+        opacity: 0;
+        transform: translateY(3rem);
+        transition:
+          opacity 800ms,
+          transform 1800ms var(--easing);
+
+        &.buttonVisible {
+          @media (min-width: 37.5rem) {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      }
+
+      .project {
+        position: absolute;
+        width: 100%;
+        max-width: clamp(20.125rem, calc(20.125vw / 0.48), 27rem);
+        display: flex;
+        flex-direction: column;
+        gap: clamp(0.75rem, calc(1vw / 0.48), 1rem);
+        transform: translateY(100%);
+        transition: transform 7400ms var(--easing);
+        left: 2.25rem;
+        top: 100%;
+        z-index: 1;
+
+        .image {
+          width: 100%;
+          height: clamp(432px, calc(431vw / 7.68), 575px);
+          overflow: hidden;
+          border-radius: 4px;
+          transition: border-radius 600ms var(--easing);
+
+          img {
+            width: 100%;
+            height: 100%;
+            transition: transform 800ms var(--easing);
+          }
+        }
+
+        &:first-of-type {
+        }
+
+        &:nth-of-type(2) {
+          left: unset;
+          right: 2.25rem;
+          top: 120%;
+          z-index: 3;
+          transition-delay: 200ms;
+        }
+
+        .name,
+        .category {
+          transition: transform 800ms var(--easing);
+        }
+
+        .name {
+          color: var(--neutral-900, #141915);
+        }
+
+        &:hover {
+          .image {
+            border-radius: 12px;
+
+            img {
+              transform: scale(1.08);
+            }
+          }
+          .name {
+            transform: translateY(-2px);
+          }
+
+          .category {
+            transform: translateY(-2px);
+          }
+        }
+
+        &:focus:not(:focus-visible) {
+          .image {
+            border-radius: 4px;
+
+            img {
+              transform: scale(1);
+            }
+          }
+          .name {
+            transform: translateY(0px);
+          }
+
+          .category {
+            transform: translateY(0px);
+          }
+        }
+
+        &:focus-visible {
+          outline: 3px solid var(--neutral-700, #5f6d62);
+          border-radius: 12px;
+        }
+
+        &.visible {
+          @media (min-width: 37.5rem) {
+            transform: translateY(-280%);
+          }
+        }
+      }
+    }
+
+    @media (max-width: 37.5rem) {
+      padding: 2.5rem var(--pageMargin);
+      .container {
+        flex-direction: column;
+        .header {
+          margin-top: 0;
+          padding: 0;
+          .heading {
+            margin-bottom: 2.5rem;
+
+            span,
+            strong {
+              opacity: 1;
+              transform: none;
+            }
+          }
+        }
+
+        > a:last-of-type {
+          opacity: 1;
+          transform: none;
+        }
+
+        .project {
+          position: static;
+          transition: none;
+          transform: none;
+          max-width: 24rem;
+          margin: 0 auto;
+
+          &:first-of-type {
+            margin-bottom: 1.5rem;
+          }
+
+          &:nth-of-type(2) {
+            margin-bottom: 2.5rem;
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLDivElement>('.AnimatedProjectReferences').forEach((section) => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.querySelectorAll('.project').forEach((project) => {
+              project.classList.add('visible');
+            });
+            entry.target.querySelector('.heading')?.classList.add('headingVisible');
+            entry.target.querySelector('#ctaButton')?.classList.add('buttonVisible');
+          }
+        });
+      },
+      { threshold: 0.9 }
+    );
+
+    observer.observe(section);
+  });
+</script>

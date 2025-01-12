@@ -22,6 +22,7 @@ import TextListWithImage, { TextListWithImage_Query } from './global/TextListWit
 import HeadingRowListCta, { HeadingRowListCta_Query } from './global/HeadingRowListCta.astro';
 import TimelineSection, { TimelineSection_Query } from './global/TimelineSection.astro';
 import TwoColumnsImageListCta, { TwoColumnsImageListCta_Query } from './global/TwoColumnsImageListCta.astro';
+import AnimatedProjectReferences, { AnimatedProjectReferences_Query } from './global/AnimatedProjectReferences.astro';
 
 const components = {
   FullWidthPhoto,
@@ -44,6 +45,7 @@ const components = {
   HeadingRowListCta,
   TimelineSection,
   TwoColumnsImageListCta,
+  AnimatedProjectReferences,
 };
 
 type ComponentsMap = {
@@ -85,6 +87,7 @@ export const Components_Query = /* groq */ `
     ${HeadingRowListCta_Query}
     ${TimelineSection_Query}
     ${TwoColumnsImageListCta_Query}
+    ${AnimatedProjectReferences_Query}
   },
 `;
 ---

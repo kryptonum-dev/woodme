@@ -18,6 +18,7 @@ import TextListWithImage from './components/TextListWithImage';
 import HeadingRowListCta from './components/HeadingRowListCta';
 import TimelineSection from './components/TimelineSection';
 import TwoColumnsImageListCta from './components/TwoColumnsImageListCta';
+import AnimatedProjectReferences from './components/AnimatedProjectReferences';
 
 export default defineType({
   name: 'components',
@@ -43,6 +44,7 @@ export default defineType({
     HeadingRowListCta,
     TimelineSection,
     TwoColumnsImageListCta,
+    AnimatedProjectReferences,
   ],
   options: {
     insertMenu: {

@@ -42,9 +42,6 @@ function renderHeading(heading: any) {
   const newBlock = heading.map((block: any) => {
     if (block.children) {
       block.children = block.children.map((child: any) => {
-        if (child.text === 'WOODME') {
-          return child.text;
-        }
         return child.text;
       });
     }

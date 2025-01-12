@@ -1,41 +1,29 @@
 import { defineField, defineType } from 'sanity';
 import { defineSlugForDocument } from '../../utils/define-slug-for-document';
 
-const name = 'Project_Collection';
-const title = 'Project Collection';
-const icon = () => '🏗️';
+const name = 'ProjectCategory_Collection';
+const title = 'Project Category Collection';
+const icon = () => '🏠';
 
 export default defineType({
   name: name,
   type: 'document',
   title,
   icon,
-  options: { documentPreview: true },
   fields: [
     defineField({
       name: 'name',
       type: 'string',
       title: 'Name',
-      description: 'Name will be displayed in breadcrumb and in schemas for Google',
       validation: (Rule) => Rule.required(),
     }),
-    ...defineSlugForDocument({ source: 'name', prefix: '/realizacja/' }),
+    ...defineSlugForDocument({ source: 'name', prefix: '/realizacje/kategoria/' }),
     defineField({
       name: 'heading',
       type: 'Heading',
       title: 'Heading',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'category',
-      type: 'reference',
-      to: [{ type: 'ProjectCategory_Collection' }],
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'image',
-      type: 'image',
-      title: 'Image',
+      description:
+        'In that page the H1 tag will not be visible, so you can use this field to define the main heading of the page.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -55,13 +43,11 @@ export default defineType({
     select: {
       name: 'name',
       slug: 'slug.current',
-      media: 'img',
     },
-    prepare: ({ name, slug, media }) => ({
+    prepare: ({ name, slug }) => ({
       title: name,
       subtitle: slug,
       icon,
-      media: media,
     }),
   },
 });
