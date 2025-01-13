@@ -25,9 +25,9 @@ type Props = {
 const { index, sectionId, heading, paragraph, images, ctas } = Astro.props;
 
 const getSizes = (i: number) => {
-  if (i === 0 || i === 4) return '(max-width: 36.25rem) 151px, (max-width: 64rem) 20vw, 202px';
-  if (i === 1 || i === 3) return '(max-width: 36.25rem) 159px, (max-width: 64rem) 28vw, 283px';
-  if (i === 2) return '(max-width: 36.25rem) 193px, (max-width: 64rem) 34vw, 343px';
+  if (i === 0 || i === 4) return '(max-width: 36.25rem) 0px, (max-width: 64rem) 5vw, 202px';
+  if (i === 1 || i === 3) return '(max-width: 36.25rem) 89px, (max-width: 64rem) 28vw, 283px';
+  if (i === 2) return '(max-width: 36.25rem) 113px, (max-width: 64rem) 34vw, 343px';
   return '0';
 };
 ---
@@ -107,6 +107,7 @@ const getSizes = (i: number) => {
         align-self: center;
         justify-content: center;
         position: relative;
+        will-change: transform;
 
         &::before {
           content: '';
@@ -124,6 +125,7 @@ const getSizes = (i: number) => {
           border-radius: 8px;
           flex-shrink: 0;
           opacity: 0;
+          will-change: transform, opacity;
           &:nth-of-type(1),
           &:nth-of-type(5) {
             width: clamp(151px, calc(151vw / 7.68), 202px);
@@ -183,6 +185,17 @@ const getSizes = (i: number) => {
 
       @media (max-width: 37.5rem) {
         gap: 6rem;
+      }
+
+      @media (max-width: 34.25rem) {
+        .images {
+          img {
+            &:nth-of-type(1),
+            &:nth-of-type(5) {
+              display: none;
+            }
+          }
+        }
       }
 
       @media (max-width: 27.5rem) {
