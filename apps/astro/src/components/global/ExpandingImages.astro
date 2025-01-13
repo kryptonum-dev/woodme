@@ -1,7 +1,7 @@
 ---
 import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
 import Button from '../ui/button/Button.astro';
-import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
+import { ImageDataQuery, type ImageDataProps } from '../ui/image';
 import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
 
 export const ExpandingImages_Query = `
@@ -22,14 +22,14 @@ type Props = {
   ctas: ButtonDataProps[];
 };
 
-const { index, sectionId, heading, paragraph, images, ctas } = Astro.props;
+const { index, sectionId, heading, paragraph, ctas } = Astro.props;
 
-const getSizes = (i: number) => {
-  if (i === 0 || i === 4) return '(max-width: 36.25rem) 0px, (max-width: 64rem) 5vw, 202px';
-  if (i === 1 || i === 3) return '(max-width: 36.25rem) 89px, (max-width: 64rem) 28vw, 283px';
-  if (i === 2) return '(max-width: 36.25rem) 113px, (max-width: 64rem) 34vw, 343px';
-  return '0';
-};
+// const getSizes = (i: number) => {
+//   if (i === 0 || i === 4) return '(max-width: 36.25rem) 0px, (max-width: 64rem) 5vw, 202px';
+//   if (i === 1 || i === 3) return '(max-width: 36.25rem) 89px, (max-width: 64rem) 28vw, 283px';
+//   if (i === 2) return '(max-width: 36.25rem) 113px, (max-width: 64rem) 34vw, 343px';
+//   return '0';
+// };
 ---
 
 <section class="ExpandingImages" id={sectionId}>
@@ -38,7 +38,7 @@ const getSizes = (i: number) => {
       <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
       <PortableText value={paragraph} class="paragraph" />
     </header>
-    <div class="images">
+    <!-- <div class="images">
       {
         images.map((image, i) => (
           <Image
@@ -49,7 +49,7 @@ const getSizes = (i: number) => {
           />
         ))
       }
-    </div>
+    </div> -->
     <div class="ctas">
       <Button {...ctas[0]} />
       {ctas[1] && <Button {...ctas[1]} />}
