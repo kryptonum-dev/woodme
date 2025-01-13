@@ -336,6 +336,8 @@ const hasVideo = !!testimonial?.video;
   document.querySelectorAll<HTMLDivElement>('.SingleTestimonialSection').forEach((section) => {
     function setupVideoPopup() {
       const showVideoBtn = section.querySelector('.showVideo')! as HTMLElement;
+
+      if (!showVideoBtn) return;
       const container = section.querySelector('.container') as HTMLElement;
       if (!container) return;
       const maxWidth = Number(container.getAttribute('data-max-width'));
