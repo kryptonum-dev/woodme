@@ -130,13 +130,13 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
         align-self: center;
         a {
           cursor: none;
-          padding: 8px;
+          padding: 0.5rem;
           border-radius: 12px;
           background-color: var(--secondary-300, #e3dfd3);
           max-width: 437px;
           transition: background-color 400ms;
           position: relative;
-
+          overflow: hidden;
           .container {
             display: flex;
             flex-direction: column;
@@ -146,6 +146,9 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
             height: 100%;
             position: relative;
             gap: 0;
+            transition:
+              transform 800ms var(--easing),
+              border-radius 800ms var(--easing);
             img {
               width: 100%;
             }
@@ -161,24 +164,33 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
                 color: var(--neutral-900, #141915);
                 font-weight: 400;
                 margin-bottom: 2.5rem;
+                transition: transform 800ms var(--easing);
               }
               .reading {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 font-size: var(--typography-body-m, 0.875rem);
-
+                transition: transform 800ms var(--easing);
                 svg {
                   margin-bottom: 0.375rem;
-                }
-
-                span {
                 }
               }
             }
           }
           &:focus:not(:focus-visible) {
             background-color: transparent;
+
+            .container {
+              transform: scale(1.02);
+              border-radius: 4px;
+
+              h2,
+              h3,
+              .reading {
+                transform: translateY(-0.25rem);
+              }
+            }
           }
 
           &:focus-visible {
@@ -205,6 +217,10 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
         font-size: var(--typography-body-m, 0.875rem);
         opacity: 0;
         transition: opacity 200ms;
+
+        @media not all and (pointer: fine) {
+          display: none;
+        }
       }
       @media (max-width: 64rem) {
         flex-direction: column;

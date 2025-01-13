@@ -150,6 +150,10 @@ const Subheading = index === 0 ? 'h2' : 'h3';
             transition: opacity 100ms;
             pointer-events: none;
             cursor: none;
+
+            @media not all and (pointer: fine) {
+              display: none;
+            }
           }
 
           .card {
