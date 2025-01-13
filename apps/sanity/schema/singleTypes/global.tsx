@@ -185,6 +185,95 @@ export default defineType({
             }),
           ],
         }),
+        defineField({
+          name: 'header',
+          type: 'object',
+          title: 'Header',
+          fields: [
+            defineField({
+              name: 'highlistedProjects',
+              type: 'array',
+              title: 'Highlisted Projects',
+              of: [{ type: 'reference', to: [{ type: 'Project_Collection' }] }],
+              validation: (Rule) => Rule.max(5).unique(),
+            }),
+            defineField({
+              name: 'links',
+              type: 'object',
+              title: 'Links',
+              fields: [
+                defineField({
+                  name: 'linksLeft',
+                  type: 'array',
+                  title: 'Links Left',
+                  description: 'Links will be displayed on the left side of the header.',
+                  of: [
+                    {
+                      type: 'object',
+                      name: 'link',
+                      fields: [
+                        defineField({
+                          name: 'title',
+                          type: 'string',
+                          title: 'Link Title',
+                        }),
+                        defineField({
+                          name: 'reference',
+                          type: 'reference',
+                          to: InternalLinkableTypes,
+                        }),
+                      ],
+                      preview: {
+                        select: {
+                          title: 'title',
+                        },
+                        prepare: ({ title }) => ({
+                          title,
+                          media: () => '🔗',
+                        }),
+                      },
+                    },
+                  ],
+                  validation: (Rule) => Rule.min(1).max(4).unique(),
+                }),
+                defineField({
+                  name: 'linksRight',
+                  type: 'array',
+                  title: 'Links Right',
+                  description: 'Links will be displayed on the right side of the header.',
+                  of: [
+                    {
+                      type: 'object',
+                      name: 'link',
+                      fields: [
+                        defineField({
+                          name: 'title',
+                          type: 'string',
+                          title: 'Link Title',
+                        }),
+                        defineField({
+                          name: 'reference',
+                          type: 'reference',
+                          to: InternalLinkableTypes,
+                        }),
+                      ],
+                      preview: {
+                        select: {
+                          title: 'title',
+                        },
+                        prepare: ({ title }) => ({
+                          title,
+                          media: () => '🔗',
+                        }),
+                      },
+                    },
+                  ],
+                  validation: (Rule) => Rule.min(1).max(4).unique(),
+                }),
+              ],
+            }),
+          ],
+        }),
       ],
     }),
     defineField({
