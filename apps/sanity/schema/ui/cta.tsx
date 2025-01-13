@@ -98,6 +98,9 @@ export default defineType({
     {
       name: 'style',
       title: 'Style',
+      options: {
+        columns: 2,
+      },
     },
   ],
   preview: {

@@ -19,6 +19,70 @@ export default defineType({
       title: 'Phone number (optional)',
     }),
     defineField({
+      name: 'openHours',
+      type: 'object',
+      options: { collapsible: true, collapsed: true },
+      title: 'Open hours',
+      description: 'Enter time in HH:MM format',
+      fields: [
+        defineField({
+          name: 'from',
+          type: 'string',
+          title: 'From',
+          validation: (Rule) =>
+            Rule.custom((value: any, context) => {
+              if (!value) {
+                return 'Time is required';
+              }
+              if (value && !value.match(/^\d{2}:\d{2}$/)) {
+                return 'Time must be in the format HH:MM';
+              }
+              const [hh, mm] = value.split(':').map(Number);
+              if (hh > 24 || mm > 60) {
+                return 'Time must be in the format HH:MM, where HH <= 24 and MM <= 60';
+              }
+              return true;
+            }),
+          fieldset: 'openHours',
+        }),
+        defineField({
+          name: 'to',
+          type: 'string',
+          title: 'To',
+          validation: (Rule) =>
+            Rule.custom((value: any, context) => {
+              if (!value) {
+                return 'Time is required';
+              }
+              if (value && !value.match(/^\d{2}:\d{2}$/)) {
+                return 'Time must be in the format HH:MM';
+              }
+              const [hh, mm] = value.split(':').map(Number);
+              if (hh > 24 || mm > 60) {
+                return 'Time must be in the format HH:MM, where HH <= 24 and MM <= 60';
+              }
+              return true;
+            }),
+          fieldset: 'openHours',
+        }),
+        defineField({
+          name: 'closedWeekends',
+          type: 'boolean',
+          title: 'Closed on weekends',
+          fieldset: 'openHours',
+        }),
+      ],
+      fieldsets: [
+        {
+          name: 'openHours',
+          title: 'Open hours',
+          options: {
+            columns: 2,
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'socials',
       type: 'object',
       title: 'Social media',
@@ -82,6 +146,45 @@ export default defineType({
           title: 'Rating',
           options: { columns: 2 },
         },
+      ],
+    }),
+    defineField({
+      name: 'navigation',
+      type: 'object',
+      title: 'Navigation',
+      fields: [
+        defineField({
+          name: 'annotation',
+          type: 'object',
+          title: 'Annotation',
+          fields: [
+            defineField({
+              name: 'visible',
+              type: 'boolean',
+              title: 'Annotation visible',
+              validation: (Rule) => Rule.required(),
+              description: 'If true, the annotation will be visible on the top of the navigation.',
+            }),
+            defineField({
+              name: 'icon',
+              type: 'image',
+              title: 'Icon',
+              description: 'Only SVG files are supported.',
+              options: {
+                accept: '.svg',
+              },
+              validation: (Rule) => Rule.required(),
+              hidden: ({ parent }) => !parent?.visible,
+            }),
+            defineField({
+              name: 'text',
+              type: 'string',
+              title: 'Text',
+              validation: (Rule) => Rule.required(),
+              hidden: ({ parent }) => !parent?.visible,
+            }),
+          ],
+        }),
       ],
     }),
     defineField({
@@ -200,6 +303,7 @@ export default defineType({
       ],
     }),
   ],
+
   preview: {
     prepare: () => ({
       title: 'Global settings',
