@@ -138,7 +138,7 @@ const pathname = Astro.url.pathname;
               data.navigation.header.highlistedProjects.map(({ name, slug, image }) => (
                 <a href={slug} class="project" data-current={pathname === slug}>
                   <div class="image">
-                    <Image {...image} sizes="" />
+                    <Image {...image} sizes="(max-width: 75rem) 0px, (max-width: 85.375rem) 16vw, 214px" />
                   </div>
                   <span>{name}</span>
                 </a>
@@ -238,7 +238,7 @@ const pathname = Astro.url.pathname;
                 <a href={slug} class="project">
                   <span>{name}</span>
                   <div class="image">
-                    <Image {...image} sizes="" />
+                    <Image {...image} sizes="62px" />
                   </div>
                 </a>
               ))
