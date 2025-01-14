@@ -234,7 +234,7 @@ export default defineType({
                       },
                     },
                   ],
-                  validation: (Rule) => Rule.min(1).max(4).unique(),
+                  validation: (Rule) => Rule.min(1).max(3).unique(),
                 }),
                 defineField({
                   name: 'linksRight',
