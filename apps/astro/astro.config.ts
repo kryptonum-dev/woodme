@@ -17,6 +17,9 @@ export default defineConfig({
     ],
   },
   vite: {
+    ssr: {
+      noExternal: ['react-hook-form', 'react-international-phone'],
+    },
     css: {
       preprocessorOptions: {
         scss: {

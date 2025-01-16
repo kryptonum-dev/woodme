@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly SANITY_API_TOKEN: string;
+  readonly RESEND_API_KEY: string;
 }
 
 interface ImportMeta {

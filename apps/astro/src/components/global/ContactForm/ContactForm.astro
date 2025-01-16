@@ -1,0 +1,587 @@
+---
+import { DOMAIN } from '@/src/global/constants';
+import Image, { ImageDataQuery, type ImageDataProps } from '../../ui/image';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '../../ui/portable-text';
+import imageToInlineSvg from '../../ui/image/image-to-inline-svg';
+import FormWrapper from './Form/FormWrapper.astro';
+
+export const ContactForm_Query = `
+  _type == "ContactForm" => {
+    ${ImageDataQuery('image')}
+    form{
+      ${PortableTextQuery('heading')}
+      ${PortableTextQuery('paragraph')}
+      state{
+        success{
+          ${PortableTextQuery('heading')}
+          ${PortableTextQuery('paragraph')}
+          link{
+            url,
+            ${ImageDataQuery('icon')}
+            title,
+          },
+        },
+        error{
+          ${PortableTextQuery('heading')}
+          ${PortableTextQuery('paragraph')}
+        },
+      },
+    },
+    rightBox{
+      ${PortableTextQuery('heading')}
+      textColumn[]{
+        ${PortableTextQuery('paragraph')}
+        pdfBox{
+          "icon": icon.asset -> url,
+          text,
+          file{
+             asset->{
+                url,
+                assetId
+            },
+            },
+        },
+      },
+    },
+    phoneBox{
+      ${PortableTextQuery('heading')}
+      ${PortableTextQuery('paragraph')}
+    },
+    emailBox{
+      ${PortableTextQuery('heading')}
+      ${PortableTextQuery('paragraph')}
+    },
+    addressBox{
+      ${PortableTextQuery('heading')}
+      ${PortableTextQuery('paragraph')}
+    },
+    "tel": *[_type == "global"][0].tel,
+    "email": *[_type == "global"][0].email,
+    "address": *[_type == "global"][0].address
+  },
+`;
+
+type Props = {
+  index: number;
+  sectionId?: string;
+  image: ImageDataProps;
+  form: {
+    heading: PortableTextValue;
+    paragraph: PortableTextValue;
+    state: {
+      success: {
+        heading: PortableTextValue;
+        paragraph: PortableTextValue;
+        link: {
+          url: string;
+          icon: ImageDataProps;
+          title: string;
+        };
+      };
+      error: {
+        heading: PortableTextValue;
+        paragraph: PortableTextValue;
+      };
+    };
+  };
+  rightBox: {
+    heading: PortableTextValue;
+    textColumn: {
+      paragraph: PortableTextValue;
+      pdfBox: {
+        icon: string;
+        text: string;
+        file: {
+          asset: {
+            url: string;
+            assetId: string;
+          };
+        };
+      };
+    }[];
+  };
+  phoneBox: {
+    heading: PortableTextValue;
+    paragraph: PortableTextValue;
+  };
+  emailBox: {
+    heading: PortableTextValue;
+    paragraph: PortableTextValue;
+  };
+  addressBox: {
+    heading: PortableTextValue;
+    paragraph: PortableTextValue;
+  };
+  tel: string;
+  email: string;
+  address: {
+    addressText: string;
+    mapLink: string;
+  };
+};
+
+const { sectionId, index, image, form, rightBox, phoneBox, emailBox, addressBox, tel, email, address } = Astro.props;
+
+const svgContents = rightBox.textColumn.map(async (text) =>
+  text.pdfBox.icon ? await imageToInlineSvg(text.pdfBox.icon) : null
+);
+---
+
+<section class="ContactForm max-width" id={sectionId}>
+  <div class="container">
+    <Image
+      {...image}
+      sizes="(max-width: 64rem) 100vw, (max-width: 85.375rem) 97vw, 1326px"
+      priority={index === 0}
+      class="backgroundImage"
+    />
+    <div class="formBox">
+      <PortableText value={form.heading} heading={index === 0 ? 'h1' : 'h2'} class="formBox__heading" />
+      <PortableText value={form.paragraph} class="formBox__paragraph" />
+      <FormWrapper state={form.state} />
+    </div>
+    <div class="rightBox">
+      <PortableText value={rightBox.heading} heading={index === 0 ? 'h2' : 'h3'} class="rightBox__heading" />
+      {
+        rightBox.textColumn.map((text, i) => (
+          <div class="rightBox__textColumn">
+            <PortableText value={text.paragraph} class="rightBox__paragraph" />
+            {text.pdfBox?.file?.asset?.url && (
+              <a
+                href={`${DOMAIN}/api/static/${text.pdfBox.file.asset.assetId}`}
+                class="rightBox__pdfBox"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Fragment set:html={svgContents[i]} />
+                <span>{text.pdfBox.text}</span>
+              </a>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+  <div class="contactBoxes">
+    <div class="box box__phone">
+      <div class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" fill="none">
+          <path
+            stroke="#5F6D62"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M11.708 5.5A4.167 4.167 0 0 1 15 8.792m-3.292-6.625a7.5 7.5 0 0 1 6.625 6.616m-9.811 3.27A12.168 12.168 0 0 1 6.15 8.71c-.05-.104-.075-.156-.094-.222a.872.872 0 0 1 .123-.718c.04-.056.087-.103.182-.199.292-.29.437-.436.533-.583.359-.552.359-1.265 0-1.817-.096-.146-.241-.292-.533-.583L6.2 4.426c-.443-.443-.664-.664-.902-.784a1.667 1.667 0 0 0-1.505 0c-.237.12-.459.341-.902.784l-.131.132c-.442.44-.662.662-.83.962-.188.333-.322.85-.321 1.231 0 .345.068.58.201 1.05a15.866 15.866 0 0 0 4.061 6.903 15.866 15.866 0 0 0 6.904 4.061c.47.134.705.2 1.05.202.381 0 .898-.134 1.231-.32.3-.17.52-.39.962-.831l.131-.132c.443-.443.665-.664.785-.902.24-.473.24-1.031 0-1.504-.12-.238-.342-.46-.785-.902l-.162-.163c-.291-.291-.437-.437-.583-.532a1.667 1.667 0 0 0-1.817 0c-.147.095-.293.241-.584.532a1.677 1.677 0 0 1-.199.183.872.872 0 0 1-.718.122c-.066-.019-.118-.044-.221-.094a12.167 12.167 0 0 1-3.342-2.371Z"
+          ></path>
+        </svg>
+      </div>
+      <PortableText value={phoneBox.heading} heading={index === 0 ? 'h3' : 'h4'} class="boxHeading" />
+      <PortableText value={phoneBox.paragraph} class="boxParagraph" />
+      <a class="boxLink" href={`tel:${tel}`}>{tel}</a>
+    </div>
+    <div class="box box__email">
+      <div class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" fill="none">
+          <path
+            stroke="#5F6D62"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m1.667 6.333 6.804 4.763c.55.386.826.579 1.126.653.264.066.541.066.806 0 .3-.074.575-.267 1.126-.653l6.804-4.763M5.667 17.167h8.666c1.4 0 2.1 0 2.635-.273a2.5 2.5 0 0 0 1.093-1.092c.272-.535.272-1.235.272-2.635V7.833c0-1.4 0-2.1-.272-2.635a2.5 2.5 0 0 0-1.093-1.092c-.535-.273-1.235-.273-2.635-.273H5.667c-1.4 0-2.1 0-2.635.273a2.5 2.5 0 0 0-1.093 1.092c-.272.535-.272 1.235-.272 2.635v5.334c0 1.4 0 2.1.272 2.635a2.5 2.5 0 0 0 1.093 1.092c.534.273 1.234.273 2.635.273Z"
+          ></path>
+        </svg>
+      </div>
+      <PortableText value={emailBox.heading} heading={index === 0 ? 'h3' : 'h4'} class="boxHeading" />
+      <PortableText value={emailBox.paragraph} class="boxParagraph" />
+      <a class="boxLink" href={`mailto:${email}`}>{email}</a>
+    </div>
+    <div class="box box__address">
+      <div class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" fill="none">
+          <g stroke="#5F6D62" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 11.333a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"></path>
+            <path
+              d="M10 18.833c3.334-3.333 6.667-6.318 6.667-10a6.667 6.667 0 1 0-13.334 0c0 3.682 3.334 6.667 6.667 10Z"
+            ></path>
+          </g>
+        </svg>
+      </div>
+      <PortableText value={addressBox.heading} heading={index === 0 ? 'h3' : 'h4'} class="boxHeading" />
+      <PortableText value={addressBox.paragraph} class="boxParagraph" />
+      <a class="boxLink" href={address.mapLink} target="_blank" rel="noreferrer">
+        {address.addressText}
+      </a>
+      <div class="map">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1316.9721818743742!2d19.033580777482364!3d50.10573412201874!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4716b90cc9b2c73d%3A0x8153c104f53c30fb!2sUrbanowicka%208%2C%2043-109%20Tychy!5e0!3m2!1spl!2spl!4v1736938622221!5m2!1spl!2spl"
+          width="100%"
+          height="100%"
+          style="border:0;"
+          allowfullscreen="true"
+          loading={index === 0 ? 'eager' : 'lazy'}
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Mapa do naszego biura"
+        >
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .ContactForm {
+    padding: 0.25rem 0 1.25rem;
+
+    .container {
+      min-height: 46.25rem;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      padding: 0.675rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+
+      .backgroundImage {
+        position: absolute;
+        z-index: -1;
+        height: 100%;
+        inset: 0;
+      }
+
+      .formBox {
+        max-width: 26.75rem;
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        padding: 2.25rem;
+        background-color: var(--neutral-200, #e9f2ed);
+        border-radius: 8px;
+        min-height: 51rem;
+        position: relative;
+        overflow: hidden;
+
+        &__heading {
+          font-size: var(--typography-heading-m, 1.75rem);
+          line-height: 1.35;
+          margin-bottom: 1.25rem;
+
+          :global(strong) {
+            color: var(--secondary-900, #403d33);
+          }
+        }
+
+        &__paragraph {
+          margin-bottom: 2.25rem;
+        }
+      }
+
+      .rightBox {
+        border-radius: 8px;
+        background-color: var(--neutral-200, #e9f2ed);
+        padding: 2rem;
+        max-width: 22.3125rem;
+
+        &__heading {
+          font-size: var(--typography-body-l, 1.125rem);
+          line-height: 1.55;
+          letter-spacing: -0.025em;
+          color: var(--neutral-900, #141915);
+          font-family: 'Inter', sans-serif;
+          font-weight: 400;
+          margin-bottom: clamp(3rem, calc(3vw / 0.48), 5rem);
+        }
+
+        &__textColumn {
+          &:not(:last-child) {
+            margin-bottom: 1.25rem;
+          }
+        }
+
+        &__paragraph {
+          margin-bottom: 0.75rem;
+          :global(p) {
+            :not(:last-child) {
+              margin-bottom: 1.25rem;
+            }
+          }
+          :global(li) {
+            display: grid;
+            grid-template-columns: 6px 1fr;
+            gap: 0.5rem;
+            font-size: var(--typography-body-m, 0.875rem);
+            margin-left: -0.875rem;
+
+            &:not(:last-child) {
+              margin-bottom: 1.25rem;
+            }
+
+            &::before {
+              content: '';
+              margin-top: 8px;
+              width: 6px;
+              height: 6px;
+              border-radius: 999px;
+              border: 1px solid var(--neutral-700, #5f6d62);
+            }
+          }
+        }
+
+        &__pdfBox {
+          display: flex;
+          align-items: center;
+          gap: 0.375rem;
+          border-radius: 4px;
+          background-color: var(--neutral-100, #f2faf6);
+          font-size: var(--typography-body-s, 0.75rem);
+          padding: 0.675rem;
+          max-width: fit-content;
+          position: relative;
+          transition: background-color 450ms ease;
+
+          span {
+            padding-top: 1px;
+          }
+
+          &::before {
+            content: '';
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            min-width: 2.75rem;
+            min-height: 2.75rem;
+            width: 100%;
+          }
+
+          &:hover {
+            background-color: var(--neutral-300, #d0e1d7);
+          }
+
+          &:focus-visible {
+            outline: 2px solid var(--neutral-700, #5f6d62);
+            outline-offset: 4px;
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+    .contactBoxes {
+      display: flex;
+      gap: 0.5rem;
+
+      .box {
+        border-radius: 8px;
+        display: grid;
+        padding: clamp(1.25rem, calc(1.5vw / 0.48), 1.5rem);
+        font-size: var(--typography-body-m, 0.875rem);
+        grid-template-rows: max-content max-content max-content 1fr;
+
+        .icon {
+          display: grid;
+          place-items: center;
+          border-radius: 4px;
+          background-color: var(--neutral-200, #e9f2ed);
+          margin-bottom: clamp(2rem, calc(2.25vw / 0.48), 2.25rem);
+          width: 2.5rem;
+          height: 2.5rem;
+        }
+
+        .boxHeading {
+          margin-bottom: 0.75rem;
+          line-height: 1.6;
+          font-weight: 400;
+          font-family: 'Inter', sans-serif;
+          color: var(--neutral-900, #141915);
+        }
+
+        .boxParagraph {
+          margin-bottom: clamp(1rem, calc(1.25vw / 0.48), 1.25rem);
+        }
+
+        .boxLink {
+          color: var(--neutral-900, #141915);
+          position: relative;
+          min-height: 2.25rem;
+          display: flex;
+          align-items: center;
+          max-width: fit-content;
+          overflow: hidden;
+          margin-top: auto;
+
+          &::before {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: var(--neutral-900, #141915);
+            transition: transform 950ms var(--easing);
+            transform-origin: right;
+          }
+
+          &:hover::before {
+            transform: scaleX(0);
+          }
+
+          &:focus-visible {
+            outline: 2px solid var(--neutral-700, #5f6d62);
+            outline-offset: 4px;
+            border-radius: 4px;
+          }
+        }
+
+        &__phone {
+          background-color: var(--secondary-300, #e3dfd3);
+          max-width: 20.375rem;
+        }
+
+        &__email {
+          background-color: var(--neutral-300, #d0e1d7);
+          max-width: 20.375rem;
+        }
+
+        &__address {
+          background-color: var(--tertiary-400, #acc1cf);
+          flex-grow: 1;
+          grid-template-columns: minmax(15rem, 18.75rem) auto;
+          justify-content: space-between;
+          column-gap: 1.5rem;
+
+          .icon {
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+          }
+
+          .boxHeading {
+            grid-column: 1 / 2;
+            grid-row: 2 / 3;
+          }
+
+          .boxParagraph {
+            grid-column: 1 / 2;
+            grid-row: 3 / 4;
+          }
+
+          .boxLink {
+            grid-column: 1 / 2;
+            grid-row: 4 / 5;
+          }
+
+          .map {
+            width: 13.375rem;
+            height: 13.375rem;
+            border-radius: 8px;
+            background-color: var(--neutral-100, #f2faf6);
+            grid-column: 2 / 3;
+            grid-row: 1 / 5;
+
+            overflow: hidden;
+          }
+        }
+      }
+    }
+    @media (max-width: 64rem) {
+      .container {
+        flex-direction: column;
+        overflow: visible;
+        align-items: center;
+        padding: 2rem 0;
+
+        .formBox {
+          max-width: clamp(28.375rem, calc(28.375vw / 0.48), 34rem);
+          width: 100%;
+          padding: clamp(1.25rem, calc(3vw / 0.48), 3rem);
+          margin-bottom: 0.75rem;
+          align-self: center;
+          min-height: clamp(32.5rem, calc(32.5vw / 0.48), 38rem);
+        }
+
+        .rightBox {
+          max-width: clamp(28.375rem, calc(28.375vw / 0.48), 34rem);
+          width: 100%;
+          padding: 0 clamp(1rem, calc(3vw / 0.48), 3rem);
+        }
+
+        .backgroundImage {
+          width: 100vw;
+          max-width: none;
+          transform: translateX(calc(-1 * var(--pageMargin)));
+          height: auto;
+        }
+      }
+      .contactBoxes {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        .box {
+          &__phone {
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+            max-width: none;
+          }
+          &__email {
+            grid-column: 2 / 3;
+            grid-row: 1 / 2;
+            max-width: none;
+          }
+
+          &__address {
+            grid-column: 1 / 3;
+            grid-row: 2 / 3;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 56.25rem) {
+      .contactBoxes {
+        width: 100vw;
+        transform: translateX(calc(-1 * var(--pageMargin)));
+      }
+    }
+
+    @media (max-width: 33.75rem) {
+      .container {
+        padding-top: clamp(151px, calc(232vw / 5.4), 232px);
+        margin-bottom: 0.75rem;
+
+        .formBox {
+          padding: clamp(1.25rem, calc(2.25vw / 0.48), 3rem);
+          margin-bottom: 1rem;
+        }
+
+        .rightBox {
+          padding: clamp(1rem, calc(1.75vw / 0.48), 3rem);
+        }
+
+        .backgroundImage {
+          height: clamp(201px, calc(282vw / 5.4), 282px);
+        }
+      }
+      .contactBoxes {
+        display: flex;
+        flex-direction: column;
+
+        .box {
+          .boxParagraph {
+            max-width: 18.75rem;
+          }
+
+          &__address {
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(5, max-content);
+
+            .map {
+              margin-top: 2rem;
+              grid-column: 1 / 2;
+              grid-row: 5/6;
+              width: 100%;
+              max-width: 18.75rem;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>

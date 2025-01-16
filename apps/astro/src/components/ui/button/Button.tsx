@@ -11,6 +11,7 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
     className?: string;
     isLoading?: boolean;
     sendingMessage?: string;
+    customIcon?: string;
   };
 
 export default function Button({

@@ -115,6 +115,26 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'address',
+      type: 'object',
+      title: 'Address',
+      fields: [
+        defineField({
+          name: 'addressText',
+          type: 'string',
+          title: 'Address Text',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'mapLink',
+          type: 'url',
+          title: 'Map link',
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'googleData',
       type: 'object',
       title: 'Google Data',
