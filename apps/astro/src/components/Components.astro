@@ -24,7 +24,7 @@ import TimelineSection, { TimelineSection_Query } from './global/TimelineSection
 import TwoColumnsImageListCta, { TwoColumnsImageListCta_Query } from './global/TwoColumnsImageListCta.astro';
 import AnimatedProjectReferences, { AnimatedProjectReferences_Query } from './global/AnimatedProjectReferences.astro';
 import ContactForm, { ContactForm_Query } from './global/ContactForm/ContactForm.astro';
-
+import Faq, { Faq_Query } from './global/Faq/Faq.astro';
 const components = {
   FullWidthPhoto,
   CircleSwiper,
@@ -48,6 +48,7 @@ const components = {
   TwoColumnsImageListCta,
   AnimatedProjectReferences,
   ContactForm,
+  Faq,
 };
 
 type ComponentsMap = {
@@ -91,6 +92,7 @@ export const Components_Query = /* groq */ `
     ${TwoColumnsImageListCta_Query}
     ${AnimatedProjectReferences_Query}
     ${ContactForm_Query}
+    ${Faq_Query}
   },
 `;
 ---

@@ -1,8 +1,8 @@
-import { defineField, defineType } from 'sanity'
-import { toPlainText } from '../../utils/to-plain-text'
+import { defineField, defineType } from 'sanity';
+import { toPlainText } from '../../utils/to-plain-text';
 
-const title = 'FAQ items collection'
-const icon = () => '❓'
+const title = 'FAQ items Collection';
+const icon = () => '❓';
 
 export default defineType({
   name: 'Faq_Collection',
@@ -12,15 +12,20 @@ export default defineType({
   fields: [
     defineField({
       name: 'question',
-      type: 'Heading',
-      title: 'Pytanie',
+      type: 'string',
+      title: 'Question',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'answer',
       type: 'PortableText',
-      title: 'Odpowiedź',
+      title: 'Answer',
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'cta',
+      type: 'cta',
+      title: 'Call To Action (optional)',
     }),
   ],
   preview: {
@@ -29,9 +34,9 @@ export default defineType({
       subtitle: 'answer',
     },
     prepare: ({ title, subtitle }) => ({
-      title: toPlainText(title),
+      title,
       subtitle: toPlainText(subtitle),
       icon,
     }),
   },
-})
+});

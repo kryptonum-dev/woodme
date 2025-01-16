@@ -10,21 +10,36 @@ export default function Form({
   ...props
 }: { children: React.ReactNode } & React.FormHTMLAttributes<HTMLFormElement>) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [step, setStep] = useState<1 | 2>(1);
   const {
     register,
     handleSubmit,
     reset,
+    trigger,
+    setFocus,
     formState: { errors },
-    control,
   } = useForm({ mode: 'onTouched' });
 
   useEffect(() => {
-    const tryAgain = () => {
-      setStatus('idle');
-    };
+    const tryAgain = () => setStatus('idle');
+    document.addEventListener('Faq-TryAgain', tryAgain);
 
-    document.addEventListener('Contact-TryAgain', tryAgain);
-    return () => document.removeEventListener('Contact-TryAgain', tryAgain);
+    const nextStep = async () => {
+      const isMessageValid = await trigger('message');
+      if (isMessageValid) setStep(2);
+      requestAnimationFrame(() => setFocus('email'));
+    };
+    const prevStep = () => {
+      setStep(1);
+      requestAnimationFrame(() => setFocus('message'));
+    };
+    document.addEventListener('Faq-NextStep', nextStep);
+    document.addEventListener('Faq-PrevStep', prevStep);
+    return () => {
+      document.removeEventListener('Faq-TryAgain', tryAgain);
+      document.removeEventListener('Faq-NextStep', nextStep);
+      document.removeEventListener('Faq-PrevStep', prevStep);
+    };
   }, []);
 
   const onSubmit = async (data: FieldValues) => {
@@ -41,7 +56,17 @@ export default function Form({
   };
 
   return (
-    <form {...props} onSubmit={handleSubmit(onSubmit)} data-status={status}>
+    <form {...props} onSubmit={handleSubmit(onSubmit)} data-status={status} data-step={step}>
+      <Input
+        aria-hidden={status === 'loading'}
+        disabled={status === 'loading'}
+        label="Temat wiadomości"
+        register={register('message', {
+          required: { value: true, message: 'Temat jest wymagany' },
+        })}
+        errors={errors}
+        isTextarea
+      />
       <Input
         aria-hidden={status === 'loading'}
         tabIndex={status === 'loading' ? -1 : 0}
@@ -52,29 +77,6 @@ export default function Form({
         })}
         errors={errors}
         type="email"
-      />
-      <Input
-        aria-hidden={status === 'loading'}
-        disabled={status === 'loading'}
-        register={{ name: 'phone' }}
-        errors={errors}
-        additonalInfo="Obiecujemy kontaktować się wyłącznie w ramach bezpłatnej konsultacji"
-        label="Telefon (opcjonalnie)"
-        phone={{
-          isPhone: true,
-          control,
-        }}
-      />
-      <Input
-        aria-hidden={status === 'loading'}
-        disabled={status === 'loading'}
-        label="Temat wiadomości"
-        register={register('message', {
-          required: { value: true, message: 'Temat jest wymagany' },
-        })}
-        errors={errors}
-        isTextarea
-        placeholder="Napisz o czym chcesz porozmawiać"
       />
       <Checkbox
         aria-hidden={status === 'loading'}

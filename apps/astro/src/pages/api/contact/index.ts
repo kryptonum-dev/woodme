@@ -22,7 +22,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   const htmlTemplate = `
     <p>Adres email: <b>${email}</b></p>
-    ${phone && `<p>Telefon: <b>${phone}</b></p>`}
+    ${!!phone && phone !== '+48' && `<p>Telefon: <b>${phone}</b></p>`}
     <br />
     <p>${message.trim().replace(/\n/g, '<br />')}</p>
   `;

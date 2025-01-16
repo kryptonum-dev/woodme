@@ -6,9 +6,11 @@ type Props = ButtonDataProps;
 const { sendingMessage, theme, shade, customIcon, ...props } = Astro.props;
 
 const isPrimary = theme === 'primary';
+
+const pathname = Astro.url.pathname;
 ---
 
-<BaseButton {...props} shade={shade} theme={theme}>
+<BaseButton {...props} shade={shade} theme={theme} pathname={pathname}>
   <span>
     {props.text || <slot />}
   </span>

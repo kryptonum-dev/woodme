@@ -17,7 +17,7 @@ export const ContactForm_Query = `
           ${PortableTextQuery('paragraph')}
           link{
             url,
-            ${ImageDataQuery('icon')}
+            "icon": icon.asset -> url,
             title,
           },
         },
@@ -74,7 +74,7 @@ type Props = {
         paragraph: PortableTextValue;
         link: {
           url: string;
-          icon: ImageDataProps;
+          icon: string;
           title: string;
         };
       };

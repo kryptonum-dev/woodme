@@ -1,0 +1,531 @@
+---
+import { getOpenHours } from '@/src/utils/get-openHours';
+import { ButtonDataQuery, type ButtonDataProps } from '@/src/components/ui/button';
+import Button from '@/src/components/ui/button/Button.astro';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
+import FormWrapper from './Form/FormWrapper.astro';
+
+export const Faq_Query = `
+  _type == "Faq" => {
+    ${PortableTextQuery('heading')}
+    ${PortableTextQuery('paragraph')}
+    faqItems[] -> {
+        question,
+        ${PortableTextQuery('answer')}
+        ${ButtonDataQuery('cta')}
+    },
+    contactBox {
+        ${PortableTextQuery('heading')}
+        ${PortableTextQuery('paragraph')}
+        state{
+          success{
+            ${PortableTextQuery('heading')}
+            ${PortableTextQuery('paragraph')}
+            link{
+              url,
+              "icon": icon.asset -> url,
+            },
+          },
+          error{
+            ${PortableTextQuery('heading')}
+            ${PortableTextQuery('paragraph')}
+          },
+      },
+    },
+   
+    "contact": *[_type == "global"][0]{
+      tel,
+      openHours{
+        from,
+        to,
+        closedWeekends
+      }
+    },
+  },
+`;
+
+type Props = {
+  index: number;
+  sectionId?: string;
+  heading: PortableTextValue;
+  paragraph: PortableTextValue;
+  faqItems: {
+    question: string;
+    answer: PortableTextValue;
+    cta?: ButtonDataProps;
+  }[];
+  contactBox: {
+    heading: PortableTextValue;
+    paragraph: PortableTextValue;
+    state: {
+      success: {
+        heading: PortableTextValue;
+        paragraph: PortableTextValue;
+        link: {
+          url: string;
+          icon: string;
+        };
+      };
+      error: {
+        heading: PortableTextValue;
+        paragraph: PortableTextValue;
+      };
+    };
+  };
+  contact: {
+    tel: string;
+    openHours: {
+      from: string;
+      to: string;
+      closedWeekends: boolean;
+    };
+  };
+};
+
+const { index, sectionId, heading, paragraph, faqItems, contactBox, contact } = Astro.props;
+
+const openHours = getOpenHours({
+  from: contact.openHours.from,
+  to: contact.openHours.to,
+  closeWeekends: contact.openHours.closedWeekends,
+});
+---
+
+<section class="Faq" id={sectionId}>
+  <div class="container">
+    <div class="icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
+        <path
+          stroke="#87988B"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+          d="m10 15-3.075 3.114c-.43.434-.644.651-.828.666a.5.5 0 0 1-.421-.172c-.12-.14-.12-.446-.12-1.056v-1.56c0-.548-.449-.944-.99-1.024v0a3 3 0 0 1-2.534-2.533C2 12.219 2 11.96 2 11.445V6.8c0-1.68 0-2.52.327-3.162a3 3 0 0 1 1.311-1.311C4.28 2 5.12 2 6.8 2h7.4c1.68 0 2.52 0 3.162.327a3 3 0 0 1 1.311 1.311C19 4.28 19 5.12 19 6.8V11m0 11-2.176-1.513c-.306-.213-.46-.32-.626-.395a2.002 2.002 0 0 0-.462-.145c-.18-.033-.367-.033-.74-.033H13.2c-1.12 0-1.68 0-2.108-.218a2 2 0 0 1-.874-.874C10 18.394 10 17.834 10 16.714V14.2c0-1.12 0-1.68.218-2.108a2 2 0 0 1 .874-.874C11.52 11 12.08 11 13.2 11h5.6c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874C22 12.52 22 13.08 22 14.2v2.714c0 .932 0 1.398-.152 1.766a2 2 0 0 1-1.083 1.082c-.367.152-.833.152-1.765.152V22Z"
+        >
+        </path>
+      </svg>
+    </div>
+    <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
+    <PortableText value={paragraph} class="paragraph" />
+    <div class="list">
+      {
+        faqItems.map(({ question, answer, cta }) => (
+          <details aria-expanded="false" class="details">
+            <summary class="summary">
+              <span class="question">{question}</span>
+              <div class="iconContainer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
+                  <path
+                    stroke="#87988B"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="m5 7.5 5 5 5-5"
+                  />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
+                  <path
+                    stroke="#87988B"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="m5 7.5 5 5 5-5"
+                  />
+                </svg>
+              </div>
+            </summary>
+            <div class="content">
+              <div class="text">
+                <PortableText value={answer} class="answer" />
+                {cta && <Button {...cta} />}
+              </div>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+  <div class="contact">
+    <header class="header">
+      <PortableText value={contactBox.heading} heading={index === 0 ? 'h2' : 'h3'} class="contactHeading" />
+      <PortableText value={contactBox.paragraph} class="contactParagraph" />
+    </header>
+    <div class="boxes">
+      <div class="formBox box">
+        <div class="row">
+          <div class="contactIcon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+              ><path
+                stroke="#5F6D62"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6.332 7.667 7.666 9l3-3m-2.334 7.333a5.667 5.667 0 1 0-5.37-3.855c.071.214.108.32.114.403a.6.6 0 0 1-.018.217c-.02.08-.066.163-.156.33l-1.09 2.018c-.155.287-.233.431-.216.543a.333.333 0 0 0 .156.232c.096.06.259.042.584.009l3.414-.353c.104-.011.155-.016.202-.015.047.002.08.007.125.017.046.01.103.033.219.077a5.653 5.653 0 0 0 2.036.377Z"
+              >
+              </path>
+            </svg>
+          </div>
+          <span class="title">Zadaj je w formularzu</span>
+        </div>
+        <FormWrapper state={contactBox.state} />
+      </div>
+      <div class="phoneBox box">
+        <div class="row">
+          <div class="contactIcon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+              ><g>
+                <path
+                  stroke="#5F6D62"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9.365 4a3.333 3.333 0 0 1 2.633 2.634m-2.633-5.3a6 6 0 0 1 5.3 5.293M6.816 9.243A9.735 9.735 0 0 1 4.92 6.569a1.133 1.133 0 0 1-.075-.177.697.697 0 0 1 .098-.575c.032-.044.07-.082.146-.158.233-.233.35-.35.426-.467a1.333 1.333 0 0 0 0-1.454c-.077-.117-.193-.233-.426-.467l-.13-.13c-.354-.354-.531-.53-.722-.627a1.333 1.333 0 0 0-1.203 0c-.19.096-.368.273-.722.628l-.105.105c-.353.353-.53.53-.665.77-.15.266-.257.68-.256.985.001.275.054.463.161.84a12.692 12.692 0 0 0 3.25 5.522 12.693 12.693 0 0 0 5.522 3.249c.376.107.564.16.84.161.305 0 .719-.107.985-.256.24-.135.416-.312.77-.665l.105-.105c.354-.354.531-.531.627-.721a1.334 1.334 0 0 0 0-1.204c-.096-.19-.273-.367-.627-.722l-.13-.13c-.233-.233-.35-.35-.467-.425a1.333 1.333 0 0 0-1.454 0c-.117.076-.233.192-.467.425-.076.076-.114.115-.158.146a.698.698 0 0 1-.575.098 1.14 1.14 0 0 1-.177-.075 9.736 9.736 0 0 1-2.674-1.897Z"
+                >
+                </path>
+              </g>
+              <defs>
+                <clipPath id="a">
+                  <path fill="#fff" d="M0 0h16v16H0z"> </path>
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+          <span class="title">Zadzwoń do nas</span>
+        </div>
+        <a class="phone" href={`tel:${contact.tel}`}>
+          <span class="number">{contact.tel}</span>
+          <span class="hours">{`${openHours.days} ${openHours.time}`}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .Faq {
+    max-width: 41.25rem;
+    width: calc(100% - 2 * var(--pageMargin));
+    margin: 0 auto;
+    padding: clamp(3rem, calc(6vw / 0.48), 6rem) 0;
+
+    .container {
+      padding: clamp(1rem, calc(2vw / 0.48), 2rem) clamp(1rem, calc(2vw / 0.48), 2rem)
+        clamp(1rem, calc(2.5vw / 0.48), 2.5rem);
+      border-radius: 8px;
+      background-color: var(--neutral-100, #f2faf6);
+      .icon {
+        width: 2.75rem;
+        height: 2.75rem;
+        display: grid;
+        place-items: center;
+        background-color: var(--neutral-200, #e9f2ed);
+        margin-bottom: clamp(1.5rem, calc(2.25vw / 0.48), 2.25rem);
+        border-radius: 999px;
+      }
+
+      .heading {
+        font-size: var(--typography-heading-s, 1.375rem);
+        color: var(--neutral-900, #141915);
+        margin-bottom: 0.5rem;
+      }
+
+      .paragraph {
+        margin-bottom: clamp(3rem, calc(4vw / 0.48), 4rem);
+      }
+
+      .list {
+        .details {
+          border-top: 1px solid var(--neutral-700, #5f6d62);
+          .summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 1.125rem 0;
+
+            .question {
+              transition: transform 600ms var(--easing);
+            }
+
+            .iconContainer {
+              position: relative;
+              width: 1.25rem;
+              height: 1.25rem;
+              overflow: hidden;
+
+              svg {
+                position: absolute;
+                top: 0;
+                left: 0;
+                transition: transform 900ms var(--easing);
+                &:first-child {
+                  transform: translateY(-1.5rem);
+                }
+
+                &:last-child {
+                }
+              }
+            }
+
+            &:hover {
+              .question {
+                transform: translateY(-0.125rem);
+              }
+              .iconContainer {
+                svg {
+                  &:first-child {
+                    transition: transform 500ms cubic-bezier(0.34, 1.56, 0.74, 1);
+                    transform: translateY(0rem);
+                  }
+
+                  &:last-child {
+                    transform: translateY(1rem);
+                  }
+                }
+              }
+            }
+
+            &:focus-visible {
+              outline: 2px solid var(--neutral-700, #5f6d62);
+              outline-offset: 4px;
+              border-radius: 4px;
+            }
+          }
+          &[open] {
+            .summary {
+              .iconContainer {
+                svg {
+                  &:first-child {
+                    transform: translateY(-1.5rem) rotate(180deg);
+                  }
+
+                  &:last-child {
+                    transform: rotate(180deg);
+                  }
+                }
+              }
+              &:hover {
+                .iconContainer {
+                  svg {
+                    &:first-child {
+                      transform: translateY(0rem) rotate(180deg);
+                    }
+
+                    &:last-child {
+                      transform: translateY(1rem) rotate(180deg);
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .content {
+            transition: height 950ms var(--easing);
+            overflow: hidden;
+
+            .text {
+              margin: 0.75rem 0 2.25rem;
+              :global(.answer) {
+                max-width: 33.25rem;
+                :global(p):not(:last-child) {
+                  margin-bottom: 1.25rem !important;
+                }
+              }
+            }
+
+            a {
+              margin-top: 1.25rem;
+            }
+          }
+        }
+      }
+    }
+
+    .contact {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 2rem 0.75rem 0.75rem;
+      background-color: var(--secondary-400, #d2cdbf);
+      border-radius: 6px;
+      .header {
+        text-align: center;
+        margin-bottom: 2.25rem;
+        .contactHeading {
+          font-size: var(--typography-heading-s, 1.375rem);
+          color: var(--neutral-900, #141915);
+          margin-bottom: 0.25rem;
+        }
+      }
+
+      .boxes {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        align-content: stretch;
+        gap: 0.375rem;
+
+        .box {
+          padding: clamp(1.5rem, calc(2vw / 0.48), 2rem) clamp(1rem, calc(1.25vw / 0.48), 1.25rem)
+            clamp(1rem, calc(1.25vw / 0.48), 1.25rem);
+          background-color: var(--neutral-100, #f2faf6);
+          border-radius: 6px;
+          border-radius: 2px;
+          display: flex;
+          flex-direction: column;
+          background-color: var(--secondary-300, #e3dfd3);
+        }
+        .row {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 1.5rem;
+          margin-left: -0.5rem;
+          margin-bottom: 3rem;
+          .contactIcon {
+            display: grid;
+            place-items: center;
+            width: 2.75rem;
+            height: 2.75rem;
+            border-radius: 999px;
+            border: 4px solid var(--neutral-200, #e9f2ed);
+            background-color: var(--secondary-400, #d2cdbf);
+            transition: transform 700ms var(--easing);
+          }
+
+          .title {
+            font-size: var(--typography-body-m, 0.875rem);
+          }
+        }
+        .formBox {
+          position: relative;
+          overflow: hidden;
+          min-height: 19.25rem;
+        }
+
+        .phoneBox {
+          .phone {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            background-color: var(--secondary-100, #f2faf6);
+            border-radius: 999px;
+            padding: 0.375rem 1.25rem;
+            transition: background-color 300ms;
+
+            .number {
+              font-size: var(--typography-body-m, 0.875rem);
+              color: var(--neutral-900, #141915);
+            }
+
+            .hours {
+              font-size: var(--typography-body-s, 0.75rem);
+              margin-top: -1px;
+            }
+
+            &:hover {
+              background-color: var(--secondary-200, #e9f2ed);
+            }
+
+            &:focus-visible {
+              outline: 2px solid var(--neutral-700, #5f6d62);
+              outline-offset: 2px;
+            }
+          }
+          &:has(.phone:hover) {
+            .contactIcon {
+              transform: scale(1.1);
+
+              svg {
+                animation: ring 550ms infinite alternate;
+                @keyframes ring {
+                  0% {
+                    transform: rotate(0deg);
+                  }
+                  25% {
+                    transform: rotate(8deg);
+                  }
+                  50% {
+                    transform: rotate(-8deg);
+                  }
+                  75% {
+                    transform: rotate(8deg);
+                  }
+                  100% {
+                    transform: rotate(0deg);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      @media (max-width: 42.5rem) {
+        .boxes {
+          grid-template-columns: 1fr;
+          max-width: 25rem;
+          margin: 0 auto;
+        }
+
+        .formBox,
+        .phoneBox {
+          min-height: 17.25rem;
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.Faq').forEach((section) => {
+    let currentlyOpened: HTMLDetailsElement | null = null;
+    const accordions = section.querySelectorAll('details');
+    accordions.forEach((details) => {
+      const content = details.querySelector<HTMLDivElement>('.content');
+      const summary = details.querySelector<HTMLDivElement>('summary');
+      if (!content || !summary) return;
+
+      details.addEventListener('toggle', () => {
+        if (details.open) {
+          currentlyOpened = details;
+          accordions.forEach((otherDetails) => {
+            if (currentlyOpened !== otherDetails && otherDetails.open) {
+              otherDetails.querySelector('summary')?.click();
+            }
+          });
+        } else {
+          currentlyOpened = null;
+        }
+      });
+
+      summary.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (details.open) {
+          content.style.height = content.scrollHeight + 'px';
+          requestAnimationFrame(() => (content.style.height = '0px'));
+          details.setAttribute('aria-expanded', 'false');
+          content.addEventListener(
+            'transitionend',
+            () => {
+              details.open = false;
+              content.style.height = '';
+            },
+            { once: true }
+          );
+        } else {
+          details.setAttribute('aria-expanded', 'true');
+          details.open = true;
+          const startHeight = content.scrollHeight + 'px';
+          content.style.height = '0px';
+          requestAnimationFrame(() => (content.style.height = startHeight));
+          content.addEventListener(
+            'transitionend',
+            () => {
+              content.style.height = '';
+            },
+            { once: true }
+          );
+        }
+      });
+    });
+  });
+</script>

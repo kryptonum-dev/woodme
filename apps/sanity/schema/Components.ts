@@ -20,6 +20,8 @@ import TimelineSection from './components/TimelineSection';
 import TwoColumnsImageListCta from './components/TwoColumnsImageListCta';
 import AnimatedProjectReferences from './components/AnimatedProjectReferences';
 import ContactForm from './components/ContactForm';
+import Faq from './components/Faq';
+
 export default defineType({
   name: 'components',
   type: 'array',
@@ -46,6 +48,7 @@ export default defineType({
     TwoColumnsImageListCta,
     AnimatedProjectReferences,
     ContactForm,
+    Faq,
   ],
   options: {
     insertMenu: {
