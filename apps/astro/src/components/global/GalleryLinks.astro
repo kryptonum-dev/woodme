@@ -59,7 +59,7 @@ const Subheading = index === 0 ? 'h2' : 'h3';
                 draggable="false"
                 sizes="(max-width: 37.5rem) 95vw, (max-width: 48rem) 80vw, (max-width: 56.25rem) 608px, (max-width: 91.25rem) 32vw,432px"
                 loading={index === 0 ? 'eager' : 'lazy'}
-                fetchpriority={i === 0 && index === 0 ? 'high' : 'low'}
+                fetchpriority={i === 0 && index === 0 ? 'high' : 'auto'}
               />
               <div class="text">
                 <Subheading class="title">{title}</Subheading>
@@ -200,7 +200,7 @@ const Subheading = index === 0 ? 'h2' : 'h3';
                 line-height: 1.3;
                 color: var(--neutral-100, #f2faf6);
                 letter-spacing: -0.04em;
-                font-family: 'Inter';
+                font-family: 'Inter', 'Inter Fallback', sans-serif;
                 font-weight: 400;
 
                 @media (max-width: 56.25rem) {
@@ -262,23 +262,10 @@ const Subheading = index === 0 ? 'h2' : 'h3';
 
     items.forEach((item) => {
       const showMore = item.querySelector('.showMore') as HTMLElement;
-      let lastTime = 0;
       let firstMove = false;
+      let animationFrameId: number;
 
-      item.addEventListener('mouseenter', () => {
-        showMore.style.opacity = '1';
-        firstMove = false;
-      });
-
-      item.addEventListener('mouseleave', () => {
-        showMore.style.opacity = '0';
-      });
-
-      item.addEventListener('mousemove', (e) => {
-        const now = Date.now();
-        if (now - lastTime < 11) return;
-        lastTime = now;
-
+      const updatePosition = (e: MouseEvent) => {
         const rect = item.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -287,8 +274,25 @@ const Subheading = index === 0 ? 'h2' : 'h3';
         const offsetY = showMore.offsetHeight / 2;
 
         showMore.style.transform = `translate(${x - offsetX}px, ${y - offsetY}px)`;
-        showMore.style.transition = firstMove ? 'transform 30ms opacity 100ms' : 'opacity 100ms';
+        showMore.style.transition = firstMove
+          ? 'transform 300ms cubic-bezier(0.19, 1, 0.22, 1), opacity 100ms ease-out'
+          : 'opacity 100ms ease-out';
         firstMove = true;
+      };
+
+      item.addEventListener('mouseenter', () => {
+        showMore.style.opacity = '1';
+        firstMove = false;
+      });
+
+      item.addEventListener('mouseleave', () => {
+        showMore.style.opacity = '0';
+        cancelAnimationFrame(animationFrameId);
+      });
+
+      item.addEventListener('mousemove', (e) => {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = requestAnimationFrame(() => updatePosition(e));
       });
     });
   });

@@ -6,6 +6,10 @@
   font-weight: 500;
   font-display: swap;
   font-style: normal;
+}
+
+@font-face {
+  font-family: 'Cabinet Grotesk Fallback';
   src: local('Arial');
   ascent-override: 89.14%;
   descent-override: 28.69%;
@@ -21,6 +25,10 @@
   font-weight: 400;
   font-display: swap;
   font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter Fallback';
   src: local('Arial');
   ascent-override: 91.59%;
   descent-override: 22.81%;
@@ -175,10 +183,11 @@ body {
   -webkit-tap-highlight-color: transparent;
   background-color: var(--neutral-200, #e9f2ed);
   color: var(--neutral-800, #48514a);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Inter Fallback', sans-serif;
   font-size: var(--typography-body-l, 1.125rem);
   line-height: 1.55;
   letter-spacing: -0.02em;
+  -webkit-font-smoothing: antialiased;
 }
 
 .max-width {
@@ -207,7 +216,7 @@ h6,
   overflow-wrap: anywhere;
   font-weight: 500;
   line-height: 1.28;
-  font-family: 'Cabinet Grotesk', sans-serif;
+  font-family: 'Cabinet Grotesk', 'Cabinet Grotesk Fallback', sans-serif;
 }
 
 h1,
@@ -546,6 +555,8 @@ div p:not(:last-child) {
       border-radius: 8px;
       animation: fadeIn 650ms var(--easing) 0ms forwards;
       outline: none;
+      scrollbar-width: thin;
+      scrollbar-color: var(--neutral-600, #87988b) var(--neutral-100, #f2faf6);
 
       @keyframes fadeIn {
         from {
@@ -571,9 +582,6 @@ div p:not(:last-child) {
         background-color: var(--neutral-600, #87988b);
         border-radius: 8px;
       }
-
-      scrollbar-width: thin; /* Firefox */
-      scrollbar-color: var(--neutral-600, #87988b) var(--neutral-100, #f2faf6); /* Firefox */
 
       li {
         display: flex;
@@ -634,7 +642,6 @@ div p:not(:last-child) {
     background-color: var(--neutral-200, #e9f2ed);
     transition: transform 900ms var(--easing);
     border-radius: 50%;
-    transition-delay: 200ms;
     z-index: 1;
   }
 

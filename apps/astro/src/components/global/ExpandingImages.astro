@@ -45,7 +45,7 @@ const getSizes = (i: number) => {
             {...image}
             sizes={getSizes(i)}
             loading={index === 0 ? 'eager' : 'lazy'}
-            fetchpriority={i === 2 && index === 0 ? 'high' : 'low'}
+            fetchpriority={i === 2 && index === 0 ? 'high' : 'auto'}
           />
         ))
       }
@@ -85,12 +85,11 @@ const getSizes = (i: number) => {
         .heading {
           margin-bottom: clamp(1.5rem, calc(2.25vw / 0.48), 2.25rem);
           font-size: var(--typography-heading-xl, 3.25rem);
-          color: var(--neutral-900, #141915);
           letter-spacing: -0.04em;
           line-height: 1;
 
           :global(strong) {
-            color: var(--neutral-970, #5f6d62);
+            color: var(--neutral-900, #5f6d62);
           }
         }
 
@@ -130,7 +129,7 @@ const getSizes = (i: number) => {
           &:nth-of-type(5) {
             width: clamp(151px, calc(151vw / 7.68), 202px);
             height: clamp(189px, calc(189vw / 7.68), 252px);
-            animation: fadeIn 3400ms var(--easing) forwards;
+            animation: ExpandingImages_img 3400ms var(--easing) forwards;
             animation-delay: 100ms;
           }
 
@@ -138,17 +137,17 @@ const getSizes = (i: number) => {
           &:nth-of-type(4) {
             width: clamp(159px, calc(212vw / 7.68), 283px);
             height: clamp(199px, calc(265vw / 7.68), 354px);
-            animation: fadeIn 2800ms var(--easing) forwards;
+            animation: ExpandingImages_img 2800ms var(--easing) forwards;
             animation-delay: 50ms;
           }
 
           &:nth-of-type(3) {
             width: clamp(193px, calc(257vw / 7.68), 343px);
             height: clamp(257px, calc(343vw / 7.68), 457px);
-            animation: fadeIn 2000ms var(--easing) forwards;
+            animation: ExpandingImages_img 2000ms var(--easing) forwards;
           }
 
-          @keyframes fadeIn {
+          @keyframes ExpandingImages_img {
             0% {
               opacity: 0;
               transform: translateY(clamp(1.5rem, calc(2vw / 0.48), 2rem));

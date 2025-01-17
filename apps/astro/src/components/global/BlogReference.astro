@@ -44,7 +44,7 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
               <Image
                 {...image}
                 loading={index === 0 ? 'eager' : 'lazy'}
-                fetchpriority={index === 0 && i === 0 ? 'high' : 'low'}
+                fetchpriority={index === 0 && i === 0 ? 'high' : 'auto'}
                 sizes="(max-width: 480px) 95vw, 480px"
               />
               <div class="content">
@@ -160,7 +160,7 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
               h2,
               h3 {
                 font-size: var(--typography-body-l, 1.125rem);
-                font-family: 'Inter', sans-serif;
+                font-family: 'Inter', 'Inter Fallback', sans-serif;
                 color: var(--neutral-900, #141915);
                 font-weight: 400;
                 margin-bottom: 2.5rem;
@@ -244,23 +244,10 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
 
     blogPosts.forEach((blogPost) => {
       const readMore = blogPost.querySelector('.readMore') as HTMLElement;
-      let lastTime = 0;
       let firstMove = false;
+      let animationFrameId: number;
 
-      blogPost.addEventListener('mouseenter', () => {
-        readMore.style.opacity = '1';
-        firstMove = false;
-      });
-
-      blogPost.addEventListener('mouseleave', () => {
-        readMore.style.opacity = '0';
-      });
-
-      blogPost.addEventListener('mousemove', (e) => {
-        const now = Date.now();
-        if (now - lastTime < 11) return;
-        lastTime = now;
-
+      const updatePosition = (e: MouseEvent) => {
         const rect = blogPost.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -269,8 +256,25 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
         const offsetY = readMore.offsetHeight / 2;
 
         readMore.style.transform = `translate(${x - offsetX}px, ${y - offsetY}px)`;
-        readMore.style.transition = firstMove ? 'transform 30ms opacity 100ms' : 'opacity 100ms';
+        readMore.style.transition = firstMove
+          ? 'transform 300ms cubic-bezier(0.19, 1, 0.22, 1), opacity 100ms ease-out'
+          : 'opacity 100ms ease-out';
         firstMove = true;
+      };
+
+      blogPost.addEventListener('mouseenter', () => {
+        readMore.style.opacity = '1';
+        firstMove = false;
+      });
+
+      blogPost.addEventListener('mouseleave', () => {
+        readMore.style.opacity = '0';
+        cancelAnimationFrame(animationFrameId);
+      });
+
+      blogPost.addEventListener('mousemove', (e) => {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = requestAnimationFrame(() => updatePosition(e));
       });
     });
   });

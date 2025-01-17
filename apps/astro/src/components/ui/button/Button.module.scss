@@ -35,7 +35,7 @@
         svg {
           position: absolute;
           bottom: 0;
-          transition: 600ms var(--easing);
+          transition: transform 600ms var(--easing);
         }
 
         > svg:first-of-type {

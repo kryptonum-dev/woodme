@@ -245,12 +245,12 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
               left: 50%;
               width: fit-content;
               transform: translate(-50%, -50%);
-              transition: filter 550ms cubic-bezier(0.215, 0.61, 0.355, 1);
+              transition: filter 550ms;
               will-change: filter;
 
               &[hidden] {
                 display: block;
-                filter: blur(8px);
+                filter: blur(4px);
                 visibility: hidden;
               }
             }
