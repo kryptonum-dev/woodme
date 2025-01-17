@@ -24,6 +24,7 @@ const singleTypes = [
   BusinessServices_Page,
   Projects_Page,
   NotFound_Page,
+  PrivacyPolicy_Page,
 ];
 
 // Collections Types
@@ -51,6 +52,7 @@ import cta from '../schema/ui/cta';
 import PortableText from '../schema/ui/PortableText';
 import Heading from '../schema/ui/PortableText/Heading';
 import seo from '../schema/ui/seo';
+import PrivacyPolicy_Page from '../schema/singleTypes/Legal/PrivacyPolicy_Page';
 
 const ui = [cta, seo, PortableText, Heading];
 

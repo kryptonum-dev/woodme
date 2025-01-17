@@ -1,0 +1,120 @@
+---
+import ContentNav, { ContentNav_Query, type ContentNavProps } from './ContentNav.astro';
+import ContentPT, { ContentPT_Query, type Props as ContentPTProps } from './content-pt/index.astro';
+import type { PortableTextValue } from '@/src/components/ui/portable-text';
+import PortableText from '@/src/components/ui/portable-text';
+
+export type ContentProps = ContentNavProps & {
+  content: ContentPTProps['value'];
+  heading: PortableTextValue;
+  paragraph: PortableTextValue;
+};
+
+export const Content_Query = `
+  "content": {
+    ${ContentNav_Query}
+    ${ContentPT_Query}
+  },
+`;
+
+const { headings, content, heading, paragraph } = Astro.props as ContentProps;
+---
+
+<article class="content max-width">
+  <ContentNav headings={headings} title="Spis treści" />
+  <header class="content-header">
+    <PortableText value={heading} heading="h1" class="heading" />
+    <PortableText value={paragraph} class="paragraph" />
+  </header>
+  <section class="content-body">
+    <ContentPT value={content} />
+  </section>
+</article>
+
+<style lang="scss">
+  :global(html) {
+    scroll-padding-top: 123px;
+  }
+  .content {
+    display: grid;
+    grid-template-columns: 13.375rem 1fr;
+    align-items: flex-start;
+    column-gap: 7.625rem;
+    padding: 3rem 0 clamp(3rem, calc(4vw / 0.48), 4.5rem);
+    :global(.content-nav) {
+      position: sticky;
+      top: 89px;
+      max-height: calc(100vh - 89px);
+      overflow-y: auto;
+      bottom: 0;
+    }
+
+    .content-header {
+      grid-column: 2/3;
+      grid-row: 1/2;
+      max-width: 40.9375rem;
+      .heading {
+        color: var(--primary-900, #141915);
+        margin-bottom: 1rem;
+        letter-spacing: -0.025em;
+      }
+
+      .paragraph {
+        font-size: var(--typography-body-2xl, 1.5rem);
+      }
+    }
+    .content-body {
+      max-width: 40.9375rem;
+      grid-column: 2/3;
+      grid-row: 2/3;
+      > {
+        :global(p),
+        :global(ul),
+        :global(ol) {
+          margin-bottom: clamp(1.25rem, calc(1.5vw / 0.48), 1.5rem);
+          letter-spacing: -0.025em;
+        }
+
+        :global(:last-child) {
+          margin-bottom: 0;
+        }
+        :global(h2) {
+          font-size: var(--typography-heading-s, 1.375rem);
+          margin: clamp(2.5rem, calc(4vw / 0.48), 4rem) 0 clamp(1.25rem, calc(1.5vw / 0.48), 1.5rem);
+          color: var(--primary-900, #141915);
+          line-height: 1.6;
+          letter-spacing: -0.02em;
+          counter-increment: section;
+          &::before {
+            content: counter(section);
+            margin-right: 0.675rem;
+            color: var(--neutral-700, #5f6d62);
+          }
+        }
+
+        :global(p + ul) {
+          margin-top: -0.75rem;
+        }
+      }
+    }
+
+    @media (max-width: 56.25rem) {
+      grid-template-columns: 1fr;
+      .content-header {
+        grid-row: 1/2;
+        width: 100%;
+      }
+
+      .content-body {
+        grid-row: 3/4;
+      }
+
+      .content-header,
+      .content-body {
+        grid-column: 1/2;
+        margin: 0 auto;
+        max-width: 38rem;
+      }
+    }
+  }
+</style>

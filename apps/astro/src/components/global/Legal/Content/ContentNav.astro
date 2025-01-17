@@ -1,0 +1,243 @@
+---
+import type { PortableTextProps } from 'astro-portabletext/types';
+import type { PortableTextBlock } from '@portabletext/types';
+import { toPlainText } from 'astro-portabletext/utils';
+import { slugify } from '@/src/utils/slugify';
+
+type Props = {
+  title: string;
+  headings: PortableTextProps['value'][];
+};
+
+export type ContentNavProps = Props;
+
+export const ContentNav_Query = `
+  "headings": content[length(style) == 2 && string::startsWith(style, "h")],
+`;
+
+const { title, headings } = Astro.props;
+
+type HeadingGroup = {
+  text: string;
+  slug: string;
+};
+
+const groupedHeadings = headings?.reduce<HeadingGroup[]>((acc, heading) => {
+  const text = toPlainText(heading as PortableTextBlock);
+  const slug = slugify(text);
+  acc.push({ text, slug });
+  return acc;
+}, []);
+---
+
+<nav class="content-nav">
+  <p>{title}</p>
+  {
+    groupedHeadings && (
+      <ul class="list">
+        {groupedHeadings.map(({ text, slug }) => (
+          <li>
+            <a href={`#${slug}`} aria-current="false">
+              {text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</nav>
+
+<nav class="content-nav__mobile">
+  <button class="open">
+    <span>{title}</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+      <path d="m4 6 4 4 4-4" stroke="#87988B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </button>
+  <div class="container">
+    {
+      groupedHeadings && (
+        <ul class="list">
+          {groupedHeadings.map(({ text, slug }) => (
+            <li>
+              <a href={`#${slug}`} aria-current="false">
+                {text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</nav>
+
+<style lang="scss">
+  .content-nav {
+    font-size: var(--typography-body-m, 0.875rem);
+    grid-row: 1/3;
+    p {
+      min-height: 2.75rem;
+      padding-top: 0.5rem;
+    }
+    .list {
+      > li {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.375rem;
+        color: var(--neutral-900, #141915);
+        counter-increment: section;
+        border-radius: 4px;
+        transition: background-color 400ms;
+        padding: 0 0.25rem;
+
+        a {
+          min-height: 2.75rem;
+          padding-top: 0.5rem;
+
+          &[aria-current='true'] {
+          }
+
+          &::before {
+            content: counter(section);
+            color: var(--neutral-800, #48514a);
+            margin: 0.5rem 0.25rem 0 0;
+          }
+        }
+
+        &:has(a:hover) {
+          background-color: var(--neutral-100, #f2faf6);
+        }
+        &:has(a[aria-current='true']),
+        &:focus-within:not(:active) {
+          background-color: var(--neutral-100, #f2faf6);
+        }
+        &:has(a:focus-visible) {
+          outline: 2px solid var(--primary-700, #5f6d62);
+          outline-offset: -2px;
+
+          a {
+            outline: none;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 56.25rem) {
+      display: none;
+    }
+  }
+
+  .content-nav__mobile {
+    display: none;
+    grid-column: 1/2;
+    grid-row: 2/3;
+    width: 100%;
+    max-width: 38rem;
+    margin: 0 auto;
+    background: var(--neutral-100, #f2faf6);
+    padding: 0.25rem clamp(0.75rem, calc(1vw / 0.48), 1rem);
+    margin-top: clamp(2.5rem, calc(4vw / 0.48), 4rem);
+    font-size: var(--typography-body-m, 0.875rem);
+    border-radius: 2px;
+    .open {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      min-height: 2.75rem;
+    }
+
+    .container {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 400ms;
+      .list {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        margin: 0 -0.5rem;
+
+        li {
+          counter-increment: section;
+
+          a {
+            display: flex;
+            align-items: center;
+            color: var(--neutral-900, #141915);
+            min-height: 2.75rem;
+            gap: 0.375rem;
+            padding: 0 0.5rem;
+            transition: background-color 300ms;
+            &::before {
+              content: counter(section);
+              margin-right: 0.25rem;
+              color: var(--neutral-800, #48514a);
+              width: 0.675rem;
+              text-align: center;
+            }
+
+            &:focus-visible {
+              outline: 2px solid var(--primary-700, #5f6d62);
+              outline-offset: -2px;
+              border-radius: 2px;
+            }
+
+            &:hover,
+            &:has(a[aria-current='true']) {
+              background-color: var(--neutral-200, #e5f2e9);
+            }
+          }
+        }
+      }
+    }
+
+    &[data-open='true'] {
+      .container {
+        grid-template-rows: 1fr;
+      }
+    }
+
+    @media (max-width: 56.25rem) {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLDivElement>('.content-nav')?.forEach((nav) => {
+    const contentBody = nav.closest('.content')?.querySelector('.content-body');
+    if (!contentBody) {
+      throw new Error('It seems that .content-body is not present in the .content, where it is supposed to be.');
+    }
+    const navLinks = nav.querySelectorAll('a');
+    const headings = Array.from(contentBody.querySelectorAll(':scope > h2'));
+    function updateActiveHeading() {
+      const triggerPoint = 124;
+      const currentHeading = headings.reduce((current, heading) => {
+        const headingTop = heading.getBoundingClientRect().top;
+        if (headingTop <= triggerPoint) return heading;
+        return current;
+      }, headings[0]);
+      navLinks.forEach((link) => link.setAttribute('aria-current', 'false'));
+      if (currentHeading) {
+        const id = currentHeading.getAttribute('id');
+        nav.querySelector(`a[href="#${id}"]`)?.setAttribute('aria-current', 'true');
+      }
+    }
+    window.addEventListener('scroll', () => requestAnimationFrame(updateActiveHeading));
+    updateActiveHeading();
+
+    const openButton = document.querySelector('.open') as HTMLButtonElement;
+    const container = document.querySelector('.content-nav__mobile') as HTMLDivElement;
+    console.log(container);
+    console.log(openButton);
+    openButton?.addEventListener('click', () => {
+      if (container?.getAttribute('data-open') === 'true') {
+        container?.setAttribute('data-open', 'false');
+      } else {
+        container?.setAttribute('data-open', 'true');
+      }
+    });
+  });
+</script>
