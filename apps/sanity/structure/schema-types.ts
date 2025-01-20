@@ -33,6 +33,7 @@ import BlogPost_Collection from '../schema/collectionTypes/BlogPost_Collection';
 import Project_Collection from '../schema/collectionTypes/Project_Collection';
 import Testimonials_Collection from '../schema/collectionTypes/Testimonial_Collection';
 import ProjectCategory_Collection from '../schema/collectionTypes/ProjectCategory_Collection';
+import BlogCategory_Collection from '../schema/collectionTypes/BlogCategory_Collection';
 
 const collectionTypes = [
   Faq_Collection,
@@ -40,6 +41,7 @@ const collectionTypes = [
   Project_Collection,
   Testimonials_Collection,
   ProjectCategory_Collection,
+  BlogCategory_Collection,
 ];
 
 // Components

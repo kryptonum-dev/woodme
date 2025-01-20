@@ -1,0 +1,59 @@
+---
+export const slugPrefix = '/blog/';
+
+import Content, { Content_Query, type ContentProps } from '@/src/components/Blog/Post/index.astro';
+import sanityFetch from '@/src/utils/sanity.fetch';
+import metadataFetch from '@/src/utils/metadata.fetch';
+import Components, { Components_Query, type ComponentsProps } from '@/src/components/Components.astro';
+import Layout from '@/src/layouts/Layout.astro';
+import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
+import { Hero_Query, type HeroProps } from '@/src/components/Blog/Post/Hero.astro';
+
+export const blogPosts = await sanityFetch<{ slug: string }[]>({
+  query: `
+    *[_type == 'BlogPost_Collection'][] {
+      "slug": slug.current,
+    }
+  `,
+});
+export async function getStaticPaths() {
+  return blogPosts?.map(({ slug }) => ({ params: { slug: slug.replace(slugPrefix, '') } }));
+}
+
+const { slug: _slug } = Astro.params;
+const slug = `${slugPrefix}${_slug}`;
+
+if (!blogPosts.find(({ slug }) => slug === slug)) return Astro.rewrite('/404');
+
+const page = await sanityFetch<{
+  name: string;
+  hero: HeroProps;
+  content: ContentProps;
+  components: ComponentsProps;
+}>({
+  query: `
+    *[_type == 'BlogPost_Collection' && slug.current == $slug][0] {
+      name,
+      ${Hero_Query}
+      ${Content_Query}
+      ${Components_Query}
+    }
+  `,
+  params: { slug: slug },
+});
+if (!page) return Astro.rewrite('/404');
+
+const metadata = await metadataFetch(slug);
+---
+
+<Layout {...metadata}>
+  <Breadcrumbs
+    data={[
+      { name: 'Blog', path: slugPrefix },
+      { name: page.name, path: slug },
+    ]}
+    firstItemType="BlogPost_View"
+  />
+  <Content {...page.content} hero={page.hero} />
+  <Components data={page.components} hasPreviousSections={true} />
+</Layout>

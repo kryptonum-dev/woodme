@@ -1,0 +1,189 @@
+---
+import Image, { ImageDataQuery, type ImageDataProps } from '../../ui/image';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '../../ui/portable-text';
+
+export type HeroProps = {
+  _createdAt: Date;
+  _updatedAt: Date;
+  readingTime: string;
+  heading: PortableTextValue;
+  image: ImageDataProps;
+};
+
+export const Hero_Query = `
+  "hero": {
+    "_createdAt": coalesce(publishedDate, _createdAt),
+    _updatedAt,
+    ${PortableTextQuery('heading')}
+    ${ImageDataQuery('image')}
+    category -> {
+      name,
+      "slug": slug.current,
+      "postCount": count(*[_type == 'BlogPost_Collection' && references(^._id)])
+    }
+  },
+`;
+
+const { _createdAt, _updatedAt, heading, image, readingTime } = Astro.props as HeroProps;
+
+function getRelativeDate(date: Date, upperCase: boolean = false) {
+  const today = new Date();
+  const targetDate = new Date(date);
+
+  today.setHours(0, 0, 0, 0);
+  targetDate.setHours(0, 0, 0, 0);
+
+  const diffTime = Math.abs(today.getTime() - targetDate.getTime());
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return upperCase ? 'Dzisiaj' : 'dzisiaj';
+  if (diffDays === 1) return upperCase ? 'Wczoraj' : 'wczoraj';
+  return `${diffDays} dni temu`;
+}
+---
+
+<header class="content-hero">
+  <PortableText value={heading} heading="h1" class="heading" />
+  <div class="metadata">
+    <div class="col">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 15 14">
+        <path
+          stroke="#9E9781"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.25"
+          d="M7.501 3.5V7l2.334 1.167M13.335 7A5.833 5.833 0 1 1 1.668 7a5.833 5.833 0 0 1 11.667 0Z"
+        >
+        </path>
+      </svg>
+      <span>{readingTime}</span>
+    </div>
+    <div class="col">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+        <path
+          stroke="#9E9781"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.25"
+          d="M12.25 5.833H1.75m7.583-4.666V3.5M4.667 1.167V3.5m-.117 9.333h4.9c.98 0 1.47 0 1.845-.19a1.75 1.75 0 0 0 .764-.765c.191-.374.191-.865.191-1.845v-4.9c0-.98 0-1.47-.19-1.844a1.75 1.75 0 0 0-.766-.765c-.374-.19-.864-.19-1.844-.19h-4.9c-.98 0-1.47 0-1.844.19a1.75 1.75 0 0 0-.765.765c-.191.374-.191.864-.191 1.844v4.9c0 .98 0 1.47.19 1.845.169.33.436.597.766.765.374.19.864.19 1.844.19Z"
+        >
+        </path>
+      </svg>
+      <span>{getRelativeDate(_createdAt, true)}</span>
+    </div>
+    <div class="col">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 15 14">
+        <path
+          stroke="#9E9781"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.25"
+          d="M1.668 8.167s.07.495 2.121 2.545a5.25 5.25 0 0 0 8.832-2.545m-10.953 0v3.5m0-3.5h3.5m8.167-2.334s-.071-.495-2.121-2.545a5.25 5.25 0 0 0-8.832 2.545m10.953 0v-3.5m0 3.5h-3.5"
+        >
+        </path>
+      </svg>
+      <span
+        >Zaktualizowano <span data-updated-at={new Date(_updatedAt).toISOString()} class="relative-date"
+          >{getRelativeDate(_updatedAt)}</span
+        ></span
+      >
+    </div>
+  </div>
+  <Image
+    {...image}
+    sizes="(max-width: 37.5rem) 96vw, (max-width: 48rem) 86vw, (max-width: 69rem) 656px, (max-width: 79.625rem) 62vw, 770px"
+    priority
+  />
+</header>
+
+<style lang="scss">
+  .content-hero {
+    grid-column: 2/3;
+    grid-row: 1/2;
+    width: 100%;
+    background-color: var(--neutral-100, #f2faf6);
+    border-radius: 12px 12px 0 0;
+    padding: clamp(3rem, calc(3.5vw / 0.48), 3.5rem) 3.5rem 3rem;
+
+    .heading {
+      margin-bottom: clamp(1.25rem, calc(1.5vw / 0.48), 1.5rem);
+      letter-spacing: -0.025em;
+    }
+
+    .metadata {
+      display: flex;
+      gap: 0.75rem 2.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--neutral-400, #c1d1c8);
+      margin-bottom: clamp(1.25rem, calc(1.5vw / 0.48), 1.5rem);
+
+      .col {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 0.375rem 1rem;
+
+        font-size: var(--typography-body-m, 0.875rem);
+        span {
+        }
+        svg {
+          width: 1rem;
+          height: 1rem;
+        }
+      }
+    }
+
+    img {
+      border-radius: 8px;
+    }
+
+    @media (max-width: 48rem) {
+      padding-left: var(--pageMargin);
+      padding-right: var(--pageMargin);
+    }
+
+    @media (max-width: 30rem) {
+      .metadata {
+        flex-direction: column;
+        border-bottom: none;
+        padding-bottom: 0;
+        padding-top: 1rem;
+
+        .col {
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid var(--neutral-400, #c1d1c8);
+          flex-direction: row;
+          justify-content: space-between;
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  function getRelativeDate(date: Date): string | null {
+    const now = new Date();
+    const dateToCompare = new Date(date);
+    now.setHours(0, 0, 0, 0);
+    dateToCompare.setHours(0, 0, 0, 0);
+    const diffDays = Math.floor((now.getTime() - dateToCompare.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      return 'dzisiaj';
+    } else if (diffDays === 1) {
+      return 'wczoraj';
+    } else if (diffDays === 2) {
+      return 'przedwczoraj';
+    } else if (diffDays >= 3 && diffDays <= 6) {
+      return `${diffDays}. dni temu`;
+    }
+    return null;
+  }
+
+  const dateElements = document.querySelectorAll<HTMLSpanElement>('.content-hero .relative-date');
+  dateElements.forEach((element) => {
+    const updatedAt = new Date(element.dataset.updatedAt as string);
+    const relativeDate = getRelativeDate(updatedAt);
+    if (relativeDate) element.textContent = relativeDate;
+  });
+</script>

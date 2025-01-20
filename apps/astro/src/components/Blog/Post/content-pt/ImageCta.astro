@@ -1,0 +1,140 @@
+---
+import { ButtonDataQuery, type ButtonDataProps } from '@/src/components/ui/button';
+import Button from '@/src/components/ui/button/Button.astro';
+import Image, { ImageDataQuery, type ImageDataProps } from '@/src/components/ui/image';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
+
+export const ImageCta_Query = `
+  _type == "ImageCta" => {
+    type,
+    ${ImageDataQuery('image')}
+    ${ImageDataQuery('imageList[]')}
+    ${PortableTextQuery('heading')}
+    ${ButtonDataQuery('ctas[]')}
+  },
+`;
+
+type Props = {
+  node: {
+    type: 'Triple Image' | 'Single Image';
+    image: ImageDataProps;
+    imageList: ImageDataProps[];
+    heading: PortableTextValue;
+    ctas: ButtonDataProps[];
+  };
+};
+
+const {
+  node: { image, imageList, heading, ctas, type },
+} = Astro.props;
+---
+
+<section class="ImageCta">
+  {
+    type === 'Single Image' && !!image ? (
+      <Image
+        {...image}
+        class="image"
+        sizes="(max-width: 37.5rem) 95vw, (max-width: 48.125rem) 84vw, (max-width: 69rem) 632px, (max-width: 79.875rem) 60vw, 746px"
+        loading="lazy"
+      />
+    ) : (
+      <div class="imageRow">
+        {imageList.map((item) => (
+          <Image
+            {...item}
+            sizes="(max-width: 48rem) 28vw, (max-width: 69rem) 213px, (max-width: 79.5rem) 20vw, 251px"
+            loading="lazy"
+          />
+        ))}
+      </div>
+    )
+  }
+  <header class="header">
+    <PortableText value={heading} class="heading" />
+    <div class="ctas">{ctas.map((item) => <Button {...item} />)}</div>
+  </header>
+</section>
+
+<style lang="scss">
+  .ImageCta {
+    margin: clamp(2.5rem, calc(3vw / 0.48), 3.5rem) 0;
+    padding: 0.25rem 0.25rem 2rem;
+    border-radius: 8px;
+    background-color: var(--neutral-200, #e9f2ed);
+    .image {
+      border-radius: 4px;
+      width: calc(100% - 1rem);
+      margin: 0 0.5rem clamp(1.5rem, calc(2vw / 0.48), 2rem);
+    }
+
+    .imageRow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.25rem;
+      margin-bottom: clamp(1.25rem, calc(1.75vw / 0.48), 2rem);
+
+      img {
+        border-radius: 4px;
+      }
+    }
+
+    .header {
+      padding: 0 clamp(1rem, calc(2vw / 0.48), 2rem);
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      .heading {
+        margin-bottom: clamp(1rem, calc(1vw / 0.48), 1.25rem);
+        max-width: 38rem;
+        font-size: 1.25rem;
+        letter-spacing: -0.025em;
+        line-height: 1.65;
+        text-align: center;
+      }
+      .ctas {
+        display: flex;
+        gap: 0.375rem 1.5rem;
+      }
+    }
+
+    @media (max-width: 48rem) {
+      padding: 0.25rem 0.25rem clamp(2rem, calc(2.25vw / 0.48), 2.25rem);
+      .image {
+        width: calc(100% + 0.5rem);
+        max-width: none;
+        margin: 0 -0.5rem clamp(1rem, calc(1.5vw / 0.48), 1.5rem);
+        border-radius: 2px;
+        margin-bottom: clamp(1.5rem, calc(2.25vw / 0.48), 2.25rem);
+        transform: translateX(0.25rem);
+      }
+
+      .imageRow img {
+        border-radius: 2px;
+      }
+    }
+
+    @media (max-width: 26.25rem) {
+      .header {
+        .ctas {
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+
+          a[data-theme='primary'] {
+            width: 100%;
+            max-width: 100%;
+            justify-content: stretch;
+
+            :global(div) {
+              width: 100%;
+              flex: 1;
+              justify-content: center;
+              max-width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>

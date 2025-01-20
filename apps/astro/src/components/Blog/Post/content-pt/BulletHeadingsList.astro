@@ -1,0 +1,94 @@
+---
+import PortableText, { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
+
+export const BulletHeadingsList_Query = `
+  _type == "BulletHeadingsList" => {
+    list[] {
+      ${PortableTextQuery('heading')}
+      ${PortableTextQuery('paragraph')}
+    },
+  },
+`;
+
+type Props = {
+  node: {
+    list: {
+      heading: PortableTextValue;
+      paragraph: PortableTextValue;
+    }[];
+  };
+};
+
+const { node } = Astro.props;
+---
+
+<ul class="BulletHeadingsList">
+  {
+    node.list.map((item) => (
+      <li class="item">
+        <div class="content">
+          <PortableText value={item.heading} class="heading" />
+          <PortableText value={item.paragraph} class="paragraph" />
+        </div>
+      </li>
+    ))
+  }
+</ul>
+
+<style lang="scss">
+  .BulletHeadingsList {
+    margin: clamp(2rem, calc(3vw / 0.48), 3rem) 0 !important;
+    .item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0px clamp(0.5rem, calc(0.675vw / 0.48), 0.675rem);
+      font-size: 1.25rem;
+
+      &:not(:last-child) {
+        margin-bottom: clamp(1.5rem, calc(1.75vw / 0.48), 1.75rem);
+      }
+
+      .content {
+        .heading {
+          margin-bottom: clamp(0.5rem, calc(0.675vw / 0.48), 0.675rem);
+          color: var(--neutral-900, #141915);
+        }
+
+        .paragraph {
+          grid-column: 2/3;
+          grid-row: 2/3;
+
+          :global(ul) {
+            :global(li) {
+              display: grid;
+              grid-template-columns: auto 1fr;
+              gap: 0px clamp(0.5rem, calc(0.675vw / 0.48), 0.675rem);
+
+              &:not(:last-child) {
+                margin-bottom: clamp(0.625rem, calc(0.75vw / 0.48), 0.75rem);
+              }
+
+              &::before {
+                content: '';
+                width: 0.25rem;
+                height: 0.25rem;
+                background-color: var(--neutral-600, #87988b);
+                border-radius: 999px;
+                margin-top: 0.75rem;
+              }
+            }
+          }
+        }
+      }
+
+      &::before {
+        content: '';
+        width: 0.25rem;
+        height: 0.25rem;
+        background-color: var(--neutral-600, #87988b);
+        border-radius: 999px;
+        margin-top: 0.75rem;
+      }
+    }
+  }
+</style>

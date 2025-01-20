@@ -1,4 +1,3 @@
-import { REGEX } from '@/src/global/constants';
 import { Controller, type Control, type FieldErrors } from 'react-hook-form';
 import { PhoneInput } from 'react-international-phone';
 import Error from '../error';

@@ -1,0 +1,79 @@
+---
+import Image, { ImageDataQuery, type ImageDataProps } from '@/components/ui/image';
+
+export const Quote_Query = `
+  _type == "Quote" => {
+    quote,
+    author {
+      name,
+      title,
+    ${ImageDataQuery('image')}
+    },
+  },
+`;
+
+type Props = {
+  node: {
+    quote: string;
+    author: {
+      name: string;
+      title: string;
+      image: ImageDataProps;
+    };
+  };
+};
+
+const { node } = Astro.props;
+---
+
+<blockquote class="Quote">
+  <p class="quote">„{node.quote}”</p>
+  <footer class="author">
+    <Image {...node.author.image} sizes="36px" />
+    <p class="text">
+      <cite class="name">{node.author.name}</cite>{`, ${node.author.title}`}
+    </p>
+  </footer>
+</blockquote>
+
+<style lang="scss">
+  .Quote {
+    margin: clamp(2.5rem, calc(3vw / 0.48), 3rem) 0;
+    padding: 1.5rem 2rem 1.5rem clamp(1.5rem, calc(2.5vw / 0.48), 2.5rem);
+    border-left: 1px solid var(--neutral-600, #87988b);
+    .quote {
+      color: var(--neutral-900, #141915);
+      font-size: var(--typography-body-2xl, 1rem);
+      letter-spacing: -0.035em;
+      line-height: 1.5;
+      font-style: italic;
+      margin-bottom: 1.25rem;
+    }
+
+    .author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem 1rem;
+    }
+
+    img {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 999px;
+    }
+
+    .text {
+      font-size: clamp(1rem, calc(1vw / 0.48), 1.25rem);
+      padding-top: 2px;
+      .name {
+        color: var(--neutral-900, #141915);
+      }
+    }
+    @media (max-width: 30rem) {
+      padding-right: 0;
+    }
+
+    @media (max-width: 26rem) {
+    }
+  }
+</style>

@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity';
-import { defineSlugForDocument } from '../../utils/define-slug-for-document';
+import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
+import PortableText from './portable-text';
 
 const name = 'BlogPost_Collection';
 const title = 'Blog Post Collection';
@@ -27,10 +28,23 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'category',
+      type: 'reference',
+      to: [{ type: 'BlogCategory_Collection' }],
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'image',
       type: 'image',
       title: 'Image',
       validation: (Rule) => Rule.required(),
+    }),
+    PortableText,
+    defineField({
+      name: 'components',
+      type: 'components',
+      title: 'Page Components (optional)',
+      description: 'Those components will be displayed after the content of the blog post.',
     }),
     defineField({
       name: 'seo',
@@ -49,7 +63,7 @@ export default defineType({
     select: {
       name: 'name',
       slug: 'slug.current',
-      media: 'img',
+      media: 'image',
     },
     prepare: ({ name, slug, media }) => ({
       title: name,
