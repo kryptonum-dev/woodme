@@ -93,5 +93,10 @@
     input {
       border: none;
     }
+    label {
+      position: absolute;
+      opacity: 0;
+      visibility: hidden;
+    }
   }
 }

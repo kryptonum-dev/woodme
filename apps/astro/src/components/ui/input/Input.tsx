@@ -43,6 +43,7 @@ export default function Input({ register, label, additonalInfo, isTextarea, phon
       ) : (
         <Element {...register} {...props} aria-invalid={!!errors[register.name]} />
       )}
+      {phone?.isPhone && <label aria-hidden="true" htmlFor={register.name}></label>}
     </Wrapper>
   );
 }
