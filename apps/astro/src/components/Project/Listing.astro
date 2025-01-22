@@ -67,8 +67,13 @@ const categories = _categories?.filter(({ count }) => count > 0);
       <PortableText value={heading} heading="h1" class="heading" />
       <div class="categories">
         <p class="title">Kategorie</p>
-        <nav class="nav">
-          <CategoryPill href="/realizacje" isActive={!currentCategorySlug} count={totalProjects}>
+        <nav class="nav" role="navigation" aria-label="Kategorie projektów">
+          <CategoryPill
+            href="/realizacje"
+            isActive={!currentCategorySlug}
+            count={totalProjects}
+            aria-current={!currentCategorySlug ? 'page' : undefined}
+          >
             Wszystkie
           </CategoryPill>
 
@@ -80,6 +85,7 @@ const categories = _categories?.filter(({ count }) => count > 0);
                   href={isActive ? '/realizacje' : category.slug}
                   isActive={isActive}
                   count={category.count}
+                  aria-current={isActive ? 'page' : undefined}
                 >
                   {category.name}
                 </CategoryPill>

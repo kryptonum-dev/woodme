@@ -70,14 +70,26 @@ const categories = _categories?.filter(({ count }) => count > 0);
       <PortableText value={paragraph} class="paragraph" />
       <div class="categories">
         <p class="title">Kategorie</p>
-        <nav class="nav">
-          <CategoryPill href="/blog" isActive={!currentCategorySlug} count={totalBlogPosts}> Wszystkie </CategoryPill>
+        <nav class="nav" role="navigation" aria-label="Kategorie bloga">
+          <CategoryPill
+            href="/blog"
+            isActive={!currentCategorySlug}
+            count={totalBlogPosts}
+            aria-current={!currentCategorySlug ? 'page' : undefined}
+          >
+            Wszystkie
+          </CategoryPill>
 
           {
             categories?.map((category) => {
               const isActive = currentCategorySlug === category.slug;
               return (
-                <CategoryPill href={isActive ? '/blog' : category.slug} isActive={isActive} count={category.count}>
+                <CategoryPill
+                  href={isActive ? '/blog' : category.slug}
+                  isActive={isActive}
+                  count={category.count}
+                  aria-current={isActive ? 'page' : undefined}
+                >
                   {category.name}
                 </CategoryPill>
               );
