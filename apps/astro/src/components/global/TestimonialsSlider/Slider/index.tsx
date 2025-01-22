@@ -190,7 +190,7 @@ export default function Slider({ children, testimonials, googleData }: SliderPro
                   </>
                 ) : (
                   <>
-                    <img src={image.asset.url} alt={image.asset.altText} sizes="44px" />
+                    <img src={image.asset.url} alt={image.asset.altText || ''} sizes="44px" />
                     <p className={styles.name}>{name}</p>
                     <p className={styles.service}>{service}</p>
                     <div className={styles.review} dangerouslySetInnerHTML={{ __html: review }} />
