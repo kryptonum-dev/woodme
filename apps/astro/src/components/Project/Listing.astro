@@ -72,7 +72,7 @@ const categories = _categories?.filter(({ count }) => count > 0);
             href="/realizacje"
             isActive={!currentCategorySlug}
             count={totalProjects}
-            aria-current={!currentCategorySlug ? 'page' : undefined}
+            data-current={!currentCategorySlug ? 'page' : undefined}
           >
             Wszystkie
           </CategoryPill>
@@ -85,7 +85,7 @@ const categories = _categories?.filter(({ count }) => count > 0);
                   href={isActive ? '/realizacje' : category.slug}
                   isActive={isActive}
                   count={category.count}
-                  aria-current={isActive ? 'page' : undefined}
+                  data-current={isActive ? 'page' : undefined}
                 >
                   {category.name}
                 </CategoryPill>
@@ -135,6 +135,7 @@ const categories = _categories?.filter(({ count }) => count > 0);
           font-size: var(--typography-heading-m, 1.75rem);
           line-height: 1.35;
           letter-spacing: -0.02em;
+          color: var(--neutral-800);
         }
 
         .categories {

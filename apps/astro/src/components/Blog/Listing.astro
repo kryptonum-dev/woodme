@@ -75,7 +75,7 @@ const categories = _categories?.filter(({ count }) => count > 0);
             href="/blog"
             isActive={!currentCategorySlug}
             count={totalBlogPosts}
-            aria-current={!currentCategorySlug ? 'page' : undefined}
+            data-current={!currentCategorySlug ? 'page' : undefined}
           >
             Wszystkie
           </CategoryPill>
@@ -88,7 +88,7 @@ const categories = _categories?.filter(({ count }) => count > 0);
                   href={isActive ? '/blog' : category.slug}
                   isActive={isActive}
                   count={category.count}
-                  aria-current={isActive ? 'page' : undefined}
+                  data-current={isActive ? 'page' : undefined}
                 >
                   {category.name}
                 </CategoryPill>

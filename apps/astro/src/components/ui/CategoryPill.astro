@@ -87,7 +87,7 @@ const { isActive = false, count, ...props } = Astro.props;
       }
     }
 
-    &[aria-current='page'] {
+    &[data-current='page'] {
       color: var(--neutral-100, #f2faf6);
       &::before {
         transform: translateY(-100%);
