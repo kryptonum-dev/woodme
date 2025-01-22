@@ -91,7 +91,7 @@ const categories = _categories?.filter(({ count }) => count > 0);
     </header>
     <div class="list">
       {
-        listing?.map((project) => (
+        listing?.map((project, i) => (
           <ProjectCard
             {...project}
             imgProps={{
