@@ -1,0 +1,97 @@
+---
+import Image, { ImageDataQuery, type ImageDataProps } from './image';
+
+export const ProjectCard_Query = `
+  ${ImageDataQuery('image')}
+  name,
+  "slug": slug.current,
+  "category": category -> name,
+`;
+
+export type Props = {
+  image: ImageDataProps;
+  name: string;
+  slug: string;
+  category: string;
+  imgProps: {
+    sizes: string;
+    priority?: boolean;
+    loading?: 'eager' | 'lazy';
+  };
+};
+
+const { image, name, slug, category, imgProps } = Astro.props;
+---
+
+<article class="ProjectCard">
+  <a href={slug}>
+    <div class="image">
+      <Image {...image} sizes={imgProps.sizes} />
+    </div>
+    <span class="name">{name}</span>
+    <span class="category">{category}</span>
+  </a>
+</article>
+
+<style lang="scss">
+  .ProjectCard {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    a {
+      .image {
+        overflow: hidden;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+        aspect-ratio: 3/4;
+        transition: border-radius 800ms var(--easing);
+
+        img {
+          width: 100%;
+          height: 100%;
+          transition: transform 1000ms var(--easing);
+        }
+      }
+
+      .name {
+        color: var(--neutral-900, #141915);
+        display: block;
+        margin-bottom: 1rem;
+        letter-spacing: -0.025em;
+        transition: transform 1000ms var(--easing);
+      }
+
+      .category {
+        font-size: var(--typography-body-m, 0.875rem);
+        line-height: 1.6;
+        letter-spacing: -0.02em;
+        transition: transform 1000ms var(--easing);
+        display: block;
+      }
+
+      &:hover:not(:focus):not(:focus-visible) {
+        .image {
+          border-radius: 8px;
+          img {
+            transform: scale(1.05);
+          }
+        }
+
+        .name {
+          transform: translateY(-0.125rem);
+        }
+
+        .category {
+          transform: translateY(-0.1875rem);
+        }
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--neutral-700, #5f6d62);
+        outline-offset: 4px;
+        border-radius: 4px;
+      }
+    }
+  }
+</style>

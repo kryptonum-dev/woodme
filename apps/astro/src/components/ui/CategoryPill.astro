@@ -28,9 +28,12 @@ const { isActive = false, count, ...props } = Astro.props;
     align-items: center;
     height: fit-content;
     isolation: isolate;
-    transition: color 200ms;
     background-color: var(--neutral-100, #f2faf6);
     flex-shrink: 0;
+
+    @media (hover: hover) {
+      transition: color 200ms;
+    }
 
     .container {
       display: flex;

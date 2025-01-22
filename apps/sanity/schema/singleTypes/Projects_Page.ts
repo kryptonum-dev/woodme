@@ -1,10 +1,10 @@
-import { defineField, defineType } from 'sanity'
-import { defineSlugForDocument } from '../../utils/define-slug-for-document'
+import { defineField, defineType } from 'sanity';
+import { defineSlugForDocument } from '../../utils/define-slug-for-document';
 
-const name = 'Projects_Page'
-const title = 'Projects'
-const slug = '/projects'
-const icon = () => '🏗️'
+const name = 'Projects_Page';
+const title = 'Projects';
+const slug = '/projects';
+const icon = () => '🏗️';
 
 export default defineType({
   name: name,
@@ -14,6 +14,12 @@ export default defineType({
   options: { documentPreview: true },
   fields: [
     ...defineSlugForDocument({ slug: slug }),
+    defineField({
+      name: 'heading',
+      type: 'Heading',
+      title: 'Heading',
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({
       name: 'components',
       type: 'components',
@@ -38,4 +44,4 @@ export default defineType({
       subtitle: slug,
     }),
   },
-})
+});

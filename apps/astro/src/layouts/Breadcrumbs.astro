@@ -204,5 +204,24 @@ const schema = JSON.stringify({
       padding-top: 1.5rem;
       background-color: var(--secondary-400, #d2cdbf);
     }
+    &[data-first-item-type='Projects_Page'] {
+      padding-top: clamp(1.5rem, calc(2.5vw / 0.48), 4rem);
+      background-color: var(--secondary-300, #e3dfd3);
+      position: relative;
+      &::before, &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background-color: var(--secondary-300, #e3dfd3);
+      }
+
+      &::after {
+        left: 100%;
+      }
+    }
   }
 </style>
+

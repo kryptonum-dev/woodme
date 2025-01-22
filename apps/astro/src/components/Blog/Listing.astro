@@ -88,8 +88,16 @@ const categories = _categories?.filter(({ count }) => count > 0);
     </header>
     <div class="list">
       {
-        listing?.map((post) => (
-          <BlogCard {...post} imgProps={{ sizes: '(max-width: 47rem) 100vw, (max-width: 63rem) 50vw, 34vw' }} />
+        listing?.map((post, i) => (
+          <BlogCard
+            {...post}
+            imgProps={{
+              priority: i === 0,
+              loading: i < 3 ? 'eager' : 'lazy',
+              sizes:
+                '(max-width: 37.5rem) 92w, (max-width: 47rem) 78w, (max-width: 56.25rem) 39w, (max-width: 60rem) 46vw, (max-width: 85.375rem) 32vw, 420px',
+            }}
+          />
         ))
       }
     </div>
