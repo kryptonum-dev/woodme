@@ -260,18 +260,16 @@
   }
 }
 
-// @media (max-width: 64rem) {
-//   flex-direction: column;
+@media (max-width: 64rem) {
+  .header {
+    max-width: 38rem;
+  }
 
-//   .header {
-//     max-width: 38rem;
-//   }
+  .embla {
+    width: 100%;
 
-//   .embla {
-//     width: 100%;
-
-//     &__track {
-//       width: clamp(16rem, calc(33.75vw / 0.48), 33.75rem);
-//     }
-//   }
-// }
+    &__track {
+      width: clamp(16rem, calc(33.75vw / 0.48), 33.75rem);
+    }
+  }
+}
