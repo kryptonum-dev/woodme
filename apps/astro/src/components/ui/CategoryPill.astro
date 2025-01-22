@@ -6,7 +6,7 @@ type Props = { isActive?: boolean; count: number } & HTMLAttributes<'a'>;
 const { isActive = false, count, ...props } = Astro.props;
 ---
 
-<a {...props} class="CategoryPill" aria-selected={isActive ? 'true' : 'false'}>
+<a {...props} class="CategoryPill" aria-current={isActive ? 'page' : undefined}>
   <span class="container">
     <slot />
     <span class="count">{count}</span>
@@ -87,7 +87,7 @@ const { isActive = false, count, ...props } = Astro.props;
       }
     }
 
-    &[data-current='page'] {
+    &[aria-current='page'] {
       color: var(--neutral-100, #f2faf6);
       &::before {
         transform: translateY(-100%);
