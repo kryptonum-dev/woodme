@@ -18,7 +18,7 @@ export default defineConfig({
   },
   vite: {
     ssr: {
-      noExternal: ['react-hook-form', 'react-international-phone', '@mux/mux-player'],
+      noExternal: ['react-hook-form', 'react-international-phone', '@mux/mux-player', 'embla-carousel-react'],
     },
     css: {
       preprocessorOptions: {

@@ -30,7 +30,7 @@ type Props = {
         };
       };
     };
-    source: {
+    source?: {
       name: string;
       url: string;
     };
@@ -44,7 +44,7 @@ const { node } = Astro.props;
   <VideoPopup
     client:load
     playbackId={node.video.asset.playbackId}
-    name={node.source.name}
+    name={node.source?.name || ''}
     aspectRatio={node.video.asset.data.aspect_ratio}
     maxWidth={node.video.asset.data.tracks[0].max_width}
     forceAspectRatio
@@ -55,7 +55,7 @@ const { node } = Astro.props;
           (Number(node.video.asset.data.aspect_ratio.split(':')[1]) /
             Number(node.video.asset.data.aspect_ratio.split(':')[0]))
       )}`}
-      alt={node.source.name}
+      alt={node.source?.name || ''}
       width={node.video.asset.data.tracks[0].max_width}
       height={Math.round(
         node.video.asset.data.tracks[0].max_width *
@@ -66,9 +66,18 @@ const { node } = Astro.props;
       loading="lazy"
     /></VideoPopup
   >
-  <p class="source">
-    <span>Źródło:</span><a href={node.source.url} target="_blank" rel="noreferrer" class="link">{node.source.name}</a>
-  </p>
+  {
+    node.source && (
+      <p class="source">
+        <>
+          <span>Źródło:</span>
+          <a href={node.source.url} target="_blank" rel="noreferrer" class="link">
+            {node.source.name}
+          </a>
+        </>
+      </p>
+    )
+  }
 </section>
 <style lang="scss">
   .Video {

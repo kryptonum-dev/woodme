@@ -45,7 +45,7 @@ export default defineType({
     }),
     defineField({
       name: 'review',
-      type: 'PortableText',
+      type: 'Heading',
       title: 'Review',
       validation: (Rule) => Rule.required(),
     }),

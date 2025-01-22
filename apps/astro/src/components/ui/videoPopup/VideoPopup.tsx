@@ -1,6 +1,4 @@
-import MuxPlayer from '@mux/mux-player-react';
-import { createPortal } from 'preact/compat';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import styles from './VideoPopup.module.scss';
 
 type VideoPopupProps = {
@@ -25,20 +23,85 @@ export default function VideoPopup({
   shadow = false,
 }: VideoPopupProps) {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const openButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsVideoOpen(false);
+      if (e.key === 'Escape') {
+        setIsVideoOpen(false);
+        openButtonRef.current?.focus();
+      }
     };
 
     if (isVideoOpen) {
       document.addEventListener('keydown', handleEscapeKey);
+
+      const popupContainer = document.createElement('div');
+      popupContainer.className = 'video-popup is-visible';
+
+      const [width, height] = aspectRatio.split(':').map(Number);
+      const aspectHeight = (maxWidth * height) / width;
+
+      popupContainer.innerHTML = `
+        <div class="video-popup__overlay"></div>
+        <div class="video-popup__player" style="
+          aspect-ratio: ${aspectRatio}; 
+          max-width: ${maxWidth}px; 
+          width: 100%;
+          height: ${aspectHeight}px;
+          animation: fadeInPlayer 1400ms var(--easing);
+        ">
+          <button class="video-popup__close" aria-label="Zamknij filmik">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5 5 15M5 5l10 10"/>
+            </svg>
+          </button>
+          <mux-player 
+            playback-id="${playbackId}" 
+            autoplay="true" 
+            metadata-video-title="Filmik z opinią - ${name}"
+            style="width: 100%; height: 100%;"
+          ></mux-player>
+        </div>
+      `;
+
+      const overlay = popupContainer.querySelector('.video-popup__overlay');
+      const closeButton = popupContainer.querySelector('.video-popup__close');
+      const player = popupContainer.querySelector('.video-popup__player');
+
+      const closePopup = () => {
+        setIsVideoOpen(false);
+        document.body.removeChild(popupContainer);
+        openButtonRef.current?.focus();
+      };
+
+      overlay?.addEventListener('click', closePopup);
+      closeButton?.addEventListener('click', closePopup);
+      player?.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (!target.hasAttribute('playback-id')) {
+          closePopup();
+        }
+      });
+
+      document.body.appendChild(popupContainer);
+
+      if (closeButton instanceof HTMLElement) {
+        closeButton.focus();
+      }
+
+      return () => {
+        document.removeEventListener('keydown', handleEscapeKey);
+        if (document.body.contains(popupContainer)) {
+          document.body.removeChild(popupContainer);
+        }
+      };
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscapeKey);
     };
-  }, [isVideoOpen]);
+  }, [isVideoOpen, playbackId, name, aspectRatio, maxWidth]);
 
   return (
     <div
@@ -48,7 +111,7 @@ export default function VideoPopup({
       }}
     >
       {children}
-      <button className={styles.showVideo} onClick={() => setIsVideoOpen(true)}>
+      <button ref={openButtonRef} className={styles.showVideo} onClick={() => setIsVideoOpen(true)}>
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none">
           <path
             fill="#9E9781"
@@ -57,38 +120,6 @@ export default function VideoPopup({
         </svg>
         <span>{buttonText}</span>
       </button>
-      {isVideoOpen && (
-        <div className={`video-popup is-visible`}>
-          <div className="video-popup__overlay" onClick={() => setIsVideoOpen(false)} />
-          <div
-            className="video-popup__player"
-            style={{
-              aspectRatio: `${aspectRatio.split(':')[0]}/${aspectRatio.split(':')[1]}`,
-              maxWidth: `${maxWidth}px`,
-              animation: 'fadeInPlayer 1400ms var(--easing)',
-            }}
-            onClick={(e) => {
-              const target = e.target as HTMLElement;
-              if (!target.hasAttribute('playback-id')) {
-                setIsVideoOpen(false);
-              }
-            }}
-          >
-            <button className="video-popup__close" aria-label="Zamknij filmik" onClick={() => setIsVideoOpen(false)}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 5 5 15M5 5l10 10"
-                />
-              </svg>
-            </button>
-            <MuxPlayer playbackId={playbackId} autoPlay="true" metadata-video-title={`Filmik z opinią - ${name}`} />
-          </div>
-        </div>
-      )}
     </div>
   );
 }

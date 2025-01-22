@@ -22,7 +22,7 @@
     "astro-portabletext": "^0.10.1",
     "autoprefixer": "^10.4.20",
     "cssnano": "^7.0.6",
-    "embla-carousel": "^8.5.1",
+    "embla-carousel-react": "^8.5.2",
     "react-hook-form": "^7.54.2",
     "react-international-phone": "^4.4.0",
     "sharp-ico": "^0.1.5",
