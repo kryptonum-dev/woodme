@@ -69,12 +69,10 @@ const { node } = Astro.props;
   {
     node.source && (
       <p class="source">
-        <>
-          <span>Źródło:</span>
-          <a href={node.source.url} target="_blank" rel="noreferrer" class="link">
-            {node.source.name}
-          </a>
-        </>
+        <span>Źródło:</span>
+        <a href={node.source.url} target="_blank" rel="noreferrer" class="link">
+          {node.source.name}
+        </a>
       </p>
     )
   }
