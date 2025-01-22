@@ -51,17 +51,37 @@ export default defineField({
                   type: 'Heading',
                   title: 'Heading',
                   validation: (Rule) => Rule.required(),
+                  initialValue: [
+                    {
+                      _type: 'block',
+                      style: 'normal',
+                      children: [{ _type: 'span', text: 'Pomyślnie wysłano wiadomość' }],
+                    },
+                  ],
                 }),
                 defineField({
                   name: 'paragraph',
                   type: 'PortableText',
                   title: 'Paragraph',
                   validation: (Rule) => Rule.required(),
+                  initialValue: [
+                    {
+                      _type: 'block',
+                      style: 'normal',
+                      children: [
+                        {
+                          _type: 'span',
+                          text: 'Odpowiemy najszybciej jak to będzie możliwe. A w międzyczasie zapraszamy na naszego Facebooka',
+                        },
+                      ],
+                    },
+                  ],
                 }),
                 defineField({
                   name: 'link',
                   type: 'object',
                   title: 'Link',
+                  validation: (Rule) => Rule.required(),
                   fields: [
                     defineField({
                       name: 'url',
@@ -95,12 +115,26 @@ export default defineField({
                   type: 'Heading',
                   title: 'Heading',
                   validation: (Rule) => Rule.required(),
+                  initialValue: [
+                    {
+                      _type: 'block',
+                      style: 'normal',
+                      children: [{ _type: 'span', text: 'Wiadomość nie została wysłana' }],
+                    },
+                  ],
                 }),
                 defineField({
                   name: 'paragraph',
                   type: 'PortableText',
                   title: 'Paragraph',
                   validation: (Rule) => Rule.required(),
+                  initialValue: [
+                    {
+                      _type: 'block',
+                      style: 'normal',
+                      children: [{ _type: 'span', text: 'Spróbuj ponownie lub skontaktuj się z nami telefonicznie.' }],
+                    },
+                  ],
                 }),
               ],
             }),
@@ -196,14 +230,26 @@ export default defineField({
           type: 'Heading',
           title: 'Heading',
           validation: (Rule) => Rule.required(),
-          initialValue: 'Zadzwoń do nas',
+          initialValue: [
+            {
+              _type: 'block',
+              style: 'normal',
+              children: [{ _type: 'span', text: 'Zadzwoń do nas' }],
+            },
+          ],
         }),
         defineField({
           name: 'paragraph',
           type: 'PortableText',
           title: 'Paragraph',
           validation: (Rule) => Rule.required(),
-          initialValue: 'Potrzebujesz szybkiej odpowiedzi? Z przyjemnością Ci pomożemy',
+          initialValue: [
+            {
+              _type: 'block',
+              style: 'normal',
+              children: [{ _type: 'span', text: 'Potrzebujesz szybkiej odpowiedzi? Z przyjemnością Ci pomożemy' }],
+            },
+          ],
         }),
       ],
     }),
@@ -221,14 +267,28 @@ export default defineField({
           type: 'Heading',
           title: 'Heading',
           validation: (Rule) => Rule.required(),
-          initialValue: 'Napisz do nas',
+          initialValue: [
+            {
+              _type: 'block',
+              style: 'normal',
+              children: [{ _type: 'span', text: 'Napisz do nas' }],
+            },
+          ],
         }),
         defineField({
           name: 'paragraph',
           type: 'PortableText',
           title: 'Paragraph',
           validation: (Rule) => Rule.required(),
-          initialValue: 'Wolisz napisać? Napisz maila – odpowiemy najszybciej, jak to możliwe',
+          initialValue: [
+            {
+              _type: 'block',
+              style: 'normal',
+              children: [
+                { _type: 'span', text: 'Wolisz napisać? Napisz maila – odpowiemy najszybciej, jak to możliwe' },
+              ],
+            },
+          ],
         }),
       ],
     }),
@@ -246,14 +306,26 @@ export default defineField({
           type: 'Heading',
           title: 'Heading',
           validation: (Rule) => Rule.required(),
-          initialValue: 'Zobacz naszą pracownie',
+          initialValue: [
+            {
+              _type: 'block',
+              style: 'normal',
+              children: [{ _type: 'span', text: 'Zobacz naszą pracownie' }],
+            },
+          ],
         }),
         defineField({
           name: 'paragraph',
           type: 'PortableText',
           title: 'Paragraph',
           validation: (Rule) => Rule.required(),
-          initialValue: 'Chcesz zobaczyć jak pracujemy? Zapraszamy do naszej pracowni',
+          initialValue: [
+            {
+              _type: 'block',
+              style: 'normal',
+              children: [{ _type: 'span', text: 'Chcesz zobaczyć jak pracujemy? Zapraszamy do naszej pracowni' }],
+            },
+          ],
         }),
       ],
     }),

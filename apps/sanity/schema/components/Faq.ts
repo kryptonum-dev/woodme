@@ -70,17 +70,37 @@ export default defineField({
                   type: 'Heading',
                   title: 'Heading',
                   validation: (Rule) => Rule.required(),
+                  initialValue: [
+                    {
+                      _type: 'block',
+                      style: 'normal',
+                      children: [{ _type: 'span', text: 'Pomyślnie wysłano wiadomość' }],
+                    },
+                  ],
                 }),
                 defineField({
                   name: 'paragraph',
                   type: 'PortableText',
                   title: 'Paragraph',
                   validation: (Rule) => Rule.required(),
+                  initialValue: [
+                    {
+                      _type: 'block',
+                      style: 'normal',
+                      children: [
+                        {
+                          _type: 'span',
+                          text: 'Odpowiemy najszybciej jak to będzie możliwe. A w międzyczasie zapraszamy na naszego Facebooka  ',
+                        },
+                      ],
+                    },
+                  ],
                 }),
                 defineField({
                   name: 'link',
                   type: 'object',
                   title: 'Link',
+                  validation: (Rule) => Rule.required(),
                   fields: [
                     defineField({
                       name: 'url',
@@ -108,12 +128,26 @@ export default defineField({
                   type: 'Heading',
                   title: 'Heading',
                   validation: (Rule) => Rule.required(),
+                  initialValue: [
+                    {
+                      _type: 'block',
+                      style: 'normal',
+                      children: [{ _type: 'span', text: 'Wiadomość nie została wysłana' }],
+                    },
+                  ],
                 }),
                 defineField({
                   name: 'paragraph',
                   type: 'PortableText',
                   title: 'Paragraph',
                   validation: (Rule) => Rule.required(),
+                  initialValue: [
+                    {
+                      _type: 'block',
+                      style: 'normal',
+                      children: [{ _type: 'span', text: 'Spróbuj ponownie lub skontaktuj się z nami telefonicznie.' }],
+                    },
+                  ],
                 }),
               ],
             }),

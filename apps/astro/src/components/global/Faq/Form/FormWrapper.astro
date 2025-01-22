@@ -28,7 +28,7 @@ const { state } = Astro.props;
 const svgContent = await imageToInlineSvg(state.success.link.icon);
 ---
 
-<Form className="Form" client:load>
+<Form className="FaqForm" client:load>
   <div class="submit-wrapper">
     <Button type="button" theme="primary" className="next-step">Przejdź dalej</Button>
     <Button theme="primary" id="submit" type="submit" className="submit-button">Wyślij Wiadomość</Button>
@@ -79,7 +79,7 @@ const svgContent = await imageToInlineSvg(state.success.link.icon);
 </Form>
 
 <style lang="scss">
-  .Form {
+  .FaqForm {
     margin-top: auto;
     &::before {
       content: '';
