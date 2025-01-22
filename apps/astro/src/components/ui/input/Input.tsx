@@ -27,7 +27,7 @@ export default function Input({ register, label, additonalInfo, isTextarea, phon
   const Wrapper = phone?.isPhone ? 'div' : 'label';
 
   return (
-    <Wrapper className={styles.Input} data-is-phone={phone?.isPhone}>
+    <label className={styles.Input} data-is-phone={phone?.isPhone}>
       <div className={styles.wrapper}>
         <p className={styles.label}>{label}</p>
         {additonalInfo && <p className={styles.additonalInfo}>{additonalInfo}</p>}
@@ -43,7 +43,6 @@ export default function Input({ register, label, additonalInfo, isTextarea, phon
       ) : (
         <Element {...register} {...props} aria-invalid={!!errors[register.name]} />
       )}
-      {phone?.isPhone && <label aria-hidden="true" htmlFor={register.name}></label>}
-    </Wrapper>
+    </label>
   );
 }
