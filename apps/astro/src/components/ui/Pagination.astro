@@ -1,0 +1,313 @@
+---
+type Props = {
+  currentPage: number;
+  totalItems: number;
+  slugBase: string;
+  itemsPerPage?: number;
+};
+
+const { currentPage = 1, totalItems, slugBase = '', itemsPerPage = 1 } = Astro.props;
+
+const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+console.log(totalItems);
+
+const slugPrefix = (number?: number) => (number && number > 1 ? `${slugBase}/strona/${number}` : slugBase);
+
+const createOpenContainer = (startPage: number, endPage: number) => `
+    <div class="open-container">
+        <button tabindex="-1">...</button>
+        <div tabindex="-1" class="content">
+            <div>
+                ${Array.from({ length: endPage - startPage + 1 }, (_, i) => i + startPage)
+                  .map(
+                    (
+                      page
+                    ) => `<a tabindex="-1" href="${slugPrefix(page)}" ${currentPage === page ? 'aria-current="page"' : ''}>
+                ${page}
+            </a>`
+                  )
+                  .join('')}
+            </div>
+        </div>
+    </div>
+`;
+
+const renderPagination = () => {
+  const pagination = [];
+
+  if (totalPages <= 6) {
+    // Show all pages if total pages is 5 or less
+    for (let i = 1; i <= totalPages; i++) {
+      pagination.push(
+        `<a href="${slugPrefix(i)}" ${currentPage === i ? 'aria-current="page"' : ''}>
+          ${i}
+        </a>`
+      );
+    }
+  } else {
+    // Show pagination with ellipsis for more than 5 pages
+    pagination.push(
+      `<a href="${slugPrefix(1)}" ${currentPage === 1 ? 'aria-current="page"' : ''}>
+          ${1}
+        </a>`
+    );
+    if (currentPage <= 3) {
+      // Near the start
+      for (let i = 2; i <= 4; i++) {
+        pagination.push(
+          `<a href="${slugPrefix(i)}" ${currentPage === i ? 'aria-current="page"' : ''}>
+            ${i}
+          </a>`
+        );
+      }
+      pagination.push(createOpenContainer(5, totalPages - 1));
+      pagination.push(
+        `<a href="${slugPrefix(totalPages)}" ${currentPage === totalPages ? 'aria-current="page"' : ''}>
+          ${totalPages}
+        </a>`
+      );
+    } else if (currentPage > 3 && totalPages - currentPage > 3) {
+      // In the middle
+      pagination.push(
+        `<a href="${slugPrefix(currentPage - 1)}" ${currentPage === currentPage - 1 ? 'aria-current="page"' : ''}>
+          ${currentPage - 1}
+        </a>`
+      );
+      pagination.push(
+        `<a href="${slugPrefix(currentPage)}" aria-current="page">
+          ${currentPage}
+        </a>`
+      );
+      pagination.push(
+        `<a href="${slugPrefix(currentPage + 1)}" ${currentPage === currentPage + 1 ? 'aria-current="page"' : ''}>
+          ${currentPage + 1}
+        </a>`
+      );
+      pagination.push(createOpenContainer(currentPage + 2, totalPages - 1));
+      pagination.push(
+        `<a href="${slugPrefix(totalPages)}" ${currentPage === totalPages ? 'aria-current="page"' : ''}>
+          ${totalPages}
+        </a>`
+      );
+    } else if (totalPages - currentPage === 3) {
+      for (let i = totalPages - 4; i <= totalPages; i++) {
+        pagination.push(
+          `<a href="${slugPrefix(i)}" ${currentPage === i ? 'aria-current="page"' : ''}>
+            ${i}
+          </a>`
+        );
+      }
+    } else if (currentPage > totalPages - 3) {
+      // Near the end
+      pagination.push(createOpenContainer(2, totalPages - 4));
+
+      for (let i = totalPages - 3; i <= totalPages; i++) {
+        pagination.push(
+          `<a href="${slugPrefix(i)}" ${currentPage === i ? 'aria-current="page"' : ''}>
+            ${i}
+          </a>`
+        );
+      }
+    }
+  }
+  return pagination.join('');
+};
+---
+
+{
+  totalPages > 1 && (
+    <nav class="Pagination">
+      <Fragment set:html={renderPagination()} />
+    </nav>
+  )
+}
+
+<style lang="scss">
+  .Pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    max-width: 100%;
+    align-items: center;
+
+    :global(> a),
+    :global(button) {
+      display: grid;
+      place-items: center;
+      font-variant-numeric: lining-nums proportional-nums;
+      width: 2.75rem;
+      height: 2.75rem;
+      font-size: var(--typography-body-m, 0.875rem);
+      border-radius: 999px;
+      padding: 0.5rem;
+      border: 1px solid var(--neutral-700, #5f6d62);
+    }
+    :global(> a) {
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      transition: border-color 500ms var(--easing);
+
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0%;
+        top: 100%;
+        width: 100%;
+        height: 100%;
+      }
+
+      &::before {
+        background-color: var(--neutral-200, #e9f2ed);
+        z-index: -2;
+        transition: transform 600ms var(--easing);
+      }
+
+      &::after {
+        background-color: var(--neutral-700, #5f6d62);
+        z-index: -1;
+        transition: transform 400ms var(--easing);
+      }
+
+      &:hover {
+        &::before {
+          transform: translateY(-100%);
+        }
+      }
+      &:focus:not(:focus-visible),
+      &[aria-current='page'] {
+        color: var(--neutral-100, #f2faf6);
+        &::after {
+          transform: translateY(-100%);
+        }
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--neutral-700, #5f6d62);
+        outline-offset: 2px;
+      }
+    }
+    :global(div.arrow) {
+      opacity: 0.62;
+      pointer-events: none;
+    }
+
+    :global(.open-container) {
+      isolation: isolate;
+      z-index: 20;
+      position: relative;
+      button {
+      }
+
+      > :global(div.content) {
+        position: absolute;
+        min-width: 100%;
+        width: fit-content;
+        opacity: 0;
+        transition: opacity 300ms;
+        border-radius: 999px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding-right: 0.125rem;
+        max-height: 10rem;
+
+        @media (hover: none) and (pointer: coarse) {
+          &::-webkit-scrollbar {
+            display: none;
+          }
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+          padding-right: 0rem;
+        }
+
+        &::-webkit-scrollbar {
+          width: 2px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: var(--neutral-500, #e9f2ed);
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: var(--neutral-700, #5f6d62);
+          border-radius: 999px;
+        }
+
+        :global(div) {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          background-color: var(--neutral-200, #e9f2ed);
+        }
+
+        :global(a) {
+          display: grid;
+          place-items: center;
+          z-index: 20;
+          width: 2.75rem;
+          height: 2.75rem;
+          font-size: var(--typography-body-m, 0.875rem);
+          border-radius: 999px;
+          overflow: hidden;
+          position: relative;
+          flex-shrink: 0;
+          transition:
+            background-color 300ms,
+            color 150ms;
+          &::before,
+          &::after {
+            content: '';
+            position: absolute;
+            left: 0%;
+            top: 100%;
+            width: 100%;
+            height: 100%;
+          }
+
+          &::before {
+            background-color: var(--neutral-300, #e9f2ed);
+            z-index: -2;
+            transition: transform 600ms var(--easing);
+          }
+
+          &::after {
+            background-color: var(--neutral-700, #5f6d62);
+            z-index: -1;
+            transition: transform 400ms var(--easing);
+          }
+
+          &:hover {
+            &::before {
+              transform: translateY(-100%);
+            }
+          }
+
+          &:focus:not(:focus-visible) {
+            color: var(--neutral-100, #f2faf6);
+            &::after {
+              transform: translateY(-100%);
+            }
+          }
+
+          &:focus-visible {
+            outline: 2px solid var(--neutral-700, #5f6d62);
+            outline-offset: 2px;
+          }
+        }
+      }
+
+      &:hover,
+      &:focus,
+      &:focus-within {
+        > :global(div) {
+          opacity: 1;
+        }
+      }
+
+      a {
+      }
+    }
+  }
+</style>

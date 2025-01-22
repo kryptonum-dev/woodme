@@ -1,0 +1,253 @@
+---
+import BlogCard, { BlogCard_Query, type Props as BlogCardProps } from '../ui/BlogCard/BlogCard.astro';
+import Pagination from '../ui/Pagination.astro';
+import type { PortableTextValue } from '../ui/portable-text';
+import PortableText from '../ui/portable-text';
+import CategoryPill from '../ui/CategoryPill.astro';
+import { ITEMS_PER_PAGE } from '@/src/pages/blog/index.astro';
+
+export const Listing_Query = ({
+  currentPage = 1,
+  currentCategorySlug = '',
+}: {
+  currentPage?: number;
+  currentCategorySlug?: string;
+}) => {
+  const OFFSET = ITEMS_PER_PAGE * (currentPage - 1);
+  const PAGINATION_BEFORE = OFFSET;
+  const PAGINATION_AFTER = OFFSET + ITEMS_PER_PAGE;
+  return `
+      "totalBlogPosts": count(*[_type == 'BlogPost_Collection']),
+      "totalPostsByCategory": count(*[_type == 'BlogPost_Collection' ${currentCategorySlug ? `&& category -> slug.current == "${currentCategorySlug}"` : ''}]),
+      "categories": *[_type == 'BlogCategory_Collection'] {
+        name,
+        "slug": slug.current,
+        "count": count(*[_type == 'BlogPost_Collection' && references(^._id) && defined(category)])
+      },
+      "listing": *[_type == 'BlogPost_Collection'
+        ${currentCategorySlug ? `&& category -> slug.current == "${currentCategorySlug}"` : ''}
+      ] | order(coalesce(publishedDate, _createdAt) desc) [${PAGINATION_BEFORE}...${PAGINATION_AFTER}] {
+        ${BlogCard_Query}
+      },
+  `;
+};
+
+export type ListingProps = {
+  heading: PortableTextValue;
+  paragraph: PortableTextValue;
+  totalBlogPosts: number;
+  totalPostsByCategory: number;
+  currentPage: number;
+  categories: Array<{
+    name: string;
+    slug: string;
+    count: number;
+  }>;
+  listing: BlogCardProps[];
+  currentCategorySlug?: string;
+  slugBase: string;
+};
+
+const {
+  heading,
+  paragraph,
+  totalBlogPosts,
+  categories: _categories,
+  listing,
+  totalPostsByCategory,
+  currentPage,
+  currentCategorySlug,
+  slugBase,
+} = Astro.props as ListingProps;
+
+const categories = _categories?.filter(({ count }) => count > 0);
+---
+
+<section class="Listing">
+  <div class="container max-width">
+    <header class="header">
+      <PortableText value={heading} heading="h1" class="heading" />
+      <PortableText value={paragraph} class="paragraph" />
+      <div class="categories">
+        <p class="title">Kategorie</p>
+        <nav class="nav">
+          <CategoryPill href="/blog" isActive={!currentCategorySlug} count={totalBlogPosts}> Wszystkie </CategoryPill>
+
+          {
+            categories?.map((category) => {
+              const isActive = currentCategorySlug === category.slug;
+              return (
+                <CategoryPill href={isActive ? '/blog' : category.slug} isActive={isActive} count={category.count}>
+                  {category.name}
+                </CategoryPill>
+              );
+            })
+          }
+        </nav>
+      </div>
+    </header>
+    <div class="list">
+      {
+        listing?.map((post) => (
+          <BlogCard {...post} imgProps={{ sizes: '(max-width: 47rem) 100vw, (max-width: 63rem) 50vw, 34vw' }} />
+        ))
+      }
+    </div>
+    <Pagination
+      currentPage={currentPage}
+      totalItems={totalPostsByCategory}
+      itemsPerPage={ITEMS_PER_PAGE}
+      slugBase={slugBase}
+    />
+  </div>
+</section>
+
+<style lang="scss">
+  .Listing {
+    background-color: var(--secondary-400);
+    padding: clamp(6.5rem, calc(7.5vw / 0.48), 7.5rem) 0;
+    margin-top: -4.25rem;
+    .container {
+      .header {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem 0.5rem;
+        margin-bottom: 2.5rem;
+        .heading {
+          color: var(--secondary-900, #403d33);
+          line-height: 1.12;
+          letter-spacing: -0.025em;
+        }
+
+        .categories {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 1rem 2rem;
+          padding-left: 2.25rem;
+          border-left: 1px solid var(--secondary-300, #e3dfd3);
+          .title {
+            font-size: var(--typography-body-m, 0.875rem);
+            margin-bottom: 0;
+          }
+
+          .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-end;
+            justify-content: flex-start;
+            max-height: 10rem;
+            padding-right: 0.25rem;
+            overflow: hidden;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--secondary-300) transparent;
+
+            &::-webkit-scrollbar {
+              width: 6px;
+            }
+
+            &::-webkit-scrollbar-track {
+              background: transparent;
+            }
+
+            &::-webkit-scrollbar-thumb {
+              background-color: var(--secondary-300);
+              border-radius: 3px;
+            }
+          }
+        }
+      }
+    }
+
+    .list {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.5rem;
+      margin-bottom: clamp(4rem, calc(4vw / 0.48), 5rem);
+
+      :global(article) {
+        &:not(:nth-child(7), :nth-child(8)) {
+          grid-column: span 2;
+        }
+        &:nth-child(7) {
+          grid-column: 2 / 4;
+        }
+        &:nth-child(8) {
+          grid-column: 4 / 6;
+        }
+      }
+    }
+
+    @media (max-width: 60rem) {
+      .container {
+        .header {
+          grid-template-columns: clamp(16rem, calc(23.125vw / 0.48), 26rem) 1fr;
+          margin-bottom: clamp(2rem, calc(3vw / 0.48), 3rem);
+          column-gap: 2rem;
+          .paragraph {
+            grid-column: 1/2;
+            grid-row: 2/3;
+          }
+          .categories {
+            grid-column: 2/3;
+            grid-row: 1/3;
+            flex-direction: column;
+            align-items: flex-end;
+          }
+        }
+        .list {
+          grid-template-columns: repeat(2, 1fr);
+
+          :global(article) {
+            &:not(:nth-child(7), :nth-child(8)) {
+              grid-column: span 1;
+            }
+            &:nth-child(7) {
+              grid-column: 1/2;
+            }
+            &:nth-child(8) {
+              grid-column: 2/3;
+            }
+          }
+        }
+      }
+    }
+
+    @media (max-width: 47rem) {
+      .container {
+        .header {
+          grid-template-columns: 1fr;
+          .categories {
+            grid-column: 1/2;
+            grid-row: 3/4;
+            border-left: none;
+            border-top: 1px solid var(--secondary-300, #e3dfd3);
+            margin-top: 0.25rem;
+            align-items: center;
+            padding-top: 1rem;
+            padding-left: 0;
+
+            .nav {
+              flex-direction: row;
+              flex-wrap: wrap;
+              max-height: none;
+              overflow: visible;
+              gap: 0.5rem 0.125rem;
+            }
+          }
+        }
+        .list {
+          grid-template-columns: 1fr;
+
+          :global(article) {
+            &:not(:nth-child(7)) {
+              grid-column: 1/2;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>

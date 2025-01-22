@@ -1,0 +1,74 @@
+---
+import sanityFetch from '@/src/utils/sanity.fetch';
+import type { QueryProps } from '../index.astro';
+import { PortableTextQuery } from '@/src/components/ui/portable-text';
+import Components, { Components_Query } from '@/src/components/Components.astro';
+import { Listing_Query } from '@/src/components/Blog/Listing.astro';
+import metadataFetch from '@/src/utils/metadata.fetch';
+import Layout from '@/src/layouts/Layout.astro';
+import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
+import Listing from '@/src/components/Blog/Listing.astro';
+
+export const slugPrefix = '/blog/kategoria/';
+
+type CategoriesProps = { slug: string; name: string }[];
+
+export const categories = await sanityFetch<CategoriesProps>({
+  query: `
+    *[_type == "BlogCategory_Collection"][] {
+        name,
+        "slug": slug.current,
+    }
+  `,
+});
+
+export async function getStaticPaths() {
+  return categories?.map(({ slug }) => ({ params: { category: slug.replace(slugPrefix, '') } }));
+}
+
+const { category: _category } = Astro.params;
+const categorySlug = `${slugPrefix}${_category}`;
+
+const currentCategory = categories.find(({ slug }) => slug === categorySlug);
+
+if (!currentCategory) return Astro.rewrite('/404');
+
+const page = await sanityFetch<QueryProps>({
+  query: `
+    *[_type == "Blog_Page"][0] {
+        name,
+        "slug": slug.current,
+        ${PortableTextQuery('heading')}
+        ${PortableTextQuery('paragraph')}   
+        ${Listing_Query({ currentPage: 1, currentCategorySlug: categorySlug })}
+        ${Components_Query} 
+    }
+  `,
+});
+
+const metadata = await metadataFetch(categorySlug);
+---
+
+<Layout {...metadata}>
+  <Breadcrumbs
+    data={[
+      { name: page.name, path: page.slug },
+      { name: currentCategory.name, path: currentCategory.slug },
+    ]}
+    firstItemType="Blog_Page"
+  />
+  <Listing
+    heading={page.heading}
+    paragraph={page.paragraph}
+    totalBlogPosts={page.totalBlogPosts}
+    categories={page.categories}
+    listing={page.listing}
+    currentCategorySlug={currentCategory.slug}
+    currentPage={1}
+    heading={page.heading}
+    paragraph={page.paragraph}
+    slugBase={currentCategory.slug}
+    totalPostsByCategory={page.totalPostsByCategory}
+  />
+  <Components data={page.components} hasPreviousSections={true} />
+</Layout>
