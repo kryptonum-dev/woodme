@@ -25,6 +25,8 @@ import TwoColumnsImageListCta, { TwoColumnsImageListCta_Query } from './global/T
 import AnimatedProjectReferences, { AnimatedProjectReferences_Query } from './global/AnimatedProjectReferences.astro';
 import ContactForm, { ContactForm_Query } from './global/ContactForm/ContactForm.astro';
 import Faq, { Faq_Query } from './global/Faq/Faq.astro';
+import GallerySlider, { GallerySlider_Query } from './global/GallerySlider/index.astro';
+
 const components = {
   FullWidthPhoto,
   CircleSwiper,
@@ -49,6 +51,7 @@ const components = {
   AnimatedProjectReferences,
   ContactForm,
   Faq,
+  GallerySlider,
 };
 
 type ComponentsMap = {
@@ -93,6 +96,7 @@ export const Components_Query = /* groq */ `
     ${AnimatedProjectReferences_Query}
     ${ContactForm_Query}
     ${Faq_Query}
+    ${GallerySlider_Query}
   },
 `;
 ---

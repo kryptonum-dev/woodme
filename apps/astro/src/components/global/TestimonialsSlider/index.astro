@@ -67,7 +67,7 @@ const clientTestimonials = testimonials.map((testimonial) => {
 ---
 
 <section class="TestimonialsSlider max-width" id={sectionId}>
-  <Slider testimonials={clientTestimonials} client:load googleData={googleData}>
+  <Slider testimonials={clientTestimonials} index={index} client:load googleData={googleData}>
     <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
   </Slider>
 </section>

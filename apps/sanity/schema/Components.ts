@@ -21,6 +21,7 @@ import TwoColumnsImageListCta from './components/TwoColumnsImageListCta';
 import AnimatedProjectReferences from './components/AnimatedProjectReferences';
 import ContactForm from './components/ContactForm';
 import Faq from './components/Faq';
+import GallerySlider from './components/GallerySlider';
 
 export default defineType({
   name: 'components',
@@ -49,6 +50,7 @@ export default defineType({
     AnimatedProjectReferences,
     ContactForm,
     Faq,
+    GallerySlider,
   ],
   options: {
     insertMenu: {

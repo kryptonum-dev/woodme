@@ -2,7 +2,6 @@ import VideoPopup from '@/src/components/ui/videoPopup/VideoPopup';
 import { formatDate } from '@/src/utils/format-date';
 import { renderStars } from '@/src/utils/render-stars';
 import useEmblaCarousel from 'embla-carousel-react';
-import { toChildArray } from 'preact';
 import { useCallback, useEffect } from 'preact/hooks';
 import type { TestimonialProps } from '../index.astro';
 import styles from './slider.module.scss';
@@ -10,6 +9,7 @@ import styles from './slider.module.scss';
 type SliderProps = {
   children: React.ReactNode;
   testimonials: TestimonialProps[];
+  index: number;
   googleData: {
     rating: number;
     user_ratings_total: number;
@@ -17,7 +17,7 @@ type SliderProps = {
   };
 };
 
-export default function Slider({ children, testimonials, googleData }: SliderProps) {
+export default function Slider({ children, testimonials, googleData, index }: SliderProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: 'start',
@@ -180,6 +180,8 @@ export default function Slider({ children, testimonials, googleData }: SliderPro
                     >
                       <img
                         src={`https://image.mux.com/${video.asset.playbackId}/thumbnail.jpg`}
+                        loading={index === 0 ? 'eager' : 'lazy'}
+                        fetchPriority={index === 0 && i === 0 ? 'high' : 'auto'}
                         alt={`${name} - minitaruka opinii`}
                       />
                     </VideoPopup>
@@ -190,7 +192,13 @@ export default function Slider({ children, testimonials, googleData }: SliderPro
                   </>
                 ) : (
                   <>
-                    <img src={image.asset.url} alt={image.asset.altText || ''} sizes="44px" />
+                    <img
+                      src={image.asset.url}
+                      alt={image.asset.altText || ''}
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                      fetchPriority={index === 0 && i === 0 ? 'high' : 'auto'}
+                      sizes="44px"
+                    />
                     <p className={styles.name}>{name}</p>
                     <p className={styles.service}>{service}</p>
                     <div className={styles.review} dangerouslySetInnerHTML={{ __html: review }} />
