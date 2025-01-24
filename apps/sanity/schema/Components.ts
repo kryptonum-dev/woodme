@@ -25,6 +25,8 @@ import GallerySlider from './components/GallerySlider';
 import TabsSection from './components/TabsSection';
 import ImageMarquee from './components/ImageMarquee';
 import NumbersSection from './components/NumbersSection';
+import ExpandingText from './components/ExpandingText';
+
 export default defineType({
   name: 'components',
   type: 'array',
@@ -56,6 +58,7 @@ export default defineType({
     TabsSection,
     ImageMarquee,
     NumbersSection,
+    ExpandingText,
   ],
   options: {
     insertMenu: {

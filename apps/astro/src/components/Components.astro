@@ -29,6 +29,7 @@ import GallerySlider, { GallerySlider_Query } from './global/GallerySlider/index
 import TabsSection, { TabsSection_Query } from './global/TabsSection.astro';
 import ImageMarquee, { ImageMarquee_Query } from './global/ImageMarquee.astro';
 import NumbersSection, { NumbersSection_Query } from './global/NumbersSection.astro';
+import ExpandingText, { ExpandingText_Query } from './global/ExpandingText/index.astro';
 
 const components = {
   FullWidthPhoto,
@@ -58,6 +59,7 @@ const components = {
   TabsSection,
   ImageMarquee,
   NumbersSection,
+  ExpandingText,
 };
 
 type ComponentsMap = {
@@ -106,6 +108,7 @@ export const Components_Query = /* groq */ `
     ${TabsSection_Query}
     ${ImageMarquee_Query}
     ${NumbersSection_Query}
+    ${ExpandingText_Query}
   },
 `;
 ---
