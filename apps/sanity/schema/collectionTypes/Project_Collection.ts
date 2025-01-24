@@ -19,11 +19,17 @@ export default defineType({
       description: 'Name will be displayed in breadcrumb and in schemas for Google',
       validation: (Rule) => Rule.required(),
     }),
-    ...defineSlugForDocument({ source: 'name', prefix: '/realizacja/' }),
+    ...defineSlugForDocument({ source: 'name', prefix: '/realizacje/' }),
     defineField({
       name: 'heading',
       type: 'Heading',
       title: 'Heading',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'projectDate',
+      type: 'date',
+      title: 'Project Date',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -37,6 +43,12 @@ export default defineType({
       type: 'image',
       title: 'Image',
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'components',
+      type: 'components',
+      description: "Page Components will be show after the Project's predefined Hero section",
+      title: 'Page Components',
     }),
     defineField({
       name: 'seo',

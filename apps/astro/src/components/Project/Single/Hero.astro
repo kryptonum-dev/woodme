@@ -1,0 +1,138 @@
+---
+import Image from '../../ui/image';
+import { ImageDataQuery, type ImageDataProps } from '../../ui/image';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '../../ui/portable-text';
+
+export const Hero_Query = `
+    name,
+    ${PortableTextQuery('heading')}
+    ${ImageDataQuery('image')}
+    "category": category -> name,
+    projectDate,
+`;
+
+export type HeroProps = {
+  name: string;
+  heading: PortableTextValue;
+  image: ImageDataProps;
+  category: string;
+  projectDate: string;
+};
+
+const { heading, image, category, projectDate } = Astro.props as HeroProps;
+---
+
+<section class="ProjectHero max-width">
+  <header class="header">
+    <PortableText value={heading} class="heading" heading="h1" />
+  </header>
+  <div class="box">
+    <Image
+      {...image}
+      sizes="(max-width: 37.4375rem) 100vw, (max-width: 48rem) 87vw, (max-width: 56.1875rem) 659px, (max-width: 79.875rem) 52vw, 659px"
+      fetchpriority="high"
+      loading="eager"
+    />
+    <div class="row">
+      <p class="category">{category}</p>
+      <time class="date"
+        ><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
+          ><path
+            d="M12.25 5.833H1.75m7.583-4.666V3.5M4.667 1.167V3.5m-.117 9.333h4.9c.98 0 1.47 0 1.845-.19a1.75 1.75 0 0 0 .764-.765c.191-.374.191-.865.191-1.845v-4.9c0-.98 0-1.47-.19-1.844a1.75 1.75 0 0 0-.766-.765c-.374-.19-.864-.19-1.844-.19h-4.9c-.98 0-1.47 0-1.844.19a1.75 1.75 0 0 0-.765.765c-.191.374-.191.864-.191 1.844v4.9c0 .98 0 1.47.19 1.845.169.33.436.597.766.765.374.19.864.19 1.844.19Z"
+            stroke="#87988B"
+            stroke-width="1.25"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path></svg
+        >{projectDate.split('-')[0]}</time
+      >
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .ProjectHero {
+    padding: 2.5rem 0 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 4rem 2rem;
+
+    .header {
+      max-width: 34.0625rem;
+
+      .heading {
+        letter-spacing: -0.025em;
+        line-height: 1.12;
+      }
+    }
+
+    .box {
+      max-width: 41.1875rem;
+      position: relative;
+      border-radius: clamp(6px, calc(6px / 7.68), 8px);
+      overflow: hidden;
+
+      img {
+        max-width: 100%;
+        height: 708px;
+        z-index: -1;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem clamp(2rem, calc(4vw / 0.48), 4rem);
+        position: absolute;
+        left: clamp(1rem, calc(1.25rem / 0.48), 1.25rem);
+        top: clamp(1rem, calc(1.25rem / 0.48), 1.25rem);
+        flex-wrap: wrap;
+        padding-right: 1rem;
+
+        .category,
+        .date {
+          background-color: var(--neutral-100, #f2faf6);
+          border-radius: 999px;
+          letter-spacing: -0.02em;
+          font-size: var(--typography-body-m, 0.875rem);
+        }
+
+        .category {
+          padding: 0.25rem 0.75rem;
+          margin-bottom: 0;
+        }
+
+        .date {
+          padding: 0.25rem 0.675rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+      }
+    }
+
+    @media (max-width: 56.1875rem) {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 7.5rem 0 2.5rem;
+
+      .header {
+        max-width: 38rem;
+      }
+
+      .box {
+        width: calc(100% + 3.1875rem);
+        margin: 0 -1.59375rem;
+        img {
+          height: clamp(481px, calc(879vw / 7.68), 879px);
+        }
+      }
+    }
+
+    @media (max-width: 37.4375rem) {
+      .box {
+        width: 100vw;
+        margin: 0 0 0 calc(-1 * var(--pageMargin));
+      }
+    }
+  }
+</style>

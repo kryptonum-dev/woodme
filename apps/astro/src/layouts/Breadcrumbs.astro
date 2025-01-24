@@ -39,10 +39,13 @@ const schema = JSON.stringify({
   <nav class="Breadcrumbs max-width" data-first-item-type={firstItemType}>
     {breadcrumbsData.map(({ name, path }, i) => {
       const isLastItem = i === breadcrumbsData.length - 1
+      const truncatedName = name.length > 40 ? name.slice(0, 40) + '...' : name
       return (
-        isLastItem ? <span>{name}</span> : (
-          <a href={path}>{name}</a>
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none"><path stroke="#87988B" stroke-linecap="round" stroke-linejoin="round" d="m4.5 9 3-3-3-3"/></svg>
+        isLastItem ? <span>{truncatedName}</span> : (
+          <>
+            <a href={path}>{truncatedName}</a>
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none"><path stroke="#87988B" stroke-linecap="round" stroke-linejoin="round" d="m4.5 9 3-3-3-3"/></svg>
+          </>
         )
       )
     })}
@@ -220,6 +223,15 @@ const schema = JSON.stringify({
 
       &::after {
         left: 100%;
+      }
+    }
+    &[data-first-item-type='Single_Project'] {
+      padding-top: 3rem;
+      margin-bottom: -6rem;
+
+      @media (max-width: 56.1875rem) {
+        margin-bottom: -5rem;
+  
       }
     }
   }
