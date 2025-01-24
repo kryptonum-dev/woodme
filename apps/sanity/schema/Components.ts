@@ -23,6 +23,7 @@ import ContactForm from './components/ContactForm';
 import Faq from './components/Faq';
 import GallerySlider from './components/GallerySlider';
 import TabsSection from './components/TabsSection';
+import ImageMarquee from './components/ImageMarquee';
 
 export default defineType({
   name: 'components',
@@ -53,6 +54,7 @@ export default defineType({
     Faq,
     GallerySlider,
     TabsSection,
+    ImageMarquee,
   ],
   options: {
     insertMenu: {

@@ -27,6 +27,7 @@ import ContactForm, { ContactForm_Query } from './global/ContactForm/ContactForm
 import Faq, { Faq_Query } from './global/Faq/Faq.astro';
 import GallerySlider, { GallerySlider_Query } from './global/GallerySlider/index.astro';
 import TabsSection, { TabsSection_Query } from './global/TabsSection.astro';
+import ImageMarquee, { ImageMarquee_Query } from './global/ImageMarquee.astro';
 
 const components = {
   FullWidthPhoto,
@@ -54,6 +55,7 @@ const components = {
   Faq,
   GallerySlider,
   TabsSection,
+  ImageMarquee,
 };
 
 type ComponentsMap = {
@@ -100,6 +102,7 @@ export const Components_Query = /* groq */ `
     ${Faq_Query}
     ${GallerySlider_Query}
     ${TabsSection_Query}
+    ${ImageMarquee_Query}
   },
 `;
 ---
