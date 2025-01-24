@@ -26,6 +26,7 @@ import AnimatedProjectReferences, { AnimatedProjectReferences_Query } from './gl
 import ContactForm, { ContactForm_Query } from './global/ContactForm/ContactForm.astro';
 import Faq, { Faq_Query } from './global/Faq/Faq.astro';
 import GallerySlider, { GallerySlider_Query } from './global/GallerySlider/index.astro';
+import TabsSection, { TabsSection_Query } from './global/TabsSection.astro';
 
 const components = {
   FullWidthPhoto,
@@ -52,6 +53,7 @@ const components = {
   ContactForm,
   Faq,
   GallerySlider,
+  TabsSection,
 };
 
 type ComponentsMap = {
@@ -97,6 +99,7 @@ export const Components_Query = /* groq */ `
     ${ContactForm_Query}
     ${Faq_Query}
     ${GallerySlider_Query}
+    ${TabsSection_Query}
   },
 `;
 ---

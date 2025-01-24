@@ -1,0 +1,429 @@
+---
+import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
+import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
+import Button from '../ui/button/Button.astro';
+
+export const TabsSection_Query = `
+  _type == "TabsSection" => {
+    ${PortableTextQuery('heading')}
+    ${PortableTextQuery('paragraph')}
+    ${ButtonDataQuery('cta')}
+    tabs[] {
+      title,
+      boxes[] {
+        ${ImageDataQuery('image')}
+        title,
+      },
+    },
+  },
+`;
+
+type Props = {
+  index: number;
+  sectionId?: string;
+  heading: PortableTextValue;
+  paragraph: PortableTextValue;
+  cta: ButtonDataProps;
+  tabs: {
+    title: string;
+    boxes: {
+      title: string;
+      image: ImageDataProps;
+    }[];
+  }[];
+};
+
+const { index, sectionId, heading, paragraph, cta, tabs } = Astro.props;
+---
+
+<section class="TabsSection" id={sectionId}>
+  <div class="container max-width">
+    <header class="header">
+      <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
+      <PortableText value={paragraph} class="paragraph" />
+      <Button {...cta} />
+    </header>
+    <div class="selector">
+      {
+        tabs.map((tab, i) => (
+          <button class="select" tabindex={i === 0 ? -1 : 0}>
+            <span>{tab.title}</span>
+          </button>
+        ))
+      }
+      <div class="highlight"></div>
+    </div>
+    {
+      tabs.map((tab, i) => (
+        <ul class="list">
+          {tab.boxes.map((box, boxIndex) => (
+            <li class="item">
+              <Image
+                {...box.image}
+                sizes="(max-width: 32rem) 95vw, (max-width: 43rem) 264px, (max-width: 53.75rem) 40vw, (max-width: 56.1875rem) 328px, (max-width: 67.125rem) 31vw, 325px"
+                loading={index === 0 && i === 0 ? 'eager' : 'lazy'}
+                fetchpriority={index === 0 && i === 0 && boxIndex === 0 ? 'high' : i === 0 ? 'auto' : 'low'}
+              />
+              <span class="title">{box.title}</span>
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</section>
+
+<style lang="scss">
+  .TabsSection {
+    background-color: var(--tertiary-200, #ccdde9);
+    padding: clamp(3rem, calc(6vw / 0.48), 6rem) 0;
+
+    .container {
+      .header {
+        display: grid;
+        grid-template-columns: auto 27.1875rem;
+        grid-template-rows: auto 1fr;
+        justify-content: space-between;
+        margin-bottom: clamp(3.5rem, calc(4.5vw / 0.48), 6rem);
+        column-gap: 2rem;
+
+        .heading {
+          grid-row: 1/3;
+          grid-column: 1/2;
+          max-width: 41.1875rem;
+          letter-spacing: -0.025em;
+          line-height: 1.12;
+          color: var(--secondary-900, #403d33);
+        }
+
+        .paragraph {
+          grid-row: 1/2;
+          grid-column: 2/3;
+          margin-bottom: 2rem;
+        }
+
+        a {
+          grid-row: 2/3;
+          grid-column: 2/3;
+          align-self: start;
+        }
+      }
+
+      .selector {
+        overflow: hidden;
+        --gap: 0.5rem;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--gap);
+        position: relative;
+        z-index: 1;
+        margin-bottom: clamp(2rem, calc(3.5vw / 0.48), 5rem);
+
+        &::before,
+        &::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 100%;
+          width: calc((100% - var(--gap)) / 2);
+          height: 100%;
+          z-index: -1;
+          background-color: var(--neutral-400, #d0e1d7);
+          transition: transform 800ms var(--easing);
+        }
+
+        &::after {
+          left: unset;
+          right: 0;
+        }
+
+        &:has(.select:first-of-type:hover) {
+          &::before {
+            transform: translateY(-100%);
+          }
+        }
+
+        &:has(.select:last-of-type:hover) {
+          &::after {
+            transform: translateY(-100%);
+          }
+        }
+
+        .select {
+          display: grid;
+          place-content: center;
+          min-height: clamp(3rem, calc(4.125vw / 0.48), 4.5rem);
+          padding: 0 clamp(0.5rem, calc(1vw / 0.48), 1rem);
+          border-bottom: 1px solid var(--neutral-700, #5f6d62);
+          line-height: 1.5;
+          letter-spacing: -0.035em;
+          font-size: var(--typography-body-2xl, 1.5rem);
+          position: relative;
+          overflow: hidden;
+          z-index: 2;
+          transition: color 200ms;
+
+          span {
+            isolation: isolate;
+            z-index: 3;
+          }
+
+          &:first-of-type {
+            color: var(--neutral-100, #f2faf6);
+            pointer-events: none;
+          }
+
+          &:focus:not(:focus-visible) {
+            color: var(--neutral-800, #48514a);
+          }
+
+          &:focus-visible {
+            outline: 2px solid var(--neutral-700, #5f6d62);
+            outline-offset: -2px;
+            border-radius: 4px;
+          }
+        }
+
+        .highlight {
+          position: absolute;
+          bottom: 0;
+          top: 0;
+          width: calc((100% - var(--gap)) / 2);
+          height: 100%;
+          background-color: var(--neutral-700, #5f6d62);
+          border-radius: 0px;
+        }
+      }
+      .list {
+        display: grid;
+        gap: 0 1.75rem;
+        grid-template-columns: auto auto 1fr;
+        .item {
+          max-width: 20.3125rem;
+          display: flex;
+          flex-direction: column;
+          gap: clamp(0.675rem, calc(1vw / 0.48), 1.5rem) 1.25em;
+
+          img {
+            border-radius: 8px;
+            height: 217px;
+          }
+
+          .title {
+            color: var(--neutral-900, #141915);
+          }
+
+          &:last-child {
+            justify-self: end;
+          }
+        }
+
+        &:last-of-type {
+          display: none;
+        }
+      }
+
+      &[data-selected='0'] {
+        .selector {
+          .select:first-of-type {
+            pointer-events: none;
+            color: var(--neutral-100, #f2faf6);
+          }
+        }
+        .list {
+          &:first-of-type {
+            .item {
+              animation: TabsSection_FadeIn 2000ms var(--easing) forwards;
+              opacity: 0;
+
+              &:nth-child(2) {
+                animation-delay: 50ms;
+              }
+              &:nth-child(3) {
+                animation-delay: 100ms;
+              }
+            }
+          }
+        }
+      }
+
+      &[data-selected='1'] {
+        .selector {
+          .highlight {
+            transform: translateX(calc(100% + var(--gap)));
+          }
+
+          .select {
+            &:first-of-type {
+              color: var(--neutral-800, #48514a);
+              pointer-events: auto;
+            }
+            &:last-of-type {
+              color: var(--neutral-100, #f2faf6);
+              pointer-events: none;
+            }
+          }
+        }
+
+        .list {
+          &:first-of-type {
+            display: none;
+          }
+
+          &:last-of-type {
+            display: grid;
+
+            .item {
+              opacity: 0;
+              animation: TabsSection_FadeIn 2000ms cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+
+              &:nth-child(2) {
+                animation-delay: 50ms;
+              }
+              &:nth-child(3) {
+                animation-delay: 100ms;
+              }
+            }
+          }
+        }
+      }
+
+      @media (max-width: 67rem) {
+        .list {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (max-width: 56.1875rem) {
+        .header {
+          grid-template-columns: 1fr;
+          grid-template-rows: repeat(3, auto);
+
+          .heading {
+            grid-column: 1/2;
+            grid-row: 1/2;
+            margin-bottom: clamp(1.5rem, calc(2vw / 0.48), 2rem);
+          }
+          .paragraph {
+            grid-column: 1/2;
+            grid-row: 2/3;
+            max-width: 41.1875rem;
+          }
+          a {
+            grid-column: 1/2;
+            grid-row: 3/4;
+          }
+        }
+
+        .list {
+          grid-template-columns: 1fr;
+          justify-items: stretch;
+
+          .item {
+            flex-direction: row;
+            max-width: none;
+            border-top: 1px solid var(--neutral-400, #c1d1c8);
+            column-gap: 2rem;
+
+            img {
+              order: 2;
+              max-width: clamp(264px, calc(294vw / 7.68), 328px);
+              height: clamp(165px, calc(195vw / 7.68), 224px);
+              margin-bottom: 0;
+              border-radius: 6px;
+              margin-top: -1px;
+            }
+            .title {
+              order: 1;
+              align-self: flex-start;
+              flex: 1;
+              padding-top: 1.25rem;
+            }
+
+            &:last-of-type {
+              border-bottom: 1px solid var(--neutral-400, #c1d1c8);
+
+              img {
+                margin-bottom: -1px;
+              }
+            }
+          }
+        }
+      }
+
+      @media (max-width: 32rem) {
+        .list {
+          gap: 1.5rem;
+          .item {
+            flex-direction: column;
+            border-top: none;
+            row-gap: 0.675rem;
+
+            &:last-of-type {
+              border-bottom: none;
+            }
+
+            img {
+              max-width: 100%;
+              height: clamp(219px, calc(219vw / 3.6), 260px);
+              order: 1;
+            }
+            .title {
+              padding-top: 0;
+              order: 2;
+              max-width: 20.5rem;
+            }
+          }
+        }
+      }
+
+      @media (max-width: 27.5rem) {
+        .header {
+          .paragraph {
+            margin-bottom: 2.25rem;
+          }
+        }
+        .selector {
+          .select {
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+
+    @keyframes TabsSection_FadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(2rem);
+      }
+
+      60% {
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLDivElement>('.TabsSection').forEach((section) => {
+    const container = section.querySelector('.container') as HTMLDivElement;
+    const tabsButtons = document.querySelectorAll('.select') as NodeListOf<HTMLButtonElement>;
+
+    tabsButtons.forEach((button, i) => {
+      button.addEventListener('click', () => {
+        container.dataset.selected = i.toString();
+        tabsButtons.forEach((button, index) => {
+          if (i === index) {
+            button.tabIndex = -1;
+          } else {
+            button.tabIndex = 0;
+          }
+        });
+      });
+    });
+  });
+</script>

@@ -22,6 +22,7 @@ import AnimatedProjectReferences from './components/AnimatedProjectReferences';
 import ContactForm from './components/ContactForm';
 import Faq from './components/Faq';
 import GallerySlider from './components/GallerySlider';
+import TabsSection from './components/TabsSection';
 
 export default defineType({
   name: 'components',
@@ -51,6 +52,7 @@ export default defineType({
     ContactForm,
     Faq,
     GallerySlider,
+    TabsSection,
   ],
   options: {
     insertMenu: {
