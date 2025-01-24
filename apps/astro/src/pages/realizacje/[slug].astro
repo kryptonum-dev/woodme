@@ -26,11 +26,12 @@ const slug = `${slugPrefix}${_slug}`;
 
 if (!projects.find(({ slug }) => slug === slug)) return Astro.rewrite('/404');
 
-const page = await sanityFetch<HeroProps & { components: ComponentsProps }>({
+const page = await sanityFetch<HeroProps & { components: ComponentsProps; footerBackground: string }>({
   query: `
     *[_type == 'Project_Collection' && slug.current == $slug][0] {
       ${Hero_Query}
       ${Components_Query}
+      "footerBackground": components[-1].background,
     }
   `,
   params: { slug: slug },
@@ -41,7 +42,7 @@ if (!page) return Astro.rewrite('/404');
 const metadata = await metadataFetch(slug);
 ---
 
-<Layout {...metadata}>
+<Layout {...metadata} footerBackground={page.footerBackground}>
   <Breadcrumbs
     data={[
       { name: 'Realizacje', path: slugPrefix },

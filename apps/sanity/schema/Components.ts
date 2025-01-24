@@ -24,7 +24,7 @@ import Faq from './components/Faq';
 import GallerySlider from './components/GallerySlider';
 import TabsSection from './components/TabsSection';
 import ImageMarquee from './components/ImageMarquee';
-
+import NumbersSection from './components/NumbersSection';
 export default defineType({
   name: 'components',
   type: 'array',
@@ -55,6 +55,7 @@ export default defineType({
     GallerySlider,
     TabsSection,
     ImageMarquee,
+    NumbersSection,
   ],
   options: {
     insertMenu: {
