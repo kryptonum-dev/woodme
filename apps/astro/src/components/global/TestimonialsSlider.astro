@@ -465,17 +465,14 @@ const countReviews = (number: number = 0) => {
   }
 </style>
 
-<script>
-  import EmblaCarousel, { type EmblaCarouselType, type EmblaOptionsType } from 'embla-carousel';
-  import '@mux/mux-player';
-  import { openVideoPopup } from '@/src/utils/open-video-popup';
+<script is:inline defer src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
+<script is:inline defer src="https://cdn.jsdelivr.net/npm/@mux/mux-player"></script>
 
-  document.querySelectorAll<HTMLDivElement>('.TestimonialsSlider').forEach((section) => {
-    const addTogglePrevNextBtnsActive = (
-      emblaApi: EmblaCarouselType,
-      prevBtn: HTMLButtonElement,
-      nextBtn: HTMLButtonElement
-    ) => {
+<script type="module">
+  import { openVideoPopup } from '/src/utils/open-video-popup';
+
+  document.querySelectorAll('.TestimonialsSlider').forEach((section) => {
+    const addTogglePrevNextBtnsActive = (emblaApi, prevBtn, nextBtn) => {
       const togglePrevNextBtnsState = () => {
         if (emblaApi.canScrollPrev()) prevBtn.removeAttribute('disabled');
         else prevBtn.setAttribute('disabled', 'disabled');
@@ -495,11 +492,7 @@ const countReviews = (number: number = 0) => {
       };
     };
 
-    const addPrevNextBtnsClickHandlers = (
-      emblaApi: EmblaCarouselType,
-      prevBtn: HTMLButtonElement,
-      nextBtn: HTMLButtonElement
-    ) => {
+    const addPrevNextBtnsClickHandlers = (emblaApi, prevBtn, nextBtn) => {
       const scrollPrev = () => {
         emblaApi.scrollPrev();
       };
@@ -520,14 +513,14 @@ const countReviews = (number: number = 0) => {
 
     const OPTIONS = { loop: true, align: 'start', skipSnaps: false };
 
-    const emblaNode = section.querySelector('.embla') as HTMLElement;
-    const viewportNode = emblaNode.querySelector('.embla__viewport') as HTMLElement;
-    const prevBtnNode = section.querySelector('.button__prev') as HTMLButtonElement;
-    const nextBtnNode = section.querySelector('.button__next') as HTMLButtonElement;
+    const emblaNode = section.querySelector('.embla');
+    const viewportNode = emblaNode.querySelector('.embla__viewport');
+    const prevBtnNode = section.querySelector('.button__prev');
+    const nextBtnNode = section.querySelector('.button__next');
 
-    const setupIndicator = (emblaApi: EmblaCarouselType) => {
-      const indicator = emblaNode.querySelector('.indicator') as HTMLElement;
-      const track = emblaNode.querySelector('.embla__track') as HTMLElement;
+    const setupIndicator = (emblaApi) => {
+      const indicator = emblaNode.querySelector('.indicator');
+      const track = emblaNode.querySelector('.embla__track');
 
       const updateIndicator = () => {
         const currentIndex = emblaApi.selectedScrollSnap();
@@ -538,7 +531,7 @@ const countReviews = (number: number = 0) => {
         indicator.style.width = `${slideWidth}%`;
       };
 
-      const handleTrackClick = (e: MouseEvent) => {
+      const handleTrackClick = () => {
         const rect = track.getBoundingClientRect();
         const clickPosition = e.clientX - rect.left;
         const trackWidth = rect.width;
@@ -559,7 +552,7 @@ const countReviews = (number: number = 0) => {
       };
     };
 
-    const emblaApi = EmblaCarousel(viewportNode, OPTIONS as Partial<EmblaOptionsType>);
+    const emblaApi = EmblaCarousel(viewportNode, OPTIONS);
     const cleanup = setupIndicator(emblaApi);
     const cleanupPrevNextBtns = addPrevNextBtnsClickHandlers(emblaApi, prevBtnNode, nextBtnNode);
 
@@ -572,14 +565,14 @@ const countReviews = (number: number = 0) => {
       const slides = section.querySelectorAll('.embla__slide[data-video="true"]');
 
       slides.forEach((slide) => {
-        const showVideoBtn = slide.querySelector('.showVideo')! as HTMLElement;
-        const name = slide.querySelector('.name')?.textContent!;
-        const playbackId = slide.getAttribute('data-playback-id')!;
+        const showVideoBtn = slide.querySelector('.showVideo');
+        const name = slide.querySelector('.name')?.textContent;
+        const playbackId = slide.getAttribute('data-playback-id');
 
         const aspectRatio =
-          slide.getAttribute('data-aspect-ratio')!.split(':')[0] +
+          slide.getAttribute('data-aspect-ratio')?.split(':')[0] +
           '/' +
-          slide.getAttribute('data-aspect-ratio')!.split(':')[1];
+          slide.getAttribute('data-aspect-ratio')?.split(':')[1];
         const maxWidth = Number(slide.getAttribute('data-max-width'));
 
         openVideoPopup(showVideoBtn, playbackId, name, aspectRatio, maxWidth);
