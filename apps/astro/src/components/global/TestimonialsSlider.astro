@@ -465,12 +465,11 @@ const countReviews = (number: number = 0) => {
   }
 </style>
 
-<script is:inline defer src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
-<script is:inline defer src="https://cdn.jsdelivr.net/npm/@mux/mux-player"></script>
+<script is:inline src="https://unpkg.com/embla-carousel/embla-carousel.umd.js"></script>
+<script is:inline src="https://cdn.jsdelivr.net/npm/@mux/mux-player"></script>
 
 <script type="module">
-  import { openVideoPopup } from '/src/utils/open-video-popup';
-
+  import { openVideoPopup } from '/utils/open-video-popup';
   document.querySelectorAll('.TestimonialsSlider').forEach((section) => {
     const addTogglePrevNextBtnsActive = (emblaApi, prevBtn, nextBtn) => {
       const togglePrevNextBtnsState = () => {
