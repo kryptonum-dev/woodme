@@ -1,13 +1,10 @@
-import type { ImageDataProps } from '@/src/components/ui/image';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import type { ClientGalleryListProps } from '../index.astro';
 import styles from './slider.module.scss';
 
 type SliderProps = {
-  galleryList: {
-    heading: string;
-    images: ImageDataProps[];
-  }[];
+  galleryList: ClientGalleryListProps[];
   index: number;
 };
 
@@ -124,6 +121,8 @@ export default function Slider({ galleryList, index }: SliderProps) {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
+  console.log(galleryList);
+
   return (
     <>
       <div className={styles.gallerySelect}>
@@ -143,10 +142,12 @@ export default function Slider({ galleryList, index }: SliderProps) {
             {galleryList[currentGalleryOpen].images.map((image, i) => (
               <li className={styles.embla__slide}>
                 <img
-                  src={image.asset.url}
-                  alt={image.asset.altText || ''}
+                  src={image.src}
+                  srcSet={image.srcSet.attribute}
+                  alt={galleryList[currentGalleryOpen].alts[i] || ''}
                   fetchPriority={index === 0 && i === 0 ? 'high' : 'auto'}
                   loading={index === 0 ? 'eager' : 'lazy'}
+                  sizes="(max-width: 42.375rem) 288px, (max-width: 48px) 43vw, 326px"
                 />
               </li>
             ))}

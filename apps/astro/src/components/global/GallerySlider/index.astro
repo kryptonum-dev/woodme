@@ -1,7 +1,9 @@
 ---
+import { optimizeImage } from '@/src/utils/optimize-images';
 import { ImageDataQuery, type ImageDataProps } from '../../ui/image';
 import PortableText, { PortableTextQuery, type PortableTextValue } from '../../ui/portable-text';
 import Slider from './Slider';
+import type { GetImageResult } from 'astro';
 
 export const GallerySlider_Query = `
   _type == "GallerySlider" => {
@@ -23,14 +25,36 @@ type Props = {
   }[];
 };
 
+export type ClientGalleryListProps = {
+  heading: string;
+  images: GetImageResult[];
+  alts: string[];
+};
+
 const { index, sectionId, heading, galleryList } = Astro.props as Props;
+
+const optimizedImages = await Promise.all(
+  galleryList.map(async (gallery) => {
+    return await Promise.all(
+      gallery.images.map(async (image) => {
+        return await optimizeImage(image, 326, 489);
+      })
+    );
+  })
+);
+
+const clientGalleryList = galleryList.map((gallery, index) => {
+  return { ...gallery, images: optimizedImages[index], alts: gallery.images.map((image) => image.asset.altText) };
+});
+
+
 ---
 
 <section class="GallerySlider" id={sectionId}>
   <header class="header">
     <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
   </header>
-  <div class="container"><Slider client:load index={index} galleryList={galleryList} /></div>
+  <div class="container"><Slider client:load index={index} galleryList={clientGalleryList} /></div>
 </section>
 
 <style lang="scss">

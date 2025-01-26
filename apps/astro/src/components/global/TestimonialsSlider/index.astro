@@ -4,7 +4,7 @@ import { ImageDataQuery, type ImageDataProps } from '../../ui/image';
 import PortableText, { PortableTextQuery, type PortableTextValue } from '../../ui/portable-text';
 import Slider from './Slider';
 import { portableTextToHtml } from '@/src/utils/portableText-to-html';
-import { getImage } from 'astro:assets';
+import { optimizeImage } from '@/src/utils/optimize-images';
 
 export const TestimonialsSlider_Query = `
   _type == "TestimonialsSlider" => {
@@ -68,21 +68,9 @@ type Props = {
 
 const { index, sectionId, heading, testimonials, googleData } = Astro.props as Props;
 
-const optimizeImage = async (image: ImageDataProps) => {
-  const optimizedImage = await getImage({
-    src: image.asset.url,
-    format: 'webp',
-    width: 44,
-    height: 44,
-    widths: [48, 64, 96, 128, 256, 384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-  });
-
-  return optimizedImage;
-};
-
 const optimizedImages = await Promise.all(
   testimonials.map((testimonial) => {
-    return optimizeImage(testimonial.image);
+    return optimizeImage(testimonial.image, 44, 44);
   })
 );
 
