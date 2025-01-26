@@ -1,4 +1,5 @@
 ---
+import { splitHeading } from '@/src/utils/split-heading';
 import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
 import Button from '../ui/button/Button.astro';
 import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
@@ -42,6 +43,8 @@ const {
   secondaryHeading,
   secondaryParagraph,
 } = Astro.props;
+
+const MainHeading = index === 0 ? 'h1' : 'h2';
 ---
 
 <section class="DualColumnSection max-width" id={sectionId}>
@@ -70,7 +73,6 @@ const {
             stroke-linejoin="round"
             d="M3.556 6.55a4.672 4.672 0 0 1-.055-.717c0-2.577 2.103-4.666 4.698-4.666 2.594 0 4.697 2.089 4.697 4.666 0 .583-.107 1.14-.303 1.654a1.73 1.73 0 0 0-.07.202.527.527 0 0 0-.014.112c-.001.043.004.09.016.184l.235 1.907c.025.207.038.31.004.385a.292.292 0 0 1-.15.147c-.076.033-.18.017-.385-.013l-1.858-.272c-.097-.014-.146-.021-.19-.021a.52.52 0 0 0-.116.012c-.044.01-.099.03-.21.071a4.714 4.714 0 0 1-2.374.245m-3.028 2.387c1.73 0 3.132-1.436 3.132-3.208 0-1.772-1.402-3.208-3.132-3.208-1.73 0-3.132 1.436-3.132 3.208 0 .356.057.699.162 1.019.044.135.066.203.073.25a.496.496 0 0 1 .006.123c-.002.047-.014.1-.037.205l-.357 1.611 1.747-.238c.095-.013.143-.02.185-.02.043 0 .067.003.11.012.04.008.101.03.223.072.32.113.663.174 1.02.174Z"
           ></path>
-
           <defs>
             <clipPath id="a">
               <path fill="#fff" d="M0 0h14v14H0z"></path>
@@ -84,7 +86,20 @@ const {
   </div>
   <div class="content">
     <header class="header">
-      <PortableText value={mainHeading} heading={index === 0 ? 'h1' : 'h2'} class="mainHeading" />
+      <MainHeading class="mainHeading">
+        {
+          splitHeading(mainHeading).map((item: any, i: number) => (
+            <>
+              {i === 0 ? '' : ' '}
+              {item.marks.includes('strong') ? (
+                <strong style={`animation-delay: ${i * 150 - i * 10 + 400}ms`}>{item.text}</strong>
+              ) : (
+                <span style={`animation-delay: ${i * 150 - i * 10 + 400}ms`}>{item.text}</span>
+              )}
+            </>
+          ))
+        }</MainHeading
+      >
     </header>
     <PortableText value={mainParagraph} class="mainParagraph" />
     <PortableText value={secondaryHeading} heading={index === 0 ? 'h2' : 'h3'} class="secondaryHeading" />
@@ -120,12 +135,12 @@ const {
         position: relative;
         z-index: 2;
         border-radius: 2px;
-        animation: fadeInMain 2200ms var(--easing);
+        animation: DualColumnSection_fadeInMain 4400ms var(--easing);
 
-        @keyframes fadeInMain {
+        @keyframes DualColumnSection_fadeInMain {
           0% {
             opacity: 0;
-            transform: translateY(clamp(1.5rem, calc(2vw / 0.48), 2rem));
+            transform: translateY(clamp(1.5rem, calc(2.5vw / 0.48), 4.5rem));
           }
           100% {
             opacity: 1;
@@ -144,18 +159,19 @@ const {
         margin-bottom: -1.875rem;
         position: relative;
         z-index: 1;
+        opacity: 0;
+        animation: DualColumnSection_fadeInSecondary 5400ms var(--easing) forwards;
+
         .secondaryImage {
           width: clamp(117px, calc(220vw / 7.68), 315px);
           height: clamp(145px, calc(274vw / 7.68), 393px);
           border-radius: 2px;
         }
 
-        animation: fadeInSecondary 2400ms var(--easing);
-
-        @keyframes fadeInSecondary {
+        @keyframes DualColumnSection_fadeInSecondary {
           0% {
             opacity: 0;
-            transform: translateY(clamp(2rem, calc(2.5vw / 0.48), 3rem));
+            transform: translateY(clamp(2rem, calc(2.5vw / 0.48), 3.5rem));
           }
           100% {
             opacity: 1;
@@ -178,12 +194,13 @@ const {
         right: 8.75rem;
         bottom: -3.25rem;
         opacity: 0;
-        animation: fadeInCta 2000ms var(--easing) 100ms forwards;
+        animation: DualColumnSection_fadeInCta 3000ms var(--easing) 100ms forwards;
+        animation-delay: 600ms;
 
-        @keyframes fadeInCta {
+        @keyframes DualColumnSection_fadeInCta {
           0% {
             opacity: 0;
-            transform: translateX(1rem);
+            transform: translateX(2rem);
           }
           100% {
             opacity: 1;
@@ -240,6 +257,25 @@ const {
             width: 2.75rem;
             height: 1rem;
             background-color: transparent;
+          }
+
+          span,
+          strong {
+            display: inline-block;
+            animation-delay: 100ms;
+            opacity: 0;
+            animation: DualColumnSection_heading 2800ms var(--easing) forwards;
+
+            @keyframes DualColumnSection_heading {
+              0% {
+                opacity: 0;
+                transform: translateY(1.5rem);
+              }
+              100% {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
           }
         }
       }

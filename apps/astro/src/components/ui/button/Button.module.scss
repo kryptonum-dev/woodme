@@ -20,7 +20,7 @@
       border-radius: 4px;
       min-height: 2.5rem;
       > span:first-of-type {
-        transition: transform 800ms var(--easing);
+        transition: transform 900ms var(--easing);
       }
 
       > span:last-of-type {
@@ -28,14 +28,14 @@
         position: relative;
         transition:
           opacity 300ms,
-          transform 800ms var(--easing);
+          transform 1000ms var(--easing);
         height: 15px;
         width: 14px;
 
         svg {
           position: absolute;
           bottom: 0;
-          transition: transform 600ms var(--easing);
+          transition: transform 900ms var(--easing);
         }
 
         > svg:first-of-type {
@@ -62,7 +62,7 @@
         position: absolute;
         transition:
           opacity 250ms,
-          transform 700ms var(--easing);
+          transform 800ms var(--easing);
         z-index: -1;
         width: 105%;
         aspect-ratio: 1/1;
@@ -177,7 +177,7 @@
       span {
         text-decoration: underline;
         text-underline-offset: 25%;
-        transition: transform 800ms var(--easing);
+        transition: transform 800ms cubic-bezier(0.19, 1, 0.22, 1);
         min-height: 2.75rem;
         display: inline-flex;
         align-items: center;
@@ -197,7 +197,7 @@
         content: '';
         position: absolute;
         z-index: -3;
-        transition: transform 500ms var(--easing);
+        transition: transform 600ms var(--easing);
         border-radius: 8px;
       }
     }

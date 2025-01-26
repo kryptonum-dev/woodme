@@ -64,7 +64,7 @@ const Subheading = index === 0 ? 'h2' : 'h3';
     <ul class="gallery max-width">
       {
         links.map(({ title, slug, image }, i) => (
-          <li class="item" style={`transition-delay: ${i * 80 + 140}ms`}>
+          <li class="item" style={`transition-delay: ${i * 180 + 140}ms`}>
             <a href={slug} class="card">
               <Image
                 {...image}
@@ -116,7 +116,7 @@ const Subheading = index === 0 ? 'h2' : 'h3';
             strong {
               display: inline-block;
               opacity: 0;
-              transform: translateY(0.675rem);
+              transform: translateY(0.75rem);
             }
           }
         }
@@ -157,7 +157,7 @@ const Subheading = index === 0 ? 'h2' : 'h3';
 
           @media (min-width: 56.3125rem) {
             opacity: 0;
-            transform: translateY(0.5rem);
+            transform: translateY(1rem);
           }
 
           &:has(a:focus-visible) {
@@ -203,7 +203,7 @@ const Subheading = index === 0 ? 'h2' : 'h3';
               height: 50%;
               background: linear-gradient(180deg, rgba(28, 19, 17, 0) 0%, #1c1311 100%);
               transform-origin: bottom;
-              transition: transform 400ms;
+              transition: transform 600ms;
             }
 
             &:focus:not(:focus-visible) {
@@ -296,13 +296,13 @@ const Subheading = index === 0 ? 'h2' : 'h3';
               transform: translateY(0);
               transition:
                 opacity 600ms,
-                transform 1000ms var(--easing);
+                transform 2400ms var(--easing);
             }
           }
 
           .separator {
             transform: scaleX(1);
-            transition: transform 1600ms var(--easing);
+            transition: transform 2000ms var(--easing);
 
             &:nth-of-type(4) {
               transition-delay: 200ms;
@@ -318,7 +318,7 @@ const Subheading = index === 0 ? 'h2' : 'h3';
             transform: translateY(0);
             transition:
               opacity 800ms,
-              transform 1400ms var(--easing);
+              transform 1800ms var(--easing);
           }
         }
       }
