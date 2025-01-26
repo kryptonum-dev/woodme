@@ -40,7 +40,7 @@ const Subheading = index === 0 ? 'h2' : 'h3';
       list
         .filter((_, listIndex) => listIndex % 2 === 0)
         .map(({ icon, heading, paragraph }, i) => (
-          <li class="item" style={`transition-delay: ${i * 600 + 500}ms`}>
+          <li class="item" style={`transition-delay: ${i * 200 + 200}ms`}>
             <div class="itemHeader">
               <div class="icon">
                 <Image {...icon} sizes="20px" loading={index === 0 ? 'eager' : 'lazy'} />
@@ -88,7 +88,7 @@ const Subheading = index === 0 ? 'h2' : 'h3';
       list
         .filter((_, listIndex) => listIndex % 2 !== 0)
         .map(({ icon, heading, paragraph }, i) => (
-          <li class="item" style={`transition-delay: ${i * 600 + 800}ms`}>
+          <li class="item" style={`transition-delay: ${i * 200 + 300}ms`}>
             <div class="itemHeader">
               <div class="icon">
                 <Image {...icon} sizes="20px" />

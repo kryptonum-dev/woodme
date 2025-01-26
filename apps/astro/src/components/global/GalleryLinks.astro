@@ -1,6 +1,7 @@
 ---
+import { splitHeading } from '@/src/utils/split-heading';
 import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
-import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
+import { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
 
 export const GalleryLinks_Query = `
   _type == "GalleryLinks" => {
@@ -39,7 +40,18 @@ const Subheading = index === 0 ? 'h2' : 'h3';
       {
         headingArray.map((heading, i) => (
           <>
-            <PortableText isSpan value={heading.partHeading} />
+            <span class="part">
+              {splitHeading(heading.partHeading).map((item: any, splitIndex: number) => (
+                <>
+                  {' '}
+                  {item.marks.includes('strong') ? (
+                    <strong style={`transition-delay: ${(i + 1) * 120 + splitIndex * 60 - 140}ms`}>{item.text}</strong>
+                  ) : (
+                    <span style={`transition-delay: ${(i + 1) * 120 + splitIndex * 60 - 140}ms`}>{item.text}</span>
+                  )}
+                </>
+              ))}
+            </span>
             {(i === 0 && headingArray.length > 1) || (i === 1 && headingArray.length > 2) ? (
               <span class="separator">&nbsp;</span>
             ) : null}
@@ -52,7 +64,7 @@ const Subheading = index === 0 ? 'h2' : 'h3';
     <ul class="gallery max-width">
       {
         links.map(({ title, slug, image }, i) => (
-          <li class="item">
+          <li class="item" style={`transition-delay: ${i * 80 + 140}ms`}>
             <a href={slug} class="card">
               <Image
                 {...image}
@@ -96,6 +108,19 @@ const Subheading = index === 0 ? 'h2' : 'h3';
       .heading {
         gap: 1.5rem;
 
+        .part {
+          display: inline-block;
+
+          @media (min-width: 56.3125rem) {
+            span,
+            strong {
+              display: inline-block;
+              opacity: 0;
+              transform: translateY(0.675rem);
+            }
+          }
+        }
+
         .separator {
           width: clamp(7rem, calc(7.5vw / 0.48), 13.25rem);
           display: inline-flex;
@@ -103,6 +128,8 @@ const Subheading = index === 0 ? 'h2' : 'h3';
           margin: 0 0.5rem;
           height: 1px;
           background-color: var(--neutral-400, #c1d1c8);
+          transform: scaleX(0);
+          transform-origin: left;
         }
 
         @media (max-width: 64rem) {
@@ -127,6 +154,11 @@ const Subheading = index === 0 ? 'h2' : 'h3';
           border-radius: 8px;
           overflow: hidden;
           position: relative;
+
+          @media (min-width: 56.3125rem) {
+            opacity: 0;
+            transform: translateY(0.5rem);
+          }
 
           &:has(a:focus-visible) {
             outline: 3px solid var(--neutral-700, #5f6d62);
@@ -253,6 +285,44 @@ const Subheading = index === 0 ? 'h2' : 'h3';
         padding: 1rem 0;
       }
     }
+
+    &.visible {
+      .header {
+        .heading {
+          .part {
+            span,
+            strong {
+              opacity: 1;
+              transform: translateY(0);
+              transition:
+                opacity 600ms,
+                transform 1000ms var(--easing);
+            }
+          }
+
+          .separator {
+            transform: scaleX(1);
+            transition: transform 1600ms var(--easing);
+
+            &:nth-of-type(4) {
+              transition-delay: 200ms;
+            }
+          }
+        }
+      }
+
+      .content {
+        .gallery {
+          .item {
+            opacity: 1;
+            transform: translateY(0);
+            transition:
+              opacity 800ms,
+              transform 1400ms var(--easing);
+          }
+        }
+      }
+    }
   }
 </style>
 
@@ -295,5 +365,19 @@ const Subheading = index === 0 ? 'h2' : 'h3';
         animationFrameId = requestAnimationFrame(() => updatePosition(e));
       });
     });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(section);
   });
 </script>
