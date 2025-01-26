@@ -3,12 +3,12 @@ import { formatDate } from '@/src/utils/format-date';
 import { renderStars } from '@/src/utils/render-stars';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect } from 'preact/hooks';
-import type { TestimonialProps } from '../index.astro';
+import type { ClientTestimonialProps } from '../index.astro';
 import styles from './slider.module.scss';
 
 type SliderProps = {
   children: React.ReactNode;
-  testimonials: TestimonialProps[];
+  testimonials: ClientTestimonialProps[];
   index: number;
   googleData: {
     rating: number;
@@ -193,8 +193,9 @@ export default function Slider({ children, testimonials, googleData, index }: Sl
                 ) : (
                   <>
                     <img
-                      src={image.asset.url}
-                      alt={image.asset.altText || ''}
+                      src={image.src}
+                      srcSet={image.srcSet.attribute}
+                      alt={''}
                       loading={index === 0 ? 'eager' : 'lazy'}
                       fetchPriority={index === 0 && i === 0 ? 'high' : 'auto'}
                       sizes="44px"
