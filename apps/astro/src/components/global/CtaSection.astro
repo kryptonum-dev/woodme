@@ -66,19 +66,19 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
     .background {
       position: relative;
       background-color: var(--neutral-700, #5f6d62);
-      clip-path: ellipse(122% 100% at 50% 100%);
+      clip-path: ellipse(calc(120vw) 100% at 50% 100%);
       padding-top: clamp(1rem, calc(1vw / 0.48), 1rem);
 
-      @media (max-width: 71.25rem) {
-        clip-path: ellipse(160% 100% at 50% 100%);
+      @media (max-width: 64rem) {
+        clip-path: ellipse(calc(170vw) 100% at 50% 100%);
       }
 
-      @media (max-width: 56.25rem) {
-        clip-path: ellipse(200% 100% at 50% 100%);
+      @media (max-width: 48rem) {
+        clip-path: ellipse(calc(210vw) 100% at 50% 100%);
       }
 
-      @media (max-width: 34rem) {
-        clip-path: ellipse(310% 100% at 50% 100%);
+      @media (max-width: 30rem) {
+        clip-path: ellipse(calc(270vw) 100% at 50% 100%);
       }
     }
 
@@ -120,7 +120,7 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
     .images {
       position: relative;
       overflow: hidden;
-      clip-path: ellipse(95% 100% at 50% 100%);
+      clip-path: ellipse(calc(93vw) 100% at 50% 100%);
 
       &:hover,
       &:has(a:focus-visible) {
@@ -165,30 +165,16 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
         right: 0;
         transform: rotate(180deg);
       }
-      @media (min-width: 91.25rem) {
-        clip-path: ellipse(102% 100% at 50% 100%);
-      }
-      @media (min-width: 100rem) {
-        clip-path: ellipse(110% 100% at 50% 100%);
-      }
-      @media (min-width: 115rem) {
-        clip-path: ellipse(120% 100% at 50% 100%);
+      @media (max-width: 64rem) {
+        clip-path: ellipse(calc(129vw) 100% at 50% 100%);
       }
 
-      @media (min-width: 125rem) {
-        clip-path: ellipse(130% 100% at 50% 100%);
+      @media (max-width: 48rem) {
+        clip-path: ellipse(calc(153vw) 100% at 50% 100%);
       }
 
-      @media (max-width: 71.25rem) {
-        clip-path: ellipse(120% 100% at 50% 100%);
-      }
-
-      @media (max-width: 56.25rem) {
-        clip-path: ellipse(155% 100% at 50% 100%);
-      }
-
-      @media (max-width: 34rem) {
-        clip-path: ellipse(230% 100% at 50% 100%);
+      @media (max-width: 30rem) {
+        clip-path: ellipse(calc(185vw) 100% at 50% 100%);
       }
     }
 

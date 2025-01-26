@@ -1,4 +1,5 @@
 ---
+import { splitHeading } from '@/src/utils/split-heading';
 import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
 import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
 
@@ -28,6 +29,8 @@ type Props = {
 
 const { index, sectionId, heading, image, list } = Astro.props;
 
+const Heading = index === 0 ? 'h1' : 'h2';
+
 const Subheading = index === 0 ? 'h2' : 'h3';
 ---
 
@@ -35,9 +38,9 @@ const Subheading = index === 0 ? 'h2' : 'h3';
   <ul class="list list__left">
     {
       list
-        .filter((_, index) => index % 2 === 0)
-        .map(({ icon, heading, paragraph }) => (
-          <li class="item">
+        .filter((_, listIndex) => listIndex % 2 === 0)
+        .map(({ icon, heading, paragraph }, i) => (
+          <li class="item" style={`transition-delay: ${i * 600 + 500}ms`}>
             <div class="itemHeader">
               <div class="icon">
                 <Image {...icon} sizes="20px" loading={index === 0 ? 'eager' : 'lazy'} />
@@ -57,21 +60,35 @@ const Subheading = index === 0 ? 'h2' : 'h3';
           d="m32.457 7.2-2.89-3.26-3.194-2.592A4.494 4.494 0 0 0 23.17 0H10.83c-1.2 0-2.354.486-3.203 1.348L4.432 3.94 1.542 7.2C.693 8.063.5 9.235.5 10.453v11.223a.32.32 0 0 0 .318.323h3.31a.32.32 0 0 0 .317-.323V5.92c0-.843.535-1.634 1.413-1.894.17-.051.35-.07.527-.07h10.46L13.97 7.201c-.85.863-1.043 2.033-1.043 3.25v11.224a.32.32 0 0 0 .318.323h3.31a.32.32 0 0 0 .318-.323V5.92c0-.843.534-1.634 1.412-1.894.17-.051.35-.07.527-.07h8.804c.178 0 .357.019.527.07a1.966 1.966 0 0 1 1.413 1.894v15.758a.32.32 0 0 0 .318.323h3.309a.32.32 0 0 0 .318-.323V10.454c0-1.219-.192-2.39-1.043-3.251V7.2Z"
         ></path>
       </svg>
-      <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
+      <Heading class="heading"
+        >{
+          splitHeading(heading).map((item: any, i: number) => (
+            <>
+              {i === 0 ? '' : ' '}
+              {item.marks.includes('strong') ? (
+                <strong style={`transition-delay: ${i * 50 - i * 10}ms`}>{item.text}</strong>
+              ) : (
+                <span style={`transition-delay: ${i * 50 - i * 10}ms`}>{item.text}</span>
+              )}
+            </>
+          ))
+        }</Heading
+      >
     </header>
-    <Image
-      class="image"
-      {...image}
-      sizes="(max-width: 28.75rem) 98vw,  (max-width: 37.5rem) 90vw,  (max-width: 48rem) 75vw, (max-width: 64rem) 36rem, (max-width: 81.25rem) 31vw, 402px"
-      priority={index === 0}
-    />
+    <div class="image">
+      <Image
+        {...image}
+        sizes="(max-width: 28.75rem) 98vw,  (max-width: 37.5rem) 90vw,  (max-width: 48rem) 75vw, (max-width: 64rem) 36rem, (max-width: 81.25rem) 31vw, 402px"
+        priority={index === 0}
+      />
+    </div>
   </div>
   <ul class="list list__right">
     {
       list
-        .filter((_, index) => index % 2 !== 0)
-        .map(({ icon, heading, paragraph }) => (
-          <li class="item">
+        .filter((_, listIndex) => listIndex % 2 !== 0)
+        .map(({ icon, heading, paragraph }, i) => (
+          <li class="item" style={`transition-delay: ${i * 600 + 800}ms`}>
             <div class="itemHeader">
               <div class="icon">
                 <Image {...icon} sizes="20px" />
@@ -111,11 +128,23 @@ const Subheading = index === 0 ? 'h2' : 'h3';
 
         svg {
           margin-bottom: clamp(1.25rem, calc(1.5vw / 0.48), 1.5rem);
+          transition: opacity 1200ms;
+          opacity: 0;
         }
 
         .heading {
           font-size: var(--typography-heading-m, 1.75rem);
           text-align: center;
+
+          span,
+          strong {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(0.75rem);
+            transition:
+              opacity 600ms,
+              transform 1400ms var(--easing);
+          }
         }
       }
 
@@ -123,6 +152,13 @@ const Subheading = index === 0 ? 'h2' : 'h3';
         width: 100%;
         border-radius: 4px;
         height: 16.875rem;
+        overflow: hidden;
+
+        img {
+          height: 100%;
+          width: 100%;
+          transform: scale(1.08);
+        }
       }
     }
 
@@ -138,6 +174,14 @@ const Subheading = index === 0 ? 'h2' : 'h3';
         flex-direction: column;
         gap: clamp(1rem, calc(1vw / 0.48), 1.25rem);
         align-items: flex-end;
+
+        @media (min-width: 64.0625rem) {
+          opacity: 0;
+          transform: translateY(1.25rem);
+          transition:
+            opacity 600ms,
+            transform 2200ms var(--easing);
+        }
 
         .itemHeader {
           display: flex;
@@ -196,6 +240,34 @@ const Subheading = index === 0 ? 'h2' : 'h3';
           .paragraph {
             text-align: start;
           }
+        }
+      }
+    }
+    &.visible {
+      .container {
+        .header {
+          svg {
+            opacity: 1;
+          }
+          .heading {
+            span,
+            strong {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        }
+        .image {
+          img {
+            transform: scale(1);
+            transition: transform 1800ms var(--easing);
+          }
+        }
+      }
+      .list {
+        .item {
+          opacity: 1;
+          transform: translateY(0);
         }
       }
     }
@@ -273,3 +345,33 @@ const Subheading = index === 0 ? 'h2' : 'h3';
     }
   }
 </style>
+
+<script>
+  document.querySelectorAll('.ListPointsMiddlePhoto').forEach((section) => {
+    const getResponsiveThreshold = () => {
+      const vw = window.innerWidth;
+      if (vw <= 460) {
+        return 0.15;
+      } else if (vw <= 1204) {
+        return 0.4;
+      }
+      return 0.3;
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: getResponsiveThreshold(),
+      }
+    );
+
+    observer.observe(section);
+  });
+</script>

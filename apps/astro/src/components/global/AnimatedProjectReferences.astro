@@ -3,6 +3,7 @@ import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
 import { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
 import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
 import Button from '../ui/button/Button.astro';
+import { splitHeading } from '@/src/utils/split-heading';
 
 export const AnimatedProjectReferences_Query = `
   _type == "AnimatedProjectReferences" => {
@@ -29,25 +30,6 @@ type Props = {
 
 const { index, heading, highlightedProjects, cta, sectionId } = Astro.props;
 
-function getHeadingLetters(heading: any) {
-  const newBlock = heading.map((block: any) => {
-    return block.children.map((child: any) => {
-      return { text: child.text, marks: child.marks };
-    });
-  });
-
-  return newBlock
-    .flat()
-    .flatMap((block: any) => {
-      const words = block.text.split(' ');
-      return words.map((word: any) => ({
-        text: word,
-        marks: block.marks.includes('strong') ? ['strong'] : [],
-      }));
-    })
-    .filter((item: any) => item.text !== '');
-}
-
 const Heading = index === 0 ? 'h1' : 'h2';
 ---
 
@@ -56,7 +38,7 @@ const Heading = index === 0 ? 'h1' : 'h2';
     <header class="header">
       <Heading class="heading"
         >{
-          getHeadingLetters(heading).map((item: any, i: number) => (
+          splitHeading(heading).map((item: any, i: number) => (
             <>
               {i === 0 ? '' : ' '}
               {item.marks.includes('strong') ? (
@@ -85,7 +67,7 @@ const Heading = index === 0 ? 'h1' : 'h2';
         </a>
       ))
     }
-    <Button id="ctaButton" style={{ transitionDelay: `${getHeadingLetters(heading).length * 35 + 100}ms` }} {...cta} />
+    <Button id="ctaButton" style={{ transitionDelay: `${splitHeading(heading).length * 35 + 100}ms` }} {...cta} />
   </div>
 </section>
 
