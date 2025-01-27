@@ -1,0 +1,28 @@
+---
+import 'lenis/dist/lenis.css';
+---
+
+<script>
+  import Lenis from 'lenis';
+  const lenis = new Lenis();
+
+  function raf(time: number) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const href = this.getAttribute('href');
+
+      if (href === '#') {
+        lenis.scrollTo(0);
+      } else {
+        const target = document.querySelector<HTMLElement>(href!);
+        target && lenis.scrollTo(target);
+      }
+    });
+  });
+</script>

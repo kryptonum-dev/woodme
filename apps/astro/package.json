@@ -23,6 +23,7 @@
     "autoprefixer": "^10.4.20",
     "cssnano": "^7.0.6",
     "embla-carousel-react": "^8.5.2",
+    "lenis": "^1.1.20",
     "react-hook-form": "^7.54.2",
     "react-international-phone": "^4.4.0",
     "sharp-ico": "^0.1.5",

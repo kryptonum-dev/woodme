@@ -121,8 +121,6 @@ export default function Slider({ galleryList, index }: SliderProps) {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
-  console.log(galleryList);
-
   return (
     <>
       <div className={styles.gallerySelect}>
