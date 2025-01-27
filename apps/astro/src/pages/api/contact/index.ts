@@ -22,7 +22,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   const htmlTemplate = `
     <p>Adres email: <b>${email}</b></p>
-    ${!!phone && phone !== '+48' && `<p>Telefon: <b>${phone}</b></p>`}
+    ${!!phone && phone !== '+48' ? `<p>Telefon: <b>${phone}</b></p>` : ''}
     <br />
     <p>${message.trim().replace(/\n/g, '<br />')}</p>
   `;
@@ -36,7 +36,7 @@ export const POST: APIRoute = async ({ request }) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'Formularz kontaktowy WOODME <onboarding@resend.dev>',
+        from: 'Formularz kontaktowy WOODME <formularz@sending.wood-me.pl>',
         to: 'projekty@wood-me.pl',
         reply_to: email,
         subject: `Wiadomość z formularza kontaktowego WOODME`,
@@ -55,41 +55,39 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // TODO: Add user confirmation email when confirmed DNS
+    const userConfirmationTemplate = `
+      <p>Witaj ${email},</p>
+      <p>Dziękujemy za skontaktowanie się z WOODME. Otrzymaliśmy Twoją wiadomość i wkrótce się z Tobą skontaktujemy.</p>
+      <br />
+      <p>Z poważaniem,</p>
+      <p>Zespół WOODME</p>
+    `;
+    const userConfirmationText = htmlToString(userConfirmationTemplate);
 
-    // const userConfirmationTemplate = `
-    //   <p>Witaj ${email},</p>
-    //   <p>Dziękujemy za skontaktowanie się z WOODME. Otrzymaliśmy Twoją wiadomość i wkrótce się z Tobą skontaktujemy.</p>
-    //   <br />
-    //   <p>Z poważaniem,</p>
-    //   <p>Zespół WOODME</p>
-    // `;
-    // const userConfirmationText = htmlToString(userConfirmationTemplate);
+    const userRes = await fetch(`https://api.resend.com/emails`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: 'Formularz kontaktowy WOODME <formularz@sending.wood-me.pl>',
+        to: email,
+        subject: `Dziękujemy za kontakt z WOODME`,
+        html: userConfirmationTemplate,
+        text: userConfirmationText,
+      }),
+    });
 
-    // const userRes = await fetch(`https://api.resend.com/emails`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: `Bearer ${RESEND_API_KEY}`,
-    //   },
-    //   body: JSON.stringify({
-    //     from: 'WOODME <onboarding@resend.dev>',
-    //     to: email,
-    //     subject: `Dziękujemy za kontakt z WOODME`,
-    //     html: userConfirmationTemplate,
-    //     text: userConfirmationText,
-    //   }),
-    // });
-
-    // if (userRes.status !== 200) {
-    //   return new Response(
-    //     JSON.stringify({
-    //       message: 'Failed to send confirmation email to user',
-    //       success: false,
-    //     }),
-    //     { status: 400 }
-    //   );
-    // }
+    if (userRes.status !== 200) {
+      return new Response(
+        JSON.stringify({
+          message: 'Failed to send confirmation email to user',
+          success: false,
+        }),
+        { status: 400 }
+      );
+    }
 
     return new Response(
       JSON.stringify({
