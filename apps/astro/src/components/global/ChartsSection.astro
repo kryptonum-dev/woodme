@@ -43,7 +43,9 @@ const { index, sectionId, heading, charts, ctaText, cta } = Astro.props;
       charts.map(({ value, unit, heading, paragraph }) => (
         <li class="chart">
           <div class="column">
-            <span class="value">{value}</span>
+            <p class="value" data-count-up>
+              {value}
+            </p>
             {unit && <span class="unit">{unit}</span>}
           </div>
           <div class="content">
@@ -276,12 +278,53 @@ const { index, sectionId, heading, charts, ctaText, cta } = Astro.props;
 
 <script>
   document.querySelectorAll<HTMLDivElement>('.ChartsSection').forEach((section) => {
+    const easeOutCubic = (x: number) => 1 - Math.pow(1 - x, 3);
+
+    function animateValue(element: HTMLElement, duration: number) {
+      const countFrom = 0;
+      const countTo = parseInt(element.textContent || '0', 10);
+      let startTimestamp: number;
+      const step = (timestamp: number) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const easedProgress = easeOutCubic(progress);
+        element.textContent = Math.floor(easedProgress * (countTo - countFrom) + countFrom).toString();
+        if (progress < 1) window.requestAnimationFrame(step);
+      };
+      setTimeout(() => {
+        const parent = element.closest<HTMLElement>('[data-count-up]');
+        if (parent) parent.removeAttribute('style');
+      }, duration);
+      window.requestAnimationFrame(step);
+    }
+
+    function wrapNumbersInSpans(element: HTMLElement) {
+      const text = element.textContent || '';
+      const initialWidth = element.getBoundingClientRect().width;
+      element.style.width = `${initialWidth}px`;
+      const parts = text.split(/(\d+(?:\.\d+)?)/);
+      element.innerHTML = parts
+        .map((part) => {
+          const num = parseInt(part);
+          return isNaN(num) ? part : `<span class="number">${num}</span>`;
+        })
+        .join('');
+    }
+
     const charts = section.querySelectorAll('.chart');
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
+            const dataValue = entry.target.querySelector<HTMLSpanElement>('[data-count-up]');
+
+            wrapNumbersInSpans(dataValue as HTMLElement);
+            const numberElements = dataValue?.querySelectorAll<HTMLSpanElement>('.number');
+            numberElements?.forEach((element) => {
+              animateValue(element, 3200);
+            });
+
             entry.target.classList.add('visible');
             observer.unobserve(entry.target);
           }
