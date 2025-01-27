@@ -35,8 +35,10 @@ export default function Form({
     if (response.success) {
       setStatus('success');
       reset();
+      if (typeof fathom !== 'undefined') fathom.trackEvent('contactForm_submit');
     } else {
       setStatus('error');
+      if (typeof fathom !== 'undefined') fathom.trackEvent('contactForm_error');
     }
   };
 
