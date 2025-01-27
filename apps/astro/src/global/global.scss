@@ -681,3 +681,36 @@ div p:not(:last-child) {
     z-index: 2;
   }
 }
+
+.page-transition {
+  position: fixed;
+  background-color: rgba(242, 250, 246, 0.844);
+
+  z-index: 9999;
+  transition:
+    opacity 300ms,
+    transform 300ms;
+  animation: OpenAnimation 1200ms forwards var(--easing);
+  border-radius: 999px;
+  width: 100vw;
+  aspect-ratio: 1/1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background-color: red;
+  isolation: isolate;
+}
+
+html.fresh-visit .page-transition {
+  display: none;
+}
+
+@keyframes OpenAnimation {
+  from {
+    transform: translate(-50%, -50%) scale(5);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(0);
+  }
+}

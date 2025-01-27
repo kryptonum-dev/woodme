@@ -169,6 +169,20 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'splashScreenImages',
+      type: 'array',
+      title: 'Splash Screen Images',
+      description: 'Images that will be dispalyed in the page entrance splash screen. (3 images are required)',
+      of: [
+        {
+          type: 'image',
+          title: 'Image',
+          validation: (Rule) => Rule.required(),
+        },
+      ],
+      validation: (Rule) => Rule.required().length(3),
+    }),
+    defineField({
       name: 'navigation',
       type: 'object',
       title: 'Navigation',

@@ -135,18 +135,7 @@ const MainHeading = index === 0 ? 'h1' : 'h2';
         position: relative;
         z-index: 2;
         border-radius: 2px;
-        animation: DualColumnSection_fadeInMain 4400ms var(--easing);
-
-        @keyframes DualColumnSection_fadeInMain {
-          0% {
-            opacity: 0;
-            transform: translateY(clamp(1.5rem, calc(2.5vw / 0.48), 4.5rem));
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
+        opacity: 0;
       }
 
       .secondaryImageBox {
@@ -160,23 +149,11 @@ const MainHeading = index === 0 ? 'h1' : 'h2';
         position: relative;
         z-index: 1;
         opacity: 0;
-        animation: DualColumnSection_fadeInSecondary 5400ms var(--easing) forwards;
 
         .secondaryImage {
           width: clamp(117px, calc(220vw / 7.68), 315px);
           height: clamp(145px, calc(274vw / 7.68), 393px);
           border-radius: 2px;
-        }
-
-        @keyframes DualColumnSection_fadeInSecondary {
-          0% {
-            opacity: 0;
-            transform: translateY(clamp(2rem, calc(2.5vw / 0.48), 3.5rem));
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
         }
       }
 
@@ -194,19 +171,6 @@ const MainHeading = index === 0 ? 'h1' : 'h2';
         right: 8.75rem;
         bottom: -3.25rem;
         opacity: 0;
-        animation: DualColumnSection_fadeInCta 3000ms var(--easing) 100ms forwards;
-        animation-delay: 600ms;
-
-        @keyframes DualColumnSection_fadeInCta {
-          0% {
-            opacity: 0;
-            transform: translateX(2rem);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
 
         .col {
           display: flex;
@@ -264,18 +228,6 @@ const MainHeading = index === 0 ? 'h1' : 'h2';
             display: inline-block;
             animation-delay: 100ms;
             opacity: 0;
-            animation: DualColumnSection_heading 2800ms var(--easing) forwards;
-
-            @keyframes DualColumnSection_heading {
-              0% {
-                opacity: 0;
-                transform: translateY(1.5rem);
-              }
-              100% {
-                opacity: 1;
-                transform: translateY(0);
-              }
-            }
           }
         }
       }
@@ -388,5 +340,92 @@ const MainHeading = index === 0 ? 'h1' : 'h2';
         }
       }
     }
+
+    &.animation-started {
+      .images {
+        .mainImage {
+          animation: DualColumnSection_fadeInMain 4400ms var(--easing);
+
+          @keyframes DualColumnSection_fadeInMain {
+            0% {
+              opacity: 0;
+              transform: translateY(clamp(1.5rem, calc(2.5vw / 0.48), 4.5rem));
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        }
+
+        .secondaryImageBox {
+          animation: DualColumnSection_fadeInSecondary 5400ms var(--easing) forwards;
+
+          @keyframes DualColumnSection_fadeInSecondary {
+            0% {
+              opacity: 0;
+              transform: translateY(clamp(2rem, calc(2.5vw / 0.48), 3.5rem));
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        }
+
+        .cta {
+          animation: DualColumnSection_fadeInCta 3000ms var(--easing) 100ms forwards;
+          animation-delay: 600ms;
+
+          @keyframes DualColumnSection_fadeInCta {
+            0% {
+              opacity: 0;
+              transform: translateX(2rem);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        }
+      }
+      .content {
+        .header {
+          .mainHeading {
+            span,
+            strong {
+              animation: DualColumnSection_heading 2800ms var(--easing) forwards;
+
+              @keyframes DualColumnSection_heading {
+                0% {
+                  opacity: 0;
+                  transform: translateY(1.5rem);
+                }
+                100% {
+                  opacity: 1;
+                  transform: translateY(0);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 </style>
+
+<script>
+  document.querySelectorAll('.DualColumnSection').forEach((section) => {
+    function init() {
+      section.classList.add('animation-started');
+    }
+
+    if (document.documentElement.classList.contains('fresh-visit')) {
+      init();
+    } else {
+      window.addEventListener('splashscreen:complete', () => {
+        init();
+      });
+    }
+  });
+</script>

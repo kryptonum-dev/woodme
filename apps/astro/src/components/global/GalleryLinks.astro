@@ -328,56 +328,66 @@ const Subheading = index === 0 ? 'h2' : 'h3';
 
 <script>
   document.querySelectorAll<HTMLDivElement>('.GalleryLinks').forEach((section) => {
-    const items = section.querySelectorAll('.item') as NodeListOf<HTMLAnchorElement>;
+    function init() {
+      const items = section.querySelectorAll('.item') as NodeListOf<HTMLAnchorElement>;
 
-    items.forEach((item) => {
-      const showMore = item.querySelector('.showMore') as HTMLElement;
-      let firstMove = false;
-      let animationFrameId: number;
+      items.forEach((item) => {
+        const showMore = item.querySelector('.showMore') as HTMLElement;
+        let firstMove = false;
+        let animationFrameId: number;
 
-      const updatePosition = (e: MouseEvent) => {
-        const rect = item.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const updatePosition = (e: MouseEvent) => {
+          const rect = item.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
 
-        const offsetX = showMore.offsetWidth / 2;
-        const offsetY = showMore.offsetHeight / 2;
+          const offsetX = showMore.offsetWidth / 2;
+          const offsetY = showMore.offsetHeight / 2;
 
-        showMore.style.transform = `translate(${x - offsetX}px, ${y - offsetY}px)`;
-        showMore.style.transition = firstMove
-          ? 'transform 300ms cubic-bezier(0.19, 1, 0.22, 1), opacity 100ms ease-out'
-          : 'opacity 100ms ease-out';
-        firstMove = true;
-      };
+          showMore.style.transform = `translate(${x - offsetX}px, ${y - offsetY}px)`;
+          showMore.style.transition = firstMove
+            ? 'transform 300ms cubic-bezier(0.19, 1, 0.22, 1), opacity 100ms ease-out'
+            : 'opacity 100ms ease-out';
+          firstMove = true;
+        };
 
-      item.addEventListener('mouseenter', () => {
-        showMore.style.opacity = '1';
-        firstMove = false;
-      });
-
-      item.addEventListener('mouseleave', () => {
-        showMore.style.opacity = '0';
-        cancelAnimationFrame(animationFrameId);
-      });
-
-      item.addEventListener('mousemove', (e) => {
-        cancelAnimationFrame(animationFrameId);
-        animationFrameId = requestAnimationFrame(() => updatePosition(e));
-      });
-    });
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
+        item.addEventListener('mouseenter', () => {
+          showMore.style.opacity = '1';
+          firstMove = false;
         });
-      },
-      { threshold: 0.3 }
-    );
 
-    observer.observe(section);
+        item.addEventListener('mouseleave', () => {
+          showMore.style.opacity = '0';
+          cancelAnimationFrame(animationFrameId);
+        });
+
+        item.addEventListener('mousemove', (e) => {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = requestAnimationFrame(() => updatePosition(e));
+        });
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+
+      observer.observe(section);
+    }
+
+    if (document.documentElement.classList.contains('fresh-visit')) {
+      init();
+    } else {
+      window.addEventListener('splashscreen:complete', () => {
+        init();
+      });
+    }
   });
 </script>
