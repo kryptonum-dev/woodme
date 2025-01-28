@@ -111,7 +111,7 @@ export default defineField({
         ?.map((part: any) => toPlainText(part.partHeading))
         .filter(Boolean)
         .join(' '),
-      ...sectionPreview({ imgUrl: `/static/components/test.webp`, icon: icon() }),
+      ...sectionPreview({ imgUrl: `/static/components/${name}.webp`, icon: icon() }),
     }),
   },
 });

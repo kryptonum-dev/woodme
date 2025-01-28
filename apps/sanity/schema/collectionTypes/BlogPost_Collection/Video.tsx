@@ -1,5 +1,6 @@
 import { defineField } from 'sanity';
 import { isValidUrl } from '../../../utils/is-valid-url';
+import { sectionPreview } from '../../../utils/section-preview';
 
 const name = 'Video';
 const title = 'Video';
@@ -55,7 +56,7 @@ export default defineField({
     },
     prepare: ({ source }) => ({
       title: `Video${source?.name ? ` [${source.name}]` : ''}`,
-      media: icon,
+      ...sectionPreview({ imgUrl: `/static/BlogPost_Collection/${name}.webp`, icon: icon() }),
     }),
   },
 });

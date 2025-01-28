@@ -54,7 +54,7 @@ export default defineField({
     prepare: ({ quote, author }) => ({
       title: `${quote}`,
       subtitle: `${author.name}, ${author.title}`,
-      media: author.image,
+      ...sectionPreview({ imgUrl: `/static/BlogPost_Collection/${name}.webp`, icon: icon() }),
     }),
   },
 });

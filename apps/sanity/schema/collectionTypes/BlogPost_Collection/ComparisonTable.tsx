@@ -69,7 +69,7 @@ export default defineField({
     },
     prepare: ({ comparisonHeading }) => ({
       title: `Comparison Table${comparisonHeading ? ` [${comparisonHeading[0]} vs ${comparisonHeading[1]}]` : ''}`,
-      media: () => '📊',
+      ...sectionPreview({ imgUrl: `/static/BlogPost_Collection/${name}.webp`, icon: icon() }),
     }),
   },
 });

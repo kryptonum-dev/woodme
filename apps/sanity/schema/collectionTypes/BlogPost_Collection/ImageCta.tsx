@@ -81,7 +81,7 @@ export default defineField({
       return {
         title: title,
         subtitle: toPlainText(heading),
-        media: icon,
+        ...sectionPreview({ imgUrl: `/static/BlogPost_Collection/${name}.webp`, icon: icon() }),
       };
     },
   },

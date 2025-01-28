@@ -4,7 +4,7 @@
  * @constant
  * @type {string}
  */
-export const THEME_COLOR: string = '#87988B';
+export const THEME_COLOR: string = '#48514A';
 
 /**
  * Global declaration of background color in HEX format.
@@ -12,7 +12,7 @@ export const THEME_COLOR: string = '#87988B';
  * @constant
  * @type {string}
  */
-export const BACKGROUND_COLOR: string = '#E3DFD3';
+export const BACKGROUND_COLOR: string = '#E9F2ED';
 
 /**
  * Global declaration of the locale (language) for the application.
@@ -38,7 +38,7 @@ export const DOMAIN: string = 'http://localhost:4321';
  * @constant
  * @type {string}
  */
-export const DEFAULT_TITLE: string = 'Woodme';
+export const DEFAULT_TITLE: string = 'WOODME';
 
 /**
  * Global declaration of the default description for the application.

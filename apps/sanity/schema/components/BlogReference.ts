@@ -59,7 +59,7 @@ export default defineField({
     prepare: ({ heading }) => ({
       title: title,
       subtitle: toPlainText(heading),
-      ...sectionPreview({ imgUrl: `/static/components/blog.webp`, icon: icon() }),
+      ...sectionPreview({ imgUrl: `/static/components/${name}.webp`, icon: icon() }),
     }),
   },
 });
