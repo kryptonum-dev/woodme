@@ -192,14 +192,16 @@ export default function Slider({ children, testimonials, googleData, index }: Sl
                   </>
                 ) : (
                   <>
-                    <img
-                      src={image.src}
-                      srcSet={image.srcSet.attribute}
-                      alt={''}
-                      loading={index === 0 ? 'eager' : 'lazy'}
-                      fetchPriority={index === 0 && i === 0 ? 'high' : 'auto'}
-                      sizes="44px"
-                    />
+                    {image && (
+                      <img
+                        src={image.src}
+                        srcSet={image.srcSet.attribute}
+                        alt={''}
+                        loading={index === 0 ? 'eager' : 'lazy'}
+                        fetchPriority={index === 0 && i === 0 ? 'high' : 'auto'}
+                        sizes="44px"
+                      />
+                    )}
                     <p className={styles.name}>{name}</p>
                     <p className={styles.service}>{service}</p>
                     <div className={styles.review} dangerouslySetInnerHTML={{ __html: review }} />

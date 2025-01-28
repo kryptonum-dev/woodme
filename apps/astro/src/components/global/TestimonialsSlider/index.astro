@@ -32,7 +32,7 @@ export const TestimonialsSlider_Query = `
 
 export type TestimonialProps = {
   review: string;
-  image: GetImageResult;
+  image?: GetImageResult | null;
   date: string;
   name: string;
   service: string;
@@ -50,7 +50,7 @@ export type TestimonialProps = {
 };
 
 export type ClientTestimonialProps = Omit<TestimonialProps, 'review'> & {
-  image: GetImageResult;
+  image?: GetImageResult | null;
   review: string;
 };
 
@@ -70,6 +70,7 @@ const { index, sectionId, heading, testimonials, googleData } = Astro.props as P
 
 const optimizedImages = await Promise.all(
   testimonials.map((testimonial) => {
+    if (!testimonial.image) return null;
     return optimizeImage(testimonial.image, 44, 44);
   })
 );

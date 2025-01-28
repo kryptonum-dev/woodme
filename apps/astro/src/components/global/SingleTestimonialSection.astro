@@ -32,7 +32,7 @@ type Props = {
   sectionId?: string;
   heading: PortableTextValue;
   testimonial: {
-    image: ImageDataProps;
+    image?: ImageDataProps;
     date: string;
     name: string;
     service: string;
@@ -90,8 +90,8 @@ const hasVideo = !!testimonial?.video;
         </div>
         <span class="rating__text">{googleData.rating.toFixed(1)}</span>
       </div>
-      <div class="person">
-        <Image class="photo" {...testimonial.image} sizes="52px" />
+      <div class="person" data-image={!!testimonial.image}>
+        {testimonial.image && <Image class="photo" {...testimonial.image} sizes="52px" />}
         <span class="name">{testimonial.name}</span>
         <span class="service">{testimonial.service}</span>
       </div>
@@ -220,6 +220,23 @@ const hasVideo = !!testimonial?.video;
 
         .info {
           max-width: 27.375rem;
+
+          .person {
+            display: flex;
+            flex-direction: column;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 31.25rem) {
+      .container {
+        .info {
+          .person {
+            align-items: center;
+            width: 100%;
+            justify-content: center;
+          }
         }
       }
     }
@@ -315,10 +332,6 @@ const hasVideo = !!testimonial?.video;
 
           .info {
             padding: 1.5rem 1.5rem 3rem;
-
-            .person {
-              align-self: center;
-            }
 
             .rating {
               transform: translate(-50%, 1.75rem);

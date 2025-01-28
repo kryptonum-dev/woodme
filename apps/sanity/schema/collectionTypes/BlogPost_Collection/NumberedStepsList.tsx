@@ -109,7 +109,6 @@ export default defineField({
               type: 'text',
               rows: 2,
               title: 'Paragraph',
-              validation: (Rule) => Rule.required(),
             }),
           ],
           validation: (Rule) => Rule.required(),

@@ -1,5 +1,4 @@
 import { defineField, defineType } from 'sanity';
-import { defineSlugForDocument } from '../../utils/define-slug-for-document';
 
 const name = 'Testimonial_Collection';
 const title = 'Testimonial Collection';
@@ -15,14 +14,13 @@ export default defineType({
       name: 'image',
       type: 'image',
       title: 'Image',
-      validation: (Rule) => Rule.required(),
       fieldset: 'media',
     }),
     defineField({
       name: 'video',
       type: 'mux.video',
       description: 'When added, video will replace the review text',
-      title: 'Video (optional)',
+      title: 'Video',
       fieldset: 'media',
     }),
     defineField({
@@ -53,7 +51,7 @@ export default defineType({
   fieldsets: [
     {
       name: 'media',
-      title: 'Media',
+      title: 'Media (optional)',
       options: { collapsible: true },
     },
   ],

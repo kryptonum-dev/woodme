@@ -14,7 +14,7 @@ export const Image_Query = `
 type Props = {
   node: {
     image: ImageDataProps;
-    source: {
+    source?: {
       name: string;
       url: string;
     };
@@ -30,9 +30,16 @@ const { node } = Astro.props;
     sizes="(max-width: 30rem) 100vw, (max-width: 37.5rem) 96vw, (max-width: 48rem) 86vw, (max-width: 69rem) 656px, (max-width: 79.625rem) 62vw, 770px"
     loading="lazy"
   />
-  <p class="source">
-    <span>Źródło:</span><a href={node.source.url} class="link" target="_blank" rel="noreferrer">{node.source.name}</a>
-  </p>
+  {
+    node.source && (
+      <p class="source">
+        <span>Źródło:</span>
+        <a href={node.source.url} class="link" target="_blank" rel="noreferrer">
+          {node.source.name}
+        </a>
+      </p>
+    )
+  }
 </section>
 <style lang="scss">
   .Image {
@@ -41,6 +48,10 @@ const { node } = Astro.props;
       width: 100%;
       border-radius: 4px;
       margin-bottom: 0.125rem;
+      max-height: 431px;
+      max-width: fit-content;
+      display: block;
+      margin: 0 auto;
     }
     .source {
       font-size: var(--typography-body-m, 0.875rem);

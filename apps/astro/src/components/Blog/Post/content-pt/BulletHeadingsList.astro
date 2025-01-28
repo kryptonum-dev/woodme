@@ -42,7 +42,7 @@ const { node } = Astro.props;
       display: grid;
       grid-template-columns: auto 1fr;
       gap: 0px clamp(0.5rem, calc(0.675vw / 0.48), 0.675rem);
-      font-size: 1.25rem;
+      font-size: var(--typography-body-l, 1.25rem);
 
       &:not(:last-child) {
         margin-bottom: clamp(1.5rem, calc(1.75vw / 0.48), 1.75rem);

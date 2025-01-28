@@ -55,8 +55,7 @@ const {
             <li class="item">
               <div>
                 <span>{item.heading}</span>
-                {' - '}
-                <span class="inner-text">{item.paragraph}</span>
+                {item.paragraph && <span class="inner-text">{` - ${item.paragraph}`}</span>}
               </div>
             </li>
           ))
@@ -84,7 +83,7 @@ const {
         grid-template-columns: auto 1fr;
         column-gap: var(--col-gap);
         margin-top: clamp(1.5rem, calc(1.75vw / 0.48), 1.75rem);
-        font-size: 1.25rem;
+        font-size: var(--typography-body-l, 1.25rem);
         counter-increment: section;
 
         &::before {
@@ -132,7 +131,7 @@ const {
       margin-right: calc(-1 * var(--pageMargin));
       border-radius: 8px;
       .title {
-        font-size: 1.25rem;
+        font-size: var(--typography-body-l, 1.125rem);
       }
     }
   }
