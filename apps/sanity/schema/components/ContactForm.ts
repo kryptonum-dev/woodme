@@ -92,6 +92,10 @@ export default defineField({
                     defineField({
                       name: 'icon',
                       type: 'image',
+                      description: 'Only SVG files are supported.',
+                      options: {
+                        accept: '.svg',
+                      },
                       title: 'Icon',
                       validation: (Rule) => Rule.required(),
                     }),
@@ -199,15 +203,24 @@ export default defineField({
                       validation: (Rule) => Rule.required(),
                     }),
                   ],
+                  preview: {
+                    select: {
+                      text: 'pdfBox',
+                    },
+                    prepare: ({ text }) => ({
+                      title: text,
+                      media: () => '📃',
+                    }),
+                  },
                 }),
               ],
               preview: {
                 select: {
-                  text: 'pdfBox.text',
+                  title: 'paragraph',
                 },
-                prepare: ({ text }) => ({
-                  title: text,
-                  media: () => '📃',
+                prepare: ({ title }) => ({
+                  title: toPlainText(title),
+                  media: () => '📑',
                 }),
               },
             },
@@ -333,7 +346,7 @@ export default defineField({
   ],
   preview: {
     select: {
-      heading: 'heading',
+      heading: 'form.heading',
     },
     prepare: ({ heading }) => ({
       title: title,

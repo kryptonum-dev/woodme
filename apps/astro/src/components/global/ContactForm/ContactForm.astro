@@ -123,11 +123,11 @@ type Props = {
 const { sectionId, index, image, form, rightBox, phoneBox, emailBox, addressBox, tel, email, address } = Astro.props;
 
 const svgContents = rightBox.textColumn.map(async (text) =>
-  text.pdfBox.icon ? await imageToInlineSvg(text.pdfBox.icon) : null
+  text.pdfBox?.icon ? await imageToInlineSvg(text.pdfBox.icon) : null
 );
 ---
 
-<section class="ContactForm max-width" id={sectionId}>
+<section class="ContactForm max-width" data-isFirst={index === 0} id={sectionId}>
   <div class="container">
     <Image
       {...image}
@@ -230,6 +230,14 @@ const svgContents = rightBox.textColumn.map(async (text) =>
   .ContactForm {
     padding: 0.25rem 0 1.25rem;
 
+    &[data-isFirst='false'] {
+      padding-top: 4.5rem;
+
+      @media (max-width: 64rem) {
+        padding-top: 0;
+      }
+    }
+
     .container {
       min-height: 46.25rem;
       width: 100%;
@@ -301,6 +309,8 @@ const svgContents = rightBox.textColumn.map(async (text) =>
         &__paragraph {
           margin-bottom: 0.75rem;
           :global(p) {
+            font-size: var(--typography-body-m, 0.875rem);
+
             :not(:last-child) {
               margin-bottom: 1.25rem;
             }

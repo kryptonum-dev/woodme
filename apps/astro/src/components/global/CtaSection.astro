@@ -66,7 +66,7 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
     .background {
       position: relative;
       background-color: var(--neutral-700, #5f6d62);
-      clip-path: ellipse(calc(120vw) 100% at 50% 100%);
+      clip-path: ellipse(calc(144vw) 100% at 50% 100%);
       padding-top: clamp(1rem, calc(1vw / 0.48), 1rem);
 
       @media (max-width: 64rem) {
@@ -120,7 +120,7 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
     .images {
       position: relative;
       overflow: hidden;
-      clip-path: ellipse(calc(93vw) 100% at 50% 100%);
+      clip-path: ellipse(calc(113vw) 100% at 50% 100%);
 
       &:hover,
       &:has(a:focus-visible) {
@@ -232,6 +232,9 @@ const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
         max-width: 16.375rem;
         position: relative;
         z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         .paragraph {
           text-align: center;
           color: var(--neutral-100, #f2faf6);

@@ -18,12 +18,26 @@ export default defineField({
       type: 'Heading',
       title: 'Heading',
       validation: (Rule) => Rule.required(),
+      initialValue: [
+        {
+          _type: 'block',
+          style: 'normal',
+          children: [{ _type: 'span', text: 'Masz pytanie? My mamy odpowiedzi. ' }],
+        },
+      ],
     }),
     defineField({
       name: 'paragraph',
       type: 'PortableText',
       title: 'Paragraph',
       validation: (Rule) => Rule.required(),
+      initialValue: [
+        {
+          _type: 'block',
+          style: 'normal',
+          children: [{ _type: 'span', text: 'Sprawdź najczęściej zadawane pytania' }],
+        },
+      ],
     }),
     defineField({
       name: 'faqItems',
@@ -48,12 +62,26 @@ export default defineField({
           type: 'Heading',
           title: 'Heading',
           validation: (Rule) => Rule.required(),
+          initialValue: [
+            {
+              _type: 'block',
+              style: 'normal',
+              children: [{ _type: 'span', text: 'Masz inne pytanie?' }],
+            },
+          ],
         }),
         defineField({
           name: 'paragraph',
           type: 'PortableText',
           title: 'Paragraph',
           validation: (Rule) => Rule.required(),
+          initialValue: [
+            {
+              _type: 'block',
+              style: 'normal',
+              children: [{ _type: 'span', text: 'Z przyjemnością pomożemy' }],
+            },
+          ],
         }),
         defineField({
           name: 'state',
@@ -111,6 +139,10 @@ export default defineField({
                     defineField({
                       name: 'icon',
                       type: 'image',
+                      description: 'Only SVG files are supported.',
+                      options: {
+                        accept: '.svg',
+                      },
                       title: 'Icon',
                       validation: (Rule) => Rule.required(),
                     }),

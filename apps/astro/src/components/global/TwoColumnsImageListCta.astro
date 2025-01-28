@@ -2,6 +2,7 @@
 import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
 import Button from '../ui/button/Button.astro';
 import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
+import imageToInlineSvg from '../ui/image/image-to-inline-svg';
 import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
 
 export const TwoColumnsImageListCta_Query = `
@@ -9,7 +10,7 @@ export const TwoColumnsImageListCta_Query = `
     ${ImageDataQuery('image')}
     ${PortableTextQuery('heading')}
     pointsList[]{
-        ${ImageDataQuery('icon')}
+        "icon": icon.asset -> url,
         text,
     },
     ctaBox{
@@ -26,7 +27,7 @@ type Props = {
   image: ImageDataProps;
   heading: PortableTextValue;
   pointsList: {
-    icon: ImageDataProps;
+    icon: string;
     text: string;
   }[];
   ctaBox: {
@@ -65,6 +66,8 @@ function renderHeading(heading: any) {
 }
 
 const Heading = index === 0 ? 'h1' : 'h2';
+
+const svgContents = await Promise.all(pointsList.map(async ({ icon }) => imageToInlineSvg(icon)));
 ---
 
 <section class="TwoColumnsImageListCta" id={sectionId}>
@@ -74,7 +77,7 @@ const Heading = index === 0 ? 'h1' : 'h2';
         <Heading class="heading">
           {
             renderHeading(heading).map((word: string) =>
-              word === 'WoodMe' ? (
+              word === 'WOODME' ? (
                 <>
                   <svg
                     style="display: inline-block;"
@@ -112,10 +115,10 @@ const Heading = index === 0 ? 'h1' : 'h2';
       </header>
       <ul class="list">
         {
-          pointsList.map(({ icon, text }, i) => (
+          pointsList.map(({ text }, i) => (
             <li class="item" style={`animation-duration: ${2300 + i * 400}ms; animation-delay: ${i * 200}ms;`}>
               <div class="icon">
-                <Image {...icon} sizes="20px" loading={index === 0 ? 'eager' : 'lazy'} />
+                <Fragment set:html={svgContents[i]} />
               </div>
               <span class="text">{text}</span>
             </li>
@@ -194,7 +197,7 @@ const Heading = index === 0 ? 'h1' : 'h2';
                 border-radius: 999px;
                 flex-shrink: 0;
 
-                img {
+                :global(svg) {
                   max-width: 20px;
                   max-height: 20px;
                   width: 100%;

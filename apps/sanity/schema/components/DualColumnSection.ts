@@ -65,7 +65,7 @@ export default defineField({
   ],
   preview: {
     select: {
-      heading: 'heading',
+      heading: 'mainHeading',
     },
     prepare: ({ heading }) => ({
       title: title,

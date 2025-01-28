@@ -23,7 +23,7 @@ export default defineField({
       name: 'heading',
       type: 'Heading',
       title: 'Heading',
-      description: 'Word "WoodMe" will be transformed into a logo icon',
+      description: 'Word "WOODME" will be transformed into a logo icon',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -35,7 +35,16 @@ export default defineField({
         {
           type: 'object',
           fields: [
-            { type: 'image', name: 'icon', title: 'Icon', validation: (Rule) => Rule.required() },
+            {
+              type: 'image',
+              name: 'icon',
+              title: 'Icon',
+              description: 'Only SVG files are supported.',
+              options: {
+                accept: '.svg',
+              },
+              validation: (Rule) => Rule.required(),
+            },
             { type: 'string', name: 'text', title: 'Text', validation: (Rule) => Rule.required() },
           ],
         },

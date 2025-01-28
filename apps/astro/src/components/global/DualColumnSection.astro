@@ -92,9 +92,9 @@ const MainHeading = index === 0 ? 'h1' : 'h2';
             <>
               {i === 0 ? '' : ' '}
               {item.marks.includes('strong') ? (
-                <strong style={`animation-delay: ${i * 150 - i * 10 + 400}ms`}>{item.text}</strong>
+                <strong style={`animation-delay: ${i * 150 - i * 10 + 300}ms`}>{item.text}</strong>
               ) : (
-                <span style={`animation-delay: ${i * 150 - i * 10 + 400}ms`}>{item.text}</span>
+                <span style={`animation-delay: ${i * 150 - i * 10 + 300}ms`}>{item.text}</span>
               )}
             </>
           ))
@@ -344,7 +344,7 @@ const MainHeading = index === 0 ? 'h1' : 'h2';
     &.animation-started {
       .images {
         .mainImage {
-          animation: DualColumnSection_fadeInMain 4400ms var(--easing);
+          animation: DualColumnSection_fadeInMain 4400ms var(--easing) forwards;
 
           @keyframes DualColumnSection_fadeInMain {
             0% {
@@ -394,7 +394,7 @@ const MainHeading = index === 0 ? 'h1' : 'h2';
           .mainHeading {
             span,
             strong {
-              animation: DualColumnSection_heading 2800ms var(--easing) forwards;
+              animation: DualColumnSection_heading 2200ms var(--easing) forwards;
 
               @keyframes DualColumnSection_heading {
                 0% {

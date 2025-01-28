@@ -2,13 +2,14 @@
 import { splitHeading } from '@/src/utils/split-heading';
 import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
 import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
+import imageToInlineSvg from '../ui/image/image-to-inline-svg';
 
 export const ListPointsMiddlePhoto_Query = `
   _type == "ListPointsMiddlePhoto" => {
     ${PortableTextQuery('heading')}
     ${ImageDataQuery('image')}
     list[] {
-      ${ImageDataQuery('icon')}
+    "icon": icon.asset -> url,
       heading,
       ${PortableTextQuery('paragraph')}
     },
@@ -21,7 +22,7 @@ type Props = {
   heading: PortableTextValue;
   image: ImageDataProps;
   list: {
-    icon: ImageDataProps;
+    icon: string;
     heading: string;
     paragraph: PortableTextValue;
   }[];
@@ -32,6 +33,13 @@ const { index, sectionId, heading, image, list } = Astro.props;
 const Heading = index === 0 ? 'h1' : 'h2';
 
 const Subheading = index === 0 ? 'h2' : 'h3';
+
+const svgContentsOne = await Promise.all(
+  list.filter((_, listIndex) => listIndex % 2 === 0).map(async ({ icon }) => imageToInlineSvg(icon))
+);
+const svgContentsTwo = await Promise.all(
+  list.filter((_, listIndex) => listIndex % 2 !== 0).map(async ({ icon }) => imageToInlineSvg(icon))
+);
 ---
 
 <section class="ListPointsMiddlePhoto max-width" id={sectionId}>
@@ -39,11 +47,11 @@ const Subheading = index === 0 ? 'h2' : 'h3';
     {
       list
         .filter((_, listIndex) => listIndex % 2 === 0)
-        .map(({ icon, heading, paragraph }, i) => (
+        .map(({ heading, paragraph }, i) => (
           <li class="item" style={`transition-delay: ${i * 200 + 200}ms`}>
             <div class="itemHeader">
               <div class="icon">
-                <Image {...icon} sizes="20px" loading={index === 0 ? 'eager' : 'lazy'} />
+                <Fragment set:html={svgContentsOne[i]} />
               </div>
               <Subheading class="itemHeading">{heading}</Subheading>
             </div>
@@ -87,11 +95,11 @@ const Subheading = index === 0 ? 'h2' : 'h3';
     {
       list
         .filter((_, listIndex) => listIndex % 2 !== 0)
-        .map(({ icon, heading, paragraph }, i) => (
+        .map(({ heading, paragraph }, i) => (
           <li class="item" style={`transition-delay: ${i * 200 + 300}ms`}>
             <div class="itemHeader">
               <div class="icon">
-                <Image {...icon} sizes="20px" />
+                <Fragment set:html={svgContentsTwo[i]} />
               </div>
               <Subheading class="itemHeading">{heading}</Subheading>
             </div>
@@ -198,6 +206,11 @@ const Subheading = index === 0 ? 'h2' : 'h3';
             flex-shrink: 0;
             flex-grow: 1;
             align-self: flex-start;
+
+            :global(svg) {
+              width: 1.25rem;
+              height: 1.25rem;
+            }
           }
 
           .itemHeading {

@@ -215,7 +215,7 @@ const { socials, footer } = await sanityFetch<{
 
       .containers {
         display: flex;
-        align-items: center;
+        align-items: stretch;
         padding: 0 1.75rem;
         gap: clamp(2rem, calc(2.5vw / 0.48), 2.5rem);
         justify-content: space-between;
@@ -224,7 +224,6 @@ const { socials, footer } = await sanityFetch<{
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          height: 100%;
           flex-grow: 1;
 
           .logo {

@@ -51,6 +51,10 @@ export default defineField({
               name: 'icon',
               type: 'image',
               title: 'Icon',
+              description: 'Only SVG files are supported.',
+              options: {
+                accept: '.svg',
+              },
               validation: (Rule) => Rule.required(),
             }),
             defineField({
