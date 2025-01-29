@@ -34,12 +34,7 @@ export const ContactForm_Query = `
         pdfBox{
           "icon": icon.asset -> url,
           text,
-          file{
-             asset->{
-                url,
-                assetId
-            },
-            },
+          "filename": file.asset->originalFilename
         },
       },
     },
@@ -91,12 +86,7 @@ type Props = {
       pdfBox: {
         icon: string;
         text: string;
-        file: {
-          asset: {
-            url: string;
-            assetId: string;
-          };
-        };
+        filename: string;
       };
     }[];
   };
@@ -146,9 +136,9 @@ const svgContents = rightBox.textColumn.map(async (text) =>
         rightBox.textColumn.map((text, i) => (
           <div class="rightBox__textColumn">
             <PortableText value={text.paragraph} class="rightBox__paragraph" />
-            {text.pdfBox?.file?.asset?.url && (
+            {text.pdfBox?.filename && (
               <a
-                href={`${DOMAIN}/api/static/${text.pdfBox.file.asset.assetId}`}
+                href={`${DOMAIN}/dokumenty/${text.pdfBox.filename}`}
                 class="rightBox__pdfBox"
                 target="_blank"
                 rel="noreferrer"

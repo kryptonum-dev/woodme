@@ -38,7 +38,12 @@ function getRelativeDate(date: Date, upperCase: boolean = false) {
 
   if (diffDays === 0) return upperCase ? 'Dzisiaj' : 'dzisiaj';
   if (diffDays === 1) return upperCase ? 'Wczoraj' : 'wczoraj';
-  return `${diffDays} dni temu`;
+  if (diffDays <= 6) return `${diffDays} dni temu`;
+  return new Intl.DateTimeFormat('pl-PL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(targetDate));
 }
 ---
 

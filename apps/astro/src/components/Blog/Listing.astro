@@ -70,7 +70,7 @@ const categories = _categories?.filter(({ count }) => count > 0);
       <PortableText value={paragraph} class="paragraph" />
       <div class="categories">
         <p class="title">Kategorie</p>
-        <nav class="nav" role="navigation" aria-label="Kategorie bloga">
+        <nav class="nav" role="navigation" aria-label="Kategorie bloga" data-lenis-prevent>
           <CategoryPill
             href="/blog"
             isActive={!currentCategorySlug}

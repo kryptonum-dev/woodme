@@ -10,8 +10,6 @@ const { currentPage = 1, totalItems, slugBase = '', itemsPerPage = 1 } = Astro.p
 
 const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-console.log(totalItems);
-
 const slugPrefix = (number?: number) => (number && number > 1 ? `${slugBase}/strona/${number}` : slugBase);
 
 const createOpenContainer = (startPage: number, endPage: number) => `

@@ -12,7 +12,7 @@ export const client = createClient({
   dataset: 'production',
   apiVersion: '2024-12-30',
   useCdn: false,
-  // perspective: isPreviewDeployment ? 'previewDrafts' : 'published',
+  perspective: isPreviewDeployment ? 'previewDrafts' : 'published',
   ...(isPreviewDeployment && { token: SANITY_API_TOKEN }),
 });
 

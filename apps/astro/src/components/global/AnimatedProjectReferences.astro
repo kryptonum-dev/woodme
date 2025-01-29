@@ -67,7 +67,12 @@ const Heading = index === 0 ? 'h1' : 'h2';
         </a>
       ))
     }
-    <Button id="ctaButton" style={{ transitionDelay: `${splitHeading(heading).length * 35 + 100}ms` }} {...cta} />
+    <Button
+      id="ctaButton"
+      className="cta-button"
+      style={{ transitionDelay: `${splitHeading(heading).length * 35 + 100}ms` }}
+      {...cta}
+    />
   </div>
 </section>
 
@@ -144,11 +149,13 @@ const Heading = index === 0 ? 'h1' : 'h2';
         display: flex;
         flex-direction: column;
         gap: clamp(0.75rem, calc(1vw / 0.48), 1rem);
-        transform: translateY(100%);
-        transition: transform 7400ms var(--easing);
+        transition: transform 2400ms var(--easing);
         left: 2.25rem;
         top: 100%;
-        z-index: 1;
+        z-index: 4;
+        transform: translateY(0);
+        isolation: isolate;
+        will-change: transform;
 
         .image {
           width: 100%;
@@ -170,9 +177,8 @@ const Heading = index === 0 ? 'h1' : 'h2';
         &:nth-of-type(2) {
           left: unset;
           right: 2.25rem;
-          top: 120%;
           z-index: 3;
-          transition-delay: 200ms;
+          top: 120%;
         }
 
         .name,
@@ -222,12 +228,10 @@ const Heading = index === 0 ? 'h1' : 'h2';
           outline: 3px solid var(--neutral-700, #5f6d62);
           border-radius: 12px;
         }
+      }
 
-        &.visible {
-          @media (min-width: 37.5rem) {
-            transform: translateY(-280%);
-          }
-        }
+      .cta-button {
+        margin-bottom: 2.5rem;
       }
     }
 
@@ -276,21 +280,113 @@ const Heading = index === 0 ? 'h1' : 'h2';
 
 <script>
   document.querySelectorAll<HTMLDivElement>('.AnimatedProjectReferences').forEach((section) => {
-    const observer = new IntersectionObserver(
+    const projects = section.querySelectorAll('.project');
+    let scrollProgress = 0;
+    let lastScrollY = window.scrollY;
+    let scrollHandler: (() => void) | null = null;
+    let initialScrollDirection: number | null = null;
+    const MOBILE_BREAKPOINT = 600;
+
+    const resetProjectStyles = () => {
+      projects.forEach((project) => {
+        const projectEl = project as HTMLElement;
+        projectEl.style.top = '';
+        projectEl.style.bottom = '';
+        projectEl.style.transform = '';
+        projectEl.style.position = '';
+      });
+    };
+
+    const handleViewportChange = () => {
+      if (window.innerWidth <= MOBILE_BREAKPOINT) {
+        resetProjectStyles();
+        if (scrollHandler) {
+          document.removeEventListener('scroll', scrollHandler);
+          scrollHandler = null;
+        }
+      }
+    };
+
+    const visibilityObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.querySelectorAll('.project').forEach((project) => {
-              project.classList.add('visible');
-            });
             entry.target.querySelector('.heading')?.classList.add('headingVisible');
             entry.target.querySelector('#ctaButton')?.classList.add('buttonVisible');
           }
         });
       },
-      { threshold: 0.9 }
+      { threshold: 0.6 }
     );
 
-    observer.observe(section);
+    const parallaxObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && window.innerWidth > MOBILE_BREAKPOINT) {
+            if (initialScrollDirection === null) {
+              const currentScrollY = window.scrollY;
+              initialScrollDirection = currentScrollY > lastScrollY ? -1 : 1;
+
+              projects.forEach((project, index) => {
+                const projectEl = project as HTMLElement;
+                projectEl.style.position = 'absolute';
+                if (initialScrollDirection === 1) {
+                  projectEl.style.top = 'auto';
+                  projectEl.style.bottom = `${index === 0 ? '130' : '100'}%`;
+                } else {
+                  projectEl.style.top = `${index === 1 ? '130' : '100'}%`;
+                  projectEl.style.bottom = 'auto';
+                }
+              });
+            }
+
+            scrollHandler = () => {
+              const currentScrollY = window.scrollY;
+              const scrollDirection = currentScrollY > lastScrollY ? -1 : 1;
+              projects.forEach((project) => {
+                const speed = 0.3;
+                const yOffset = scrollProgress * speed;
+                scrollProgress = scrollProgress + 10 * scrollDirection;
+
+                if (initialScrollDirection === 1) {
+                  (project as HTMLElement).style.transform = `translateY(${yOffset > 0 ? yOffset : 0}px)`;
+                } else {
+                  (project as HTMLElement).style.transform = `translateY(${yOffset < 0 ? yOffset : 0}px)`;
+                }
+              });
+              lastScrollY = currentScrollY;
+            };
+
+            document.addEventListener('scroll', scrollHandler);
+          } else {
+            scrollProgress = 0;
+            lastScrollY = window.scrollY;
+            initialScrollDirection = null;
+            resetProjectStyles();
+            if (scrollHandler) {
+              document.removeEventListener('scroll', scrollHandler);
+              scrollHandler = null;
+            }
+          }
+        });
+      },
+      { threshold: 0 }
+    );
+
+    window.addEventListener('resize', handleViewportChange);
+
+    handleViewportChange();
+
+    visibilityObserver.observe(section);
+    parallaxObserver.observe(section);
+
+    return () => {
+      window.removeEventListener('resize', handleViewportChange);
+      visibilityObserver.disconnect();
+      parallaxObserver.disconnect();
+      if (scrollHandler) {
+        document.removeEventListener('scroll', scrollHandler);
+      }
+    };
   });
 </script>

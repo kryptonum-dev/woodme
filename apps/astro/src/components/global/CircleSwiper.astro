@@ -16,12 +16,7 @@ export const CircleSwiper_Query = `
   ${ButtonDataQuery('cta')}
   additionalParagraph,
   downloadPdf {
-    pdf{
-      asset->{
-        url,
-        assetId
-      }
-    },
+    "filename": pdf.asset->originalFilename,
     downloadText
   },
   },
@@ -36,12 +31,7 @@ type Props = {
   cta: ButtonDataProps;
   additionalParagraph: string;
   downloadPdf: {
-    pdf: {
-      asset: {
-        url: string;
-        assetId: string;
-      };
-    };
+    filename: string;
     downloadText: string;
   };
 };
@@ -113,13 +103,8 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
       <div class="additionals">
         {additionalParagraph && <div class="additionalText">{additionalParagraph}</div>}
         {
-          downloadPdf?.pdf?.asset?.url && (
-            <a
-              href={`${DOMAIN}/api/static/${downloadPdf.pdf.asset.assetId}`}
-              class="download"
-              target="_blank"
-              rel="noreferrer"
-            >
+          downloadPdf?.filename && (
+            <a href={`${DOMAIN}/dokumenty/${downloadPdf.filename}`} class="download" target="_blank" rel="noreferrer">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
                 <path
                   stroke="#87988B"

@@ -24,16 +24,12 @@ const { footerBackground, ...props } = Astro.props;
       const currentUrl = window.location.href;
       const lastPage = sessionStorage.getItem('lastPage');
 
-      console.log(lastPage, currentUrl);
-      if (lastPage && currentUrl !== lastPage) {
-        document.documentElement.classList.add('fresh-visit');
-      }
+      if (lastPage && currentUrl !== lastPage) document.documentElement.classList.add('fresh-visit');
 
       sessionStorage.setItem('lastPage', currentUrl);
     </script>
   </head>
   <body>
-    <!-- <div class="page-transition"></div> -->
     <SplashScreen />
     <Header />
     <main id="main">

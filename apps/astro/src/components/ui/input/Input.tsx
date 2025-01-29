@@ -24,7 +24,6 @@ type Props = {
 
 export default function Input({ register, label, additonalInfo, isTextarea, phone, errors, ...props }: Props) {
   const Element = isTextarea ? Textarea : 'input';
-  const Wrapper = phone?.isPhone ? 'div' : 'label';
 
   return (
     <label className={styles.Input} data-is-phone={phone?.isPhone}>
@@ -35,6 +34,7 @@ export default function Input({ register, label, additonalInfo, isTextarea, phon
       </div>
       {phone?.isPhone ? (
         <Controller
+          data-lenis-prevent
           name={register.name}
           rules={phone.rules}
           control={phone.control}

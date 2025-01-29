@@ -28,7 +28,7 @@ export const LOCALE: string = 'pl';
  * @constant
  * @type {string}
  */
-export const DOMAIN: string = 'http://localhost:4321';
+export const DOMAIN: string = 'https://woodme-git-dev-kryptonum.vercel.app/';
 
 //TODO: Change to production domain
 

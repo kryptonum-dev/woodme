@@ -183,7 +183,6 @@ const svgContents = await Promise.all(pointsList.map(async ({ icon }) => imageTo
               display: flex;
               align-items: flex-start;
               gap: clamp(0.75rem, calc(1.25vw / 0.48), 1.25rem);
-
               opacity: 0;
               transform: translateX(-20px);
 
@@ -231,11 +230,6 @@ const svgContents = await Promise.all(pointsList.map(async ({ icon }) => imageTo
           gap: 2rem;
           width: 100%;
           margin-top: -4.25rem;
-          opacity: 0;
-          transform: translateY(2rem);
-          transition:
-            opacity 500ms,
-            transform 1800ms var(--easing);
 
           .content {
             max-width: 31.5rem;
@@ -267,11 +261,6 @@ const svgContents = await Promise.all(pointsList.map(async ({ icon }) => imageTo
               }
             }
           }
-        }
-
-        .visibleBottom {
-          opacity: 1;
-          transform: translateY(0);
         }
 
         @media (max-width: 56.25rem) {
@@ -337,17 +326,13 @@ const svgContents = await Promise.all(pointsList.map(async ({ icon }) => imageTo
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        if (entry.target.classList.contains('list')) {
-          entry.target.classList.add('visible');
-        } else if (entry.target.classList.contains('cta')) {
-          entry.target.classList.add('visibleBottom');
-        }
+        entry.target.classList.add('visible');
         observer.unobserve(entry.target);
       }
     });
   }, options);
 
-  document.querySelectorAll('.list, .cta').forEach((element) => {
+  document.querySelectorAll('.list').forEach((element) => {
     observer.observe(element);
   });
 </script>
