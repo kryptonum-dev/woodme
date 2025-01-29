@@ -59,10 +59,9 @@ type Props = {
   sectionId?: string;
   heading: PortableTextValue;
   testimonials: (TestimonialProps & { review: PortableTextValue; image: ImageDataProps })[];
-  googleData: {
+  googleData?: {
     rating: number;
     user_ratings_total: number;
-    url: string;
   };
 };
 
@@ -71,7 +70,7 @@ const { index, sectionId, heading, testimonials, googleData } = Astro.props as P
 const optimizedImages = await Promise.all(
   testimonials.map((testimonial) => {
     if (!testimonial.image) return null;
-    return optimizeImage(testimonial.image, 44, 44);
+    return optimizeImage(testimonial.image.asset.url, 44, 44);
   })
 );
 

@@ -3,7 +3,7 @@ import { defineSlugForDocument } from '../../utils/define-slug-for-document';
 
 const name = 'Projects_Page';
 const title = 'Projects';
-const slug = '/projects';
+const slug = '/realizacje';
 const icon = () => '🏗️';
 
 export default defineType({

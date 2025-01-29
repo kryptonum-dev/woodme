@@ -16,7 +16,6 @@
     "@astrojs/sitemap": "^3.2.1",
     "@astrojs/vercel": "^8.0.1",
     "@mux/mux-player": "^3.2.4",
-    "@mux/mux-player-react": "^3.2.4",
     "@sanity/client": "^6.24.1",
     "astro": "^5.0.5",
     "astro-portabletext": "^0.10.1",

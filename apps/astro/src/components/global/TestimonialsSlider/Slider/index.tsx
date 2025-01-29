@@ -10,10 +10,9 @@ type SliderProps = {
   children: React.ReactNode;
   testimonials: ClientTestimonialProps[];
   index: number;
-  googleData: {
+  googleData?: {
     rating: number;
     user_ratings_total: number;
-    url: string;
   };
 };
 
@@ -157,7 +156,7 @@ export default function Slider({ children, testimonials, googleData, index }: Sl
                 data-max-width={!!video ? video.asset.data.tracks[0].max_width.toString() : null}
                 data-playback-id={!!video ? video.asset.playbackId : null}
               >
-                {i === 0 && (
+                {i === 0 && !!googleData && (
                   <div className={styles.rating}>
                     <div
                       className={styles.stars}

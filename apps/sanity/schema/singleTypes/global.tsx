@@ -153,17 +153,11 @@ export default defineType({
           validation: (Rule) => Rule.required(),
           fieldset: 'rating',
         }),
-        defineField({
-          name: 'url',
-          type: 'url',
-          title: 'Google Business URL',
-          validation: (Rule) => Rule.required().uri({ scheme: ['https'] }),
-        }),
       ],
       fieldsets: [
         {
           name: 'rating',
-          title: 'Rating',
+          title: 'Rating (Optional)',
           options: { columns: 2 },
         },
       ],

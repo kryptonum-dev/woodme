@@ -1,11 +1,13 @@
 ---
-import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
-import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
-import { formatDate } from '../../utils/format-date';
+import Image, { ImageDataQuery, type ImageDataProps } from '@/src/components/ui/image';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
+import { formatDate } from '@/src/utils/format-date';
 import { renderStars } from '@/src/utils/render-stars';
-import VideoThumbnail from '../ui/VideoThumbnail.astro';
+import { optimizeImage } from '@/src/utils/optimize-images';
+import VideoPopup from '../ui/videoPopup/VideoPopup';
 
 export const SingleTestimonialSection_Query = `
+
   _type == "SingleTestimonialSection" => {
     ${PortableTextQuery('heading')}
     testimonial->{
@@ -49,7 +51,7 @@ type Props = {
       };
     };
   };
-  googleData: {
+  googleData?: {
     rating: number;
   };
 };
@@ -57,6 +59,12 @@ type Props = {
 const { index, sectionId, heading, testimonial, googleData } = Astro.props;
 
 const hasVideo = !!testimonial?.video;
+
+const thumbnail = await optimizeImage(
+  `https://image.mux.com/${testimonial.video?.asset.playbackId}/thumbnail.jpg`,
+  274,
+  343
+);
 ---
 
 <section class="SingleTestimonialSection max-width" id={sectionId} data-has-video={hasVideo}>
@@ -72,10 +80,23 @@ const hasVideo = !!testimonial?.video;
   >
     {
       hasVideo ? (
-        <VideoThumbnail
-          image={{ sizes: '274px', height: 234, width: 274 }}
+        <VideoPopup
+          client:load
           playbackId={testimonial.video?.asset.playbackId || ''}
-        />
+          name={`${testimonial.name} - filmik z opinii`}
+          aspectRatio={testimonial.video?.asset.data.aspect_ratio || ''}
+          maxWidth={testimonial.video?.asset.data.tracks[0].max_width || 0}
+          buttonText="Zobacz opinie"
+        >
+          <img
+            src={thumbnail.src}
+            srcset={thumbnail.srcSet.attribute}
+            sizes="(max-width: 31.25rem) 95vw, 286px"
+            alt={`Minitaruka opinii`}
+            fetchpriority={index === 0 ? 'high' : 'auto'}
+            loading={index === 0 ? 'eager' : 'lazy'}
+          />
+        </VideoPopup>
       ) : (
         <div class="text">
           <PortableText value={testimonial.review} class="review" />
@@ -84,14 +105,18 @@ const hasVideo = !!testimonial?.video;
       )
     }
     <div class="info">
-      <div class="rating">
-        <div class="stars">
-          <Fragment set:html={renderStars(googleData.rating)} />
-        </div>
-        <span class="rating__text">{googleData.rating.toFixed(1)}</span>
-      </div>
+      {
+        googleData && (
+          <div class="rating">
+            <div class="stars">
+              <Fragment set:html={renderStars(googleData.rating)} />
+            </div>
+            <span class="rating__text">{googleData?.rating.toFixed(1)}</span>
+          </div>
+        )
+      }
       <div class="person" data-image={!!testimonial.image}>
-        {testimonial.image && <Image class="photo" {...testimonial.image} sizes="52px" />}
+        {testimonial.image && <Image class="photo" {...testimonial.image} sizes="52px" data-no-rating={!googleData} />}
         <span class="name">{testimonial.name}</span>
         <span class="service">{testimonial.service}</span>
       </div>
@@ -182,6 +207,10 @@ const hasVideo = !!testimonial?.video;
             border: 1px solid var(--neutral-200, #e9f2ed);
             overflow: hidden;
             grid-row: 1 / 3;
+
+            &[data-no-rating='true'] {
+              margin-bottom: 1rem;
+            }
           }
 
           .name {

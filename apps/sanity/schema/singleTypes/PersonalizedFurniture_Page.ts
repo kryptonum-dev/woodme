@@ -3,7 +3,7 @@ import { defineSlugForDocument } from '../../utils/define-slug-for-document';
 
 const name = 'PersonalizedFurniture_Page';
 const title = 'Personalized Furniture';
-const slug = '/personalized-furniture';
+const slug = '/personalizowane-meble';
 const icon = () => '🪑';
 
 export default defineType({

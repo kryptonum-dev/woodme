@@ -1,3 +1,4 @@
+import MuxPlayer from '@mux/mux-player';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import styles from './VideoPopup.module.scss';
 
@@ -26,6 +27,11 @@ export default function VideoPopup({
   const openButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    // Define MuxPlayer custom element if it hasn't been defined yet
+    if (!customElements.get('mux-player')) {
+      customElements.define('mux-player', MuxPlayer);
+    }
+
     const handleEscapeKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsVideoOpen(false);
@@ -71,7 +77,6 @@ export default function VideoPopup({
 
       const closePopup = () => {
         setIsVideoOpen(false);
-        document.body.removeChild(popupContainer);
         openButtonRef.current?.focus();
       };
 

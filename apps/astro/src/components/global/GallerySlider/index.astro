@@ -37,7 +37,7 @@ const optimizedImages = await Promise.all(
   galleryList.map(async (gallery) => {
     return await Promise.all(
       gallery.images.map(async (image) => {
-        return await optimizeImage(image, 326, 489);
+        return await optimizeImage(image.asset.url, 326, 489);
       })
     );
   })
@@ -46,8 +46,6 @@ const optimizedImages = await Promise.all(
 const clientGalleryList = galleryList.map((gallery, index) => {
   return { ...gallery, images: optimizedImages[index], alts: gallery.images.map((image) => image.asset.altText) };
 });
-
-
 ---
 
 <section class="GallerySlider" id={sectionId}>

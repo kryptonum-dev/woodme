@@ -1,10 +1,10 @@
-import { defineField, defineType } from 'sanity'
-import { defineSlugForDocument } from '../../utils/define-slug-for-document'
+import { defineField, defineType } from 'sanity';
+import { defineSlugForDocument } from '../../utils/define-slug-for-document';
 
-const name = 'BusinessServices_Page'
-const title = 'Business Services'
-const slug = '/business-services'
-const icon = () => '💼'
+const name = 'BusinessServices_Page';
+const title = 'Business Services';
+const slug = '/uslugi-dla-biznesu';
+const icon = () => '💼';
 
 export default defineType({
   name: name,
@@ -38,4 +38,4 @@ export default defineType({
       subtitle: slug,
     }),
   },
-})
+});

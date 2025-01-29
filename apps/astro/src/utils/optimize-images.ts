@@ -1,9 +1,8 @@
 import { getImage } from 'astro:assets';
-import type { ImageDataProps } from '../components/ui/image/index.astro';
 
-export const optimizeImage = async (image: ImageDataProps, width: number, height: number) => {
+export const optimizeImage = async (image: string, width: number, height: number) => {
   const optimizedImage = await getImage({
-    src: image.asset.url,
+    src: image,
     format: 'webp',
     width: width,
     height: height,

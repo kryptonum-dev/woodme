@@ -427,6 +427,7 @@ div.paragraph {
       color: var(--neutral-100, #f2faf6);
       &::before {
         transform: scale(1.5);
+        z-index: -1;
       }
     }
 
