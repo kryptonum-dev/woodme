@@ -7,7 +7,6 @@ import Button from '../ui/button/Button.astro';
 export const CtaSection_Query = `
   _type == "CtaSection" => {
   ${ImageDataQuery('imageList[]')}
-  "images": imageList[],
   ${PortableTextQuery('heading')}
   ${PortableTextQuery('paragraph')}
   ${ButtonDataQuery('cta')}
@@ -21,11 +20,9 @@ type Props = {
   heading: PortableTextValue;
   paragraph: PortableTextValue;
   cta: ButtonDataProps;
-  images: ImageDataProps[];
 };
 
-const { index, sectionId, heading, paragraph, imageList, cta, images } = Astro.props;
-console.log(images);
+const { index, sectionId, heading, paragraph, imageList, cta } = Astro.props;
 ---
 
 <section class="CtaSection" id={sectionId}>
