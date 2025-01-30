@@ -48,7 +48,13 @@ const svgContent = await imageToInlineSvg(state.success.link.icon);
     </svg>
     <PortableText value={state.success.heading} class="heading" />
     <PortableText value={state.success.paragraph} class="paragraph" />
-    <a href={state.success.link.url} class="socialLink" aria-label="Odwiedź nasze social media!">
+    <a
+      href={state.success.link.url}
+      class="socialLink"
+      rel="noreferrer"
+      target="_blank"
+      aria-label="Odwiedź nasze social media!"
+    >
       <Fragment set:html={svgContent} />
     </a>
   </div>

@@ -115,7 +115,7 @@ const { socials, footer } = await sanityFetch<{
               Object.entries(socials)
                 .filter(([key]) => ['facebook', 'instagram', 'linkedin'].includes(key))
                 .map(([key, value]) => (
-                  <a href={value} class="socialLink">
+                  <a href={value} class="socialLink" rel="noreferrer" target="_blank">
                     {key === 'facebook' ? (
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
                         <title>Facebook</title>
