@@ -30,6 +30,7 @@ const page = await sanityFetch<QueryProps>({
     *[_type == "Blog_Page"][0] {
         name,
         "slug": slug.current,
+        "footerBackground": components[-1].background,
         ${PortableTextQuery('heading')}
         ${PortableTextQuery('paragraph')}   
         ${Listing_Query({ currentPage })}
@@ -46,6 +47,7 @@ const metadata = await metadataFetch(page.slug);
   description={metadata.description}
   openGraphImage={metadata.openGraphImage}
   path={Astro.url.pathname}
+  footerBackground={page.footerBackground}
 >
   <Fragment slot="Head">
     {currentPage > 2 && <link rel="prev" href={`${DOMAIN}/blog/strona/${currentPage - 1}`} />}

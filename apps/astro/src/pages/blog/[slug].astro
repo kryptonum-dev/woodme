@@ -30,6 +30,7 @@ const page = await sanityFetch<{
   hero: HeroProps;
   content: ContentProps;
   components: ComponentsProps;
+  footerBackground: string;
 }>({
   query: `
     *[_type == 'BlogPost_Collection' && slug.current == $slug][0] {
@@ -37,6 +38,7 @@ const page = await sanityFetch<{
       ${Hero_Query}
       ${Content_Query}
       ${Components_Query}
+      "footerBackground": components[-1].background,
     }
   `,
   params: { slug: slug },
@@ -46,7 +48,7 @@ if (!page) return Astro.rewrite('/404');
 const metadata = await metadataFetch(slug);
 ---
 
-<Layout {...metadata}>
+<Layout footerBackground={page.footerBackground} {...metadata}>
   <Breadcrumbs
     data={[
       { name: 'Blog', path: slugPrefix },

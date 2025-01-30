@@ -38,6 +38,7 @@ const page = await sanityFetch<QueryProps>({
     *[_type == "Blog_Page"][0] {
         name,
         "slug": slug.current,
+        "footerBackground": components[-1].background,
         ${PortableTextQuery('heading')}
         ${PortableTextQuery('paragraph')}   
         ${Listing_Query({ currentPage: 1, currentCategorySlug: categorySlug })}
@@ -49,7 +50,7 @@ const page = await sanityFetch<QueryProps>({
 const metadata = await metadataFetch(categorySlug);
 ---
 
-<Layout {...metadata}>
+<Layout footerBackground={page.footerBackground} {...metadata}>
   <Breadcrumbs
     data={[
       { name: page.name, path: page.slug },

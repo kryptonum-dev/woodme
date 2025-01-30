@@ -53,6 +53,7 @@ const page = await sanityFetch<QueryProps>({
         ${PortableTextQuery('heading')}
         ${Listing_Query({ currentPage: currentPage, currentCategorySlug: category.slug })}
         ${Components_Query} 
+        "footerBackground": components[-1].background,
     }
   `,
 });
@@ -65,6 +66,7 @@ const metadata = await metadataFetch(category.slug);
   description={metadata.description}
   openGraphImage={metadata.openGraphImage}
   path={Astro.url.pathname}
+  footerBackground={page.footerBackground}
 >
   <Fragment slot="Head">
     {currentPage > 2 && <link rel="prev" href={`${DOMAIN}/realizacje/strona/${currentPage - 1}`} />}
