@@ -30,13 +30,8 @@ const { splashScreenImages } = await sanityFetch<{
       </div>
       <div class="images">
         {
-          splashScreenImages.map((image, i) => (
-            <Image
-              {...image}
-              loading="eager"
-              fetchpriority={i === 2 ? 'high' : 'auto'}
-              sizes="(max-width: 37.4375rem) 31vw, (max-width: 56.25rem) 23vw, 220px"
-            />
+          splashScreenImages.map((image) => (
+            <Image {...image} loading="eager" sizes="(max-width: 37.4375rem) 31vw, (max-width: 56.25rem) 23vw, 220px" />
           ))
         }
       </div>
