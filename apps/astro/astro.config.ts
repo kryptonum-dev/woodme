@@ -33,5 +33,14 @@ export default defineConfig({
   },
   redirects: redirects,
   output: 'server',
-  ...(!isPreviewDeployment && { adapter: vercel({ isr: { exclude: ['/api/contact'] } }) }),
+  adapter: vercel({
+    ...(isPreviewDeployment
+      ? {
+          isr: {
+            bypassToken: process.env.VERCEL_DEPLOYMENT_ID,
+            exclude: ['/api/contact'],
+          },
+        }
+      : {}),
+  }),
 });
