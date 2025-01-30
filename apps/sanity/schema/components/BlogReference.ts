@@ -43,7 +43,13 @@ export default defineField({
         },
       ],
     }),
-
+    defineField({
+      name: 'background',
+      type: 'string',
+      title: 'Background',
+      initialValue: '#d2cdbf',
+      hidden: true,
+    }),
     ...sectionId,
   ],
   preview: {
@@ -53,7 +59,7 @@ export default defineField({
     prepare: ({ heading }) => ({
       title: title,
       subtitle: toPlainText(heading),
-      ...sectionPreview({ imgUrl: `/static/components/blog.webp`, icon: icon() }),
+      ...sectionPreview({ imgUrl: `/static/components/${name}.webp`, icon: icon() }),
     }),
   },
 });

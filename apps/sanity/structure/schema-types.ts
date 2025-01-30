@@ -24,13 +24,25 @@ const singleTypes = [
   BusinessServices_Page,
   Projects_Page,
   NotFound_Page,
+  PrivacyPolicy_Page,
 ];
 
 // Collections Types
 import Faq_Collection from '../schema/collectionTypes/Faq_Collection';
 import BlogPost_Collection from '../schema/collectionTypes/BlogPost_Collection';
+import Project_Collection from '../schema/collectionTypes/Project_Collection';
+import Testimonials_Collection from '../schema/collectionTypes/Testimonial_Collection';
+import ProjectCategory_Collection from '../schema/collectionTypes/ProjectCategory_Collection';
+import BlogCategory_Collection from '../schema/collectionTypes/BlogCategory_Collection';
 
-const collectionTypes = [Faq_Collection, BlogPost_Collection];
+const collectionTypes = [
+  Faq_Collection,
+  BlogPost_Collection,
+  Project_Collection,
+  Testimonials_Collection,
+  ProjectCategory_Collection,
+  BlogCategory_Collection,
+];
 
 // Components
 import Components from '../schema/Components';
@@ -42,6 +54,7 @@ import cta from '../schema/ui/cta';
 import PortableText from '../schema/ui/PortableText';
 import Heading from '../schema/ui/PortableText/Heading';
 import seo from '../schema/ui/seo';
+import PrivacyPolicy_Page from '../schema/singleTypes/Legal/PrivacyPolicy_Page';
 
 const ui = [cta, seo, PortableText, Heading];
 

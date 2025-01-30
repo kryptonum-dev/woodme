@@ -1,0 +1,264 @@
+---
+import { ButtonDataQuery, type ButtonDataProps } from '../../ui/button';
+import { PortableText as PortableTextComponent } from 'astro-portabletext';
+
+import Block from './Block.astro';
+import { PortableTextQuery, type PortableTextValue } from '../../ui/portable-text';
+import Button from '../../ui/button/Button.astro';
+
+export const ExpandingText_Query = `
+  _type == "ExpandingText" => {
+  ${PortableTextQuery('textContent')}
+  ${ButtonDataQuery('cta')}
+  },
+`;
+
+type Props = {
+  sectionId?: string;
+  textContent: PortableTextValue;
+  cta: ButtonDataProps;
+};
+
+const { sectionId, textContent, cta } = Astro.props;
+---
+
+<section class="ExpandingText max-width" id={sectionId}>
+  <div class="container">
+    <div class="text">
+      <div class="content">
+        <PortableTextComponent
+          value={textContent}
+          components={{
+            block: {
+              h2: Block,
+            },
+          }}
+        />
+      </div>
+    </div>
+    <div class="ctas">
+      <Button className="cta-button" {...cta} />
+      <Button theme="secondary" role="button" data-expand-trigger> Przeczytaj pełną historię </Button>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .ExpandingText {
+    padding: clamp(4rem, calc(5vw / 0.48), 5rem) 0;
+
+    .container {
+      padding: clamp(1.5rem, calc(3vw / 0.48), 3rem) clamp(1.5rem, calc(3vw / 0.48), 3rem)
+        clamp(0.25rem, calc(3vw / 0.48), 3rem);
+      border-radius: clamp(8px, calc(10vw / 7.68), 12px);
+      background-color: var(--neutral-100, #f2faf6);
+      max-width: 41.25rem;
+      margin: 0 auto;
+
+      .text {
+        .content {
+          position: relative;
+          height: 16rem;
+          overflow: hidden;
+          transition-property: height;
+          transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+
+          &[data-expanded='true'] {
+            height: auto !important;
+          }
+
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4rem;
+            opacity: 1;
+            transition: opacity 600ms;
+            background: linear-gradient(to bottom, transparent, var(--neutral-100, #f2faf6));
+          }
+
+          &[data-expanded='true']::after {
+            opacity: 0;
+          }
+
+          :global(h2),
+          :global(h3) {
+            font-weight: 500;
+            line-height: 1.35;
+            font-size: var(--typography-heading-m, 1.5rem);
+            letter-spacing: -0.02em;
+            color: var(--neutral-700, #5f6d62);
+            margin-bottom: 2rem;
+            &:not(:first-child) {
+              margin-top: 4rem;
+            }
+            :global(strong) {
+              color: var(--neutral-900, #141915);
+              font-weight: 500;
+            }
+          }
+
+          :global(p) {
+            margin-bottom: 1.25 rem;
+          }
+
+          :global(li) {
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 1rem;
+            &::before {
+              content: '';
+              position: absolute;
+              left: 0;
+              top: 0.75rem;
+              width: 0.25rem;
+              height: 0.25rem;
+              background-color: var(--neutral-600, #7a8a7f);
+              border-radius: 999px;
+            }
+          }
+        }
+      }
+      .ctas {
+        margin-top: 3rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--neutral-400, #c1d1c8);
+        flex-direction: column;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+
+        :global([data-expand-trigger]) {
+          .collapse-text {
+            display: none;
+          }
+        }
+
+        :global(.cta-button) {
+          display: none;
+          opacity: 0;
+          transform: translateY(0.5rem);
+          animation: ExpandingText_fadeIn 1200ms cubic-bezier(0.19, 1, 0.22, 1) forwards;
+
+          &.visible {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      }
+    }
+
+    .content[data-expanded='true'] {
+      .ctas .cta-button {
+        display: flex;
+      }
+    }
+
+    @keyframes ExpandingText_fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-0.5rem);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+</style>
+<script>
+  document.querySelectorAll('.ExpandingText').forEach((section) => {
+    const COLLAPSED_HEIGHT = '16rem';
+    const BASE_DURATION = 1400;
+    const PIXELS_PER_MS = 0.4;
+
+    const content = section.querySelector('.content') as HTMLElement;
+    const trigger = section.querySelector('[data-expand-trigger]') as HTMLElement;
+    const ctaButton = section.querySelector('.cta-button') as HTMLElement;
+
+    function calculateDuration(startHeight: number, endHeight: number): number {
+      const heightDifference = Math.abs(endHeight - startHeight);
+      const duration = Math.min(BASE_DURATION + heightDifference * PIXELS_PER_MS, 1500);
+      return duration;
+    }
+
+    if (content && trigger) {
+      const contentId = `expandable-content-${Math.random().toString(36).slice(2, 11)}`;
+      content.id = contentId;
+      trigger.setAttribute('aria-controls', contentId);
+
+      content.setAttribute('data-expanded', 'false');
+      if (ctaButton) ctaButton.style.display = 'none';
+
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        if (content.getAttribute('data-expanded') === 'false') {
+          trigger.textContent = 'Zwiń tekst';
+
+          content.removeAttribute('data-expanded');
+
+          const startHeight = content.offsetHeight;
+          const endHeight = content.scrollHeight;
+          const duration = calculateDuration(startHeight, endHeight);
+
+          content.style.transitionDuration = `${duration}ms`;
+          content.style.height = `${startHeight}px`;
+
+          requestAnimationFrame(() => {
+            content.style.height = `${endHeight}px`;
+            content.addEventListener(
+              'transitionend',
+              () => {
+                content.setAttribute('data-expanded', 'true');
+                content.style.height = '';
+              },
+              { once: true }
+            );
+          });
+
+          if (ctaButton) {
+            setTimeout(() => {
+              ctaButton.style.display = 'flex';
+              ctaButton.offsetHeight;
+              ctaButton.classList.add('visible');
+            }, duration / 2);
+          }
+        } else {
+          trigger.textContent = 'Przeczytaj pełną historię';
+
+          const startHeight = content.scrollHeight;
+          const endHeight = parseInt(COLLAPSED_HEIGHT);
+          const duration = calculateDuration(startHeight, endHeight);
+
+          content.style.transitionDuration = `${duration}ms`;
+          content.style.height = `${startHeight}px`;
+          content.removeAttribute('data-expanded');
+
+          if (window.innerWidth <= 600) {
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+
+          requestAnimationFrame(() => {
+            content.style.height = COLLAPSED_HEIGHT;
+            content.addEventListener(
+              'transitionend',
+              () => {
+                content.setAttribute('data-expanded', 'false');
+              },
+              { once: true }
+            );
+          });
+
+          if (ctaButton) {
+            ctaButton.style.display = 'none';
+            ctaButton.classList.remove('visible');
+          }
+        }
+      });
+    }
+  });
+</script>

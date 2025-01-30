@@ -10,11 +10,14 @@ export type PortableTextValue = PortableTextProps['value'];
 type Props = {
   value: PortableTextValue;
   heading?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  isSpan?: boolean;
 } & HTMLAttributes<'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'>;
 
-const { heading: HeadingTag, value, ...props } = Astro.props;
+const { heading: HeadingTag, value, isSpan, ...props } = Astro.props;
 
 const valueArray = Array.isArray(value) ? value : [value];
+
+const Container = isSpan ? 'span' : 'div';
 ---
 
 {
@@ -29,8 +32,8 @@ const valueArray = Array.isArray(value) ? value : [value];
       )}
     </HeadingTag>
   ) : (
-    <div {...props}>
-      <PortableText value={value} components={{ mark: Mark }} />
-    </div>
+    <Container {...props}>
+      <PortableText value={value} components={{ mark: Mark, block: isSpan ? Block : undefined }} />
+    </Container>
   )
 }

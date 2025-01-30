@@ -14,4 +14,4 @@ export const InternalLinkableTypes: { type: string }[] = [
   { type: 'PersonalizedFurniture_Page' },
   { type: 'Projects_Page' },
   { type: 'Blog_Page' },
-]
+];

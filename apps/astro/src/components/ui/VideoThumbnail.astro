@@ -1,0 +1,108 @@
+---
+import { Image } from 'astro:assets';
+
+type Props = {
+  image: {
+    width: number;
+    height: number;
+    sizes: string;
+    alt?: string;
+  };
+  playbackId: string;
+};
+
+const { image, playbackId } = Astro.props;
+---
+
+<div class="thumbnail">
+  <Image
+    src={`https://image.mux.com/${playbackId}/thumbnail.jpg`}
+    alt={image.alt || 'Miniaturka filmiku z opinii'}
+    width={image.width}
+    height={image.height}
+    sizes={image.sizes}
+  />
+  <button class="showVideo">
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none">
+      <path
+        fill="#9E9781"
+        d="M2.5 2.495c0-.486 0-.729.101-.862a.5.5 0 0 1 .37-.198c.167-.01.369.125.773.394l5.258 3.505c.333.223.5.334.558.474a.5.5 0 0 1 0 .383c-.058.14-.225.252-.558.475L3.744 10.17c-.404.27-.606.404-.774.394a.5.5 0 0 1-.369-.198c-.101-.134-.101-.376-.101-.862v-7.01Z"
+      ></path>
+    </svg>
+    <span>Zobacz opinie</span>
+  </button>
+</div>
+
+<style>
+  .thumbnail {
+    border-radius: 4px;
+    margin-bottom: auto;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    max-height: 344px;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(28, 19, 17, 0) 0%, rgba(28, 19, 17, 0.5) 100%);
+      transform-origin: bottom;
+      transition: transform 400ms;
+    }
+
+    .showVideo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--secondary-400, #d2cdbf);
+      border-radius: 999px;
+      padding: 0.375rem 0.625rem;
+      font-size: var(--typography-body-m, 0.875rem);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: transform 600ms var(--easing);
+
+      > * {
+        transition: transform 500ms var(--easing);
+      }
+
+      &:hover {
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+
+      &:focus:not(:focus-visible) {
+        svg {
+          transform: translateX(2px);
+        }
+
+        span {
+          transform: translateX(-2px);
+        }
+      }
+
+      &::before {
+        content: '';
+        min-width: 2.75rem;
+        min-height: 2.75rem;
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+</style>

@@ -1,0 +1,80 @@
+---
+import ImageRenderer, { ImageDataQuery, type ImageDataProps } from '@/components/ui/image';
+
+export const Image_Query = `
+  _type == "Image" => {
+    ${ImageDataQuery('image')}
+    source {
+      name,
+      url,
+    },
+  },
+`;
+
+type Props = {
+  node: {
+    image: ImageDataProps;
+    source?: {
+      name: string;
+      url: string;
+    };
+  };
+};
+
+const { node } = Astro.props;
+---
+
+<section class="Image">
+  <ImageRenderer
+    {...node.image}
+    sizes="(max-width: 30rem) 100vw, (max-width: 37.5rem) 96vw, (max-width: 48rem) 86vw, (max-width: 69rem) 656px, (max-width: 79.625rem) 62vw, 770px"
+    loading="lazy"
+  />
+  {
+    node.source && (
+      <p class="source">
+        <span>Źródło:</span>
+        <a href={node.source.url} class="link" target="_blank" rel="noreferrer">
+          {node.source.name}
+        </a>
+      </p>
+    )
+  }
+</section>
+<style lang="scss">
+  .Image {
+    margin: 4rem 0 2rem;
+    img {
+      width: 100%;
+      border-radius: 4px;
+      margin-bottom: 0.125rem;
+      max-height: 431px;
+      max-width: fit-content;
+      display: block;
+      margin: 0 auto;
+    }
+    .source {
+      font-size: var(--typography-body-m, 0.875rem);
+      display: flex;
+      align-items: center;
+      gap: 0.125rem;
+
+      :global(a) {
+        color: var(--primary-900, #141915);
+      }
+    }
+
+    @media (max-width: 30rem) {
+      width: 100vw;
+      margin: 0 calc(-1 * var(--pageMargin));
+
+      img {
+        border-radius: 0;
+      }
+
+      .source {
+        padding-left: var(--pageMargin);
+      }
+    }
+  }
+</style>

@@ -1,0 +1,441 @@
+---
+import Button from '@/src/components/ui/button/Button.astro';
+import Form from './index.tsx';
+import Loader from '@/src/components/ui/Loader.astro';
+import type { PortableTextValue } from '@/src/components/ui/portable-text';
+import PortableText from '@/src/components/ui/portable-text';
+import imageToInlineSvg from '@/src/components/ui/image/image-to-inline-svg';
+
+type Props = {
+  state: {
+    success: {
+      heading: PortableTextValue;
+      paragraph: PortableTextValue;
+      link: {
+        url: string;
+        icon: string;
+        title: string;
+      };
+    };
+    error: {
+      heading: PortableTextValue;
+      paragraph: PortableTextValue;
+    };
+  };
+};
+
+const { state } = Astro.props;
+
+const svgContent = await imageToInlineSvg(state.success.link.icon);
+---
+
+<Form className="Form" client:load>
+  <Button theme="primary" id="submit" type="submit">Wyślij Wiadomość</Button>
+  <Loader class="Loader" />
+  <div class="SuccessState">
+    <div class="icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none">
+        <path
+          stroke="#558F2F"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="m10.5 12.833 2.333 2.334 5.25-5.25M11.55 22.4l1.703 2.271c.254.338.38.507.536.567a.583.583 0 0 0 .422 0c.156-.06.282-.23.536-.567L16.45 22.4c.342-.456.513-.684.722-.858.278-.232.606-.396.959-.48C18.395 21 18.68 21 19.25 21c1.63 0 2.446 0 3.09-.266a3.5 3.5 0 0 0 1.894-1.895c.266-.643.266-1.458.266-3.089V9.1c0-1.96 0-2.94-.381-3.689a3.5 3.5 0 0 0-1.53-1.53C21.84 3.5 20.86 3.5 18.9 3.5H9.1c-1.96 0-2.94 0-3.689.381a3.5 3.5 0 0 0-1.53 1.53C3.5 6.16 3.5 7.14 3.5 9.1v6.65c0 1.63 0 2.446.266 3.09a3.5 3.5 0 0 0 1.895 1.894C6.304 21 7.119 21 8.75 21c.57 0 .855 0 1.12.062.352.084.68.248.958.48.209.174.38.402.722.858Z"
+        >
+        </path>
+      </svg>
+    </div>
+    <PortableText value={state.success.heading} class="heading" />
+    <PortableText value={state.success.paragraph} class="paragraph" />
+    <div class="logoBox">
+      <a href={state.success.link.url} class="socialLink" aria-label="Odwiedź nasze social media!">
+        <Fragment set:html={svgContent} />
+      </a>
+      <svg class="logo" xmlns="http://www.w3.org/2000/svg" width="141" height="19" fill="none">
+        <path
+          fill="#68746B"
+          d="M26.52 6.315 24.12 3.65l-2.65-2.119A3.758 3.758 0 0 0 18.812.43H8.572c-.996 0-1.953.397-2.657 1.101l-2.652 2.12L.865 6.314C.16 7.019 0 7.977 0 8.972v9.174c0 .145.118.264.264.264H3.01a.264.264 0 0 0 .264-.264V5.267A1.61 1.61 0 0 1 4.446 3.72c.141-.041.29-.057.437-.057h8.681l-2.387 2.653c-.706.706-.865 1.662-.865 2.657v9.174c0 .145.118.264.264.264h2.746a.264.264 0 0 0 .264-.264V5.267a1.61 1.61 0 0 1 1.172-1.548c.141-.041.29-.057.437-.057h7.306c.147 0 .296.016.438.057a1.61 1.61 0 0 1 1.172 1.548v12.88c0 .146.118.264.264.264h2.746a.264.264 0 0 0 .264-.264V8.974c0-.996-.16-1.953-.866-2.657v-.002Z"
+        >
+        </path>
+        <path
+          fill="#48514A"
+          d="M42.296 17.963h-3.383a.307.307 0 0 1-.296-.225L34.45 2.599a.307.307 0 0 1 .295-.388h2.26c.14 0 .263.097.297.235l1.738 7.133c.44 2.026.88 3.964 1.263 5.985a.153.153 0 0 0 .15.124h.553a.153.153 0 0 0 .15-.126 100.25 100.25 0 0 1 1.263-5.983l1.884-7.14a.306.306 0 0 1 .296-.228h2.967c.14 0 .262.095.297.23l1.855 7.167a113.56 113.56 0 0 1 1.263 5.954.154.154 0 0 0 .15.126h.495a.153.153 0 0 0 .15-.124c.383-1.994.823-3.932 1.263-5.986l1.71-7.132a.306.306 0 0 1 .296-.235h2.11c.202 0 .349.192.295.387l-4.11 15.138a.308.308 0 0 1-.296.227H49.54a.305.305 0 0 1-.298-.234l-1.53-6.354c-.468-1.94-1.083-4.628-1.472-6.793a.151.151 0 0 0-.15-.125h-.315a.151.151 0 0 0-.15.123c-.42 2.167-1.062 4.855-1.53 6.795l-1.501 6.352a.307.307 0 0 1-.3.236ZM57.078 10.056c0-4.94 3.052-8.175 8.226-8.175 5.174 0 8.227 3.234 8.227 8.175 0 4.941-2.932 8.237-8.227 8.237s-8.226-3.325-8.226-8.237Zm13.791-.029c0-3.474-1.766-5.84-5.564-5.84s-5.563 2.366-5.563 5.84c0 3.474 1.735 5.96 5.563 5.96 3.829 0 5.564-2.366 5.564-5.96ZM74.578 10.056c0-4.94 3.052-8.175 8.226-8.175 5.174 0 8.227 3.234 8.227 8.175 0 4.941-2.932 8.237-8.227 8.237s-8.226-3.325-8.226-8.237Zm13.79-.029c0-3.474-1.765-5.84-5.563-5.84s-5.563 2.366-5.563 5.84c0 3.474 1.735 5.96 5.563 5.96 3.829 0 5.564-2.366 5.564-5.96ZM92.586 2.518c0-.169.138-.307.306-.307h6.215c5.654 0 8.317 2.756 8.317 7.757 0 5-3.141 7.995-8.288 7.995h-6.243a.308.308 0 0 1-.307-.306V2.517Zm2.691 2.062v11.014c0 .085.07.154.153.154h3.527c4.158 0 5.803-2.127 5.803-5.78 0-3.864-1.795-5.541-5.984-5.541H95.43a.154.154 0 0 0-.153.153h.001ZM110.854 17.963h-1.899a.308.308 0 0 1-.307-.307V2.517c0-.168.138-.306.307-.306h3.943c.126 0 .238.076.284.191l2.794 6.936c.411 1.027 1.108 3.118 1.643 4.864.02.065.078.108.146.108h.432a.15.15 0 0 0 .145-.108c.532-1.743 1.174-3.78 1.643-4.955l2.824-6.848a.306.306 0 0 1 .283-.19h3.706c.169 0 .307.138.307.307v15.139a.308.308 0 0 1-.307.306h-2.049a.308.308 0 0 1-.307-.306v-7.301c0-1.774.057-4.057.115-5.833a.152.152 0 0 0-.153-.156h-.326a.151.151 0 0 0-.146.107c-.596 1.926-1.418 4.245-2.21 6.333l-2.553 6.043a.307.307 0 0 1-.282.187h-2.284a.308.308 0 0 1-.284-.19l-2.524-6.13a106.093 106.093 0 0 1-2.092-6.243.151.151 0 0 0-.146-.107h-.239a.152.152 0 0 0-.153.155c.026 1.801-.003 4.03-.003 5.835v7.301a.308.308 0 0 1-.307.307h-.001ZM129.027 2.21h11.023c.168 0 .306.139.306.308V4.18a.308.308 0 0 1-.306.307h-8.485a.154.154 0 0 0-.153.153v4.155c0 .085.069.154.153.154h7.587c.168 0 .306.138.306.307v1.393a.308.308 0 0 1-.306.307h-7.587a.154.154 0 0 0-.153.153v4.395c0 .084.069.153.153.153h8.454c.169 0 .307.138.307.307v1.693a.308.308 0 0 1-.307.306h-10.994a.308.308 0 0 1-.306-.306V2.517c0-.168.138-.306.306-.306h.002Z"
+        >
+        </path>
+        <defs>
+          <clipPath id="a"><path fill="#fff" d="M0 0h141v19H0z"></path></clipPath>
+          <clipPath id="b">
+            <path fill="#fff" d="M0 .43h27.385v17.983H0z"> </path>
+          </clipPath>
+        </defs>
+      </svg>
+      <a class="name link" href={state.success.link.url}>{state.success.link.title}</a>
+    </div>
+  </div>
+  <div class="ErrorState">
+    <div class="icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="29" fill="none">
+        <path
+          stroke="#C23D3D"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13.997 11.25v4.667m0 4.667h.012M12.382 5.29 2.786 21.865c-.532.92-.798 1.379-.759 1.756.035.33.207.628.475.823.306.223.837.223 1.9.223h19.191c1.062 0 1.594 0 1.9-.223.268-.195.44-.494.475-.823.039-.377-.227-.837-.76-1.756L15.614 5.291c-.53-.916-.796-1.374-1.141-1.528a1.167 1.167 0 0 0-.949 0c-.345.154-.61.612-1.141 1.528Z"
+        >
+        </path>
+      </svg>
+    </div>
+    <PortableText value={state.error.heading} class="heading" />
+    <PortableText value={state.error.paragraph} class="paragraph" />
+    <Button
+      theme="primary"
+      type="button"
+      className="tryAgain"
+      customIcon={`
+        <svg style="padding-bottom: 1px;" xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25" d="M1.664 6.583s1.17-1.593 2.12-2.544a5.25 5.25 0 1 1-1.331 5.17m-.789-2.626v-3.5m0 3.5h3.5"/>
+        </svg>
+      `}>Spróbuj ponownie</Button
+    >
+  </div>
+</Form>
+
+<style lang="scss">
+  .Form {
+    padding-right: 2.5rem;
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    @media (max-width: 64rem) {
+      padding-right: 0;
+    }
+
+    .Loader {
+      display: none;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: rgba(233, 242, 237, 0.3);
+      backdrop-filter: blur(4px);
+      border-radius: 8px;
+      z-index: 3;
+      display: none;
+    }
+
+    &[data-status='success'],
+    &[data-status='error'] {
+      &::before {
+        display: grid;
+      }
+    }
+
+    .ErrorState,
+    .SuccessState {
+      position: absolute;
+      inset: 0;
+      flex-direction: column;
+      padding: 2.25rem;
+      align-items: flex-start;
+      background-color: var(--neutral-200, #e9f2ed);
+      display: none;
+      animation: fadeInState 500ms ease;
+      z-index: 5;
+
+      @keyframes fadeInState {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .icon {
+        width: 3.25rem;
+        height: 3.25rem;
+        border-radius: 999px;
+        background-color: var(--neutral-100, #f2faf6);
+        display: grid;
+        place-items: center;
+        animation: fadeInIcon 400ms ease;
+      }
+
+      .heading {
+        font-size: var(--typography-heading-m, 1.75rem);
+      }
+
+      .paragraph {
+        font-size: var(--typography-body-m, 0.875rem);
+      }
+
+      @media (max-width: 64rem) {
+        padding: clamp(1.25rem, calc(3vw / 0.48), 3rem);
+      }
+      @media (max-width: 33.75rem) {
+        padding: clamp(1.25rem, calc(2.25vw / 0.48), 3rem);
+      }
+    }
+
+    .SuccessState {
+      .icon {
+        margin-bottom: 2.5rem;
+      }
+
+      .heading {
+        margin-bottom: 1.25rem;
+        line-height: 1.35;
+        font-weight: 500;
+        font-family: 'Cabinet Grotesk', 'Cabinet Grotesk Fallback', sans-serif;
+      }
+
+      .paragraph {
+        margin-bottom: 2rem;
+      }
+
+      .logoBox {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-self: stretch;
+        gap: 1.25rem;
+        padding: 2rem;
+        border-radius: 6px;
+        background-color: var(--neutral-300, #d0e1d7);
+        position: relative;
+
+        .socialLink {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          display: grid;
+          place-items: center;
+          min-width: 2.75rem;
+          min-height: 2.75rem;
+          border-radius: 999px;
+          background-color: var(--neutral-300, #d0e1d7);
+          border: 2px solid var(--neutral-200, #e9f2ed);
+        }
+
+        .logo {
+          padding-top: 0.75rem;
+        }
+
+        .name {
+          font-size: var(--typography-body-s, 0.75rem);
+          margin: -0.5rem 0;
+        }
+      }
+    }
+    .ErrorState {
+      justify-content: center;
+      .icon {
+        margin-bottom: 3rem;
+      }
+      .heading {
+        margin-bottom: 0.75rem;
+        color: var(--error-500, #c23d3d);
+      }
+
+      .paragraph {
+        margin-bottom: 3rem;
+      }
+      button {
+        max-width: 20.5rem;
+      }
+      @media (max-width: 64rem) {
+        justify-content: flex-start;
+      }
+    }
+
+    &[data-status='success'],
+    &[data-status='error'] {
+      :global(> label),
+      button[type='submit'],
+      :global(div[data-is-phone='true']) {
+        display: none;
+      }
+    }
+
+    &[data-status='loading'] {
+      .Loader {
+        display: grid;
+      }
+    }
+
+    &[data-status='error'] {
+      .ErrorState {
+        display: flex;
+      }
+    }
+
+    &[data-status='success'] {
+      .SuccessState {
+        display: flex;
+      }
+    }
+
+    button {
+      width: 100%;
+      max-width: 100%;
+      justify-content: stretch;
+
+      :global(div) {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  :global(.react-international-phone-input-container) {
+    border: 1px solid var(--neutral-600, #87988b);
+    border-radius: 4px;
+    display: flex;
+    gap: 0.5rem;
+
+    :global(.react-international-phone-country-selector) {
+      display: grid;
+      place-items: center;
+      border-right: 1px solid var(--neutral-400, #c1d1c8);
+      border-radius: 4px 0 0 4px;
+      position: relative;
+
+      :global(button) {
+        width: 2.75rem;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1px;
+
+        :global(div) {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1px;
+
+          :global(img) {
+            height: 12px;
+            width: 12px;
+            border-radius: 999px;
+          }
+
+          :global(div) {
+            position: relative;
+            height: 8px;
+            width: 8px;
+
+            &::after {
+              content: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5IiBoZWlnaHQ9IjgiIGZpbGw9Im5vbmUiPjxwYXRoIGZpbGw9IiM4Nzk4OEIiIGQ9Im0yLjUgMyAyIDIgMi0yIi8+PC9zdmc+');
+            }
+          }
+        }
+      }
+      :global(ul) {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        max-height: 14rem;
+        padding: 1rem;
+        z-index: 5;
+
+        width: max-content;
+        max-width: 18rem;
+        overflow-y: auto;
+        top: 120%;
+        left: 0;
+        background-color: var(--neutral-100, #f2faf6);
+        border-radius: 8px;
+        animation: fadeIn 650ms var(--easing) 0ms forwards;
+        outline: none;
+        scrollbar-width: thin;
+        scrollbar-color: var(--neutral-600, #87988b) var(--neutral-100, #f2faf6);
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-0.5rem);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        &::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: var(--neutral-100, #f2faf6);
+          border-radius: 8px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: var(--neutral-600, #87988b);
+          border-radius: 8px;
+        }
+
+        :global(li) {
+          display: flex;
+          align-items: center;
+          font-size: var(--typography-body-m, 0.875rem);
+          cursor: pointer;
+          padding: 0.5rem;
+          border-radius: 12px;
+          transition: background-color 200ms;
+
+          :global(img) {
+            width: 24px;
+            height: 24px;
+            border-radius: 999px;
+            margin-right: 1rem;
+          }
+
+          > :global(span):first-of-type {
+            margin-right: auto;
+            color: var(--neutral-900, #5f6d62);
+          }
+
+          > :global(span):last-of-type {
+            color: var(--neutral-700, #87988b);
+          }
+
+          &:hover {
+            background-color: var(--neutral-200, #e9f2ed);
+          }
+
+          &:focus-visible {
+            outline: 2px solid var(--neutral-700, #5f6d62);
+            outline-offset: 3px;
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+    :global(input) {
+      font-size: var(--typography-body-s, 0.75rem);
+      flex-grow: 1;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLDivElement>('.ContactForm').forEach((section) => {
+    section.querySelector<HTMLButtonElement>('.tryAgain')!.addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('Contact-TryAgain'));
+    });
+  });
+</script>

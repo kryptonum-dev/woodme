@@ -1,0 +1,393 @@
+---
+import { splitHeading } from '@/src/utils/split-heading';
+import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
+import { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
+
+export const GalleryLinks_Query = `
+  _type == "GalleryLinks" => {
+    headingArray[]{
+    ${PortableTextQuery('partHeading')}
+    },
+  links[] {
+    ${ImageDataQuery('image')}
+    title,
+    "slug": link -> slug.current,
+  },
+  },
+`;
+
+type Props = {
+  index: number;
+  sectionId?: string;
+  headingArray: {
+    partHeading: PortableTextValue;
+  }[];
+  links: {
+    image: ImageDataProps;
+    title: string;
+    slug: string;
+  }[];
+};
+
+const { index, sectionId, headingArray, links } = Astro.props;
+const Heading = index === 0 ? 'h1' : 'h2';
+const Subheading = index === 0 ? 'h2' : 'h3';
+---
+
+<section class="GalleryLinks" id={sectionId}>
+  <header class="header max-width">
+    <Heading class="heading">
+      {
+        headingArray.map((heading, i) => (
+          <>
+            <span class="part">
+              {splitHeading(heading.partHeading).map((item: any, splitIndex: number) => (
+                <>
+                  {' '}
+                  {item.marks.includes('strong') ? (
+                    <strong style={`transition-delay: ${(i + 1) * 120 + splitIndex * 60 - 140}ms`}>{item.text}</strong>
+                  ) : (
+                    <span style={`transition-delay: ${(i + 1) * 120 + splitIndex * 60 - 140}ms`}>{item.text}</span>
+                  )}
+                </>
+              ))}
+            </span>
+            {(i === 0 && headingArray.length > 1) || (i === 1 && headingArray.length > 2) ? (
+              <span class="separator">&nbsp;</span>
+            ) : null}
+          </>
+        ))
+      }
+    </Heading>
+  </header>
+  <div class="content">
+    <ul class="gallery max-width">
+      {
+        links.map(({ title, slug, image }, i) => (
+          <li class="item" style={`transition-delay: ${i * 180 + 140}ms`}>
+            <a href={slug} class="card">
+              <Image
+                {...image}
+                draggable="false"
+                sizes="(max-width: 37.5rem) 95vw, (max-width: 48rem) 80vw, (max-width: 56.25rem) 608px, (max-width: 91.25rem) 32vw,432px"
+                loading={index === 0 ? 'eager' : 'lazy'}
+                fetchpriority={i === 0 && index === 0 ? 'high' : 'auto'}
+              />
+              <div class="text">
+                <Subheading class="title">{title}</Subheading>
+                <span class="indicator">{i + 1}</span>
+              </div>
+            </a>
+            <div class="showMore">
+              Sprawdź
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" fill="none">
+                <path
+                  stroke="#3e463a"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.25"
+                  d="M2.5 6h8m0 0-3-3m3 3-3 3"
+                />
+              </svg>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style lang="scss">
+  .GalleryLinks {
+    padding: clamp(3rem, calc(5vw / 0.48), 6rem) 0;
+
+    .header {
+      text-align: center;
+      margin-bottom: clamp(1.5rem, calc(3vw / 0.48), 3rem);
+
+      .heading {
+        gap: 1.5rem;
+
+        .part {
+          display: inline-block;
+
+          @media (min-width: 56.3125rem) {
+            span,
+            strong {
+              display: inline-block;
+              opacity: 0;
+              transform: translateY(0.75rem);
+            }
+          }
+        }
+
+        .separator {
+          width: clamp(7rem, calc(7.5vw / 0.48), 13.25rem);
+          display: inline-flex;
+          align-items: center;
+          margin: 0 0.5rem;
+          height: 1px;
+          background-color: var(--neutral-400, #c1d1c8);
+          transform: scaleX(0);
+          transform-origin: left;
+        }
+
+        @media (max-width: 64rem) {
+          gap: 0;
+          text-align: center;
+          .separator {
+            display: none;
+          }
+        }
+      }
+    }
+    .content {
+      background-color: var(--neutral-100, #f2faf6);
+      padding: 2rem 0;
+
+      .gallery {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        .item {
+          flex: 1;
+          border-radius: 8px;
+          overflow: hidden;
+          position: relative;
+
+          @media (min-width: 56.3125rem) {
+            opacity: 0;
+            transform: translateY(1rem);
+          }
+
+          &:has(a:focus-visible) {
+            outline: 3px solid var(--neutral-700, #5f6d62);
+            outline-offset: 3px;
+            border-radius: 12px;
+          }
+
+          .showMore {
+            background-color: var(--secondary-400, #d2cdbf);
+            border-radius: 999px;
+            padding: 0.375rem 0.625rem;
+            position: absolute;
+            top: 0;
+            color: #3e463a;
+            left: 0;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: var(--typography-body-m, 0.875rem);
+            transition: opacity 100ms;
+            pointer-events: none;
+            cursor: none;
+
+            @media not all and (pointer: fine) {
+              display: none;
+            }
+          }
+
+          .card {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: none;
+
+            &::before {
+              content: '';
+              position: absolute;
+              width: 100%;
+              bottom: 0;
+              left: 0;
+              height: 50%;
+              background: linear-gradient(180deg, rgba(28, 19, 17, 0) 0%, #1c1311 100%);
+              transform-origin: bottom;
+              transition: transform 600ms;
+            }
+
+            &:focus:not(:focus-visible) {
+              &::before {
+                transform: scaleY(2);
+              }
+            }
+
+            img {
+              width: 100%;
+              height: 100%;
+            }
+
+            .text {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+              display: flex;
+              align-items: flex-end;
+              justify-content: space-between;
+              gap: 4rem;
+              padding: clamp(1rem, calc(1.25vw / 0.48), 1.25rem);
+              .title {
+                font-size: 1.75rem;
+                line-height: 1.3;
+                color: var(--neutral-100, #f2faf6);
+                letter-spacing: -0.04em;
+                font-family: 'Inter', 'Inter Fallback', sans-serif;
+                font-weight: 400;
+
+                @media (max-width: 56.25rem) {
+                  max-width: 19.25rem;
+                }
+              }
+
+              .indicator {
+                width: 1.125rem;
+                height: 1.375rem;
+                padding: 2px 6px 0;
+                border-radius: 999px;
+                font-size: var(--typography-body-s, 0.75rem);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                line-height: 1;
+                background-color: var(--tertiary-400, #acc1cf);
+              }
+
+              @media (max-width: 27.5rem) {
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: space-between;
+                height: 100%;
+                padding-right: 2rem;
+
+                .title {
+                  order: 2;
+                }
+                .indicator {
+                  order: 1;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      @media (max-width: 56.25rem) {
+        padding: clamp(1rem, calc(3vw / 0.48), 3rem) 0;
+
+        .gallery {
+          flex-direction: column;
+          max-width: 38rem;
+        }
+      }
+
+      @media (max-width: 27.5rem) {
+        padding: 1rem 0;
+      }
+    }
+
+    &.visible {
+      .header {
+        .heading {
+          .part {
+            span,
+            strong {
+              opacity: 1;
+              transform: translateY(0);
+              transition:
+                opacity 600ms,
+                transform 2400ms var(--easing);
+            }
+          }
+
+          .separator {
+            transform: scaleX(1);
+            transition: transform 2000ms var(--easing);
+
+            &:nth-of-type(4) {
+              transition-delay: 200ms;
+            }
+          }
+        }
+      }
+
+      .content {
+        .gallery {
+          .item {
+            opacity: 1;
+            transform: translateY(0);
+            transition:
+              opacity 800ms,
+              transform 1800ms var(--easing);
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLDivElement>('.GalleryLinks').forEach((section) => {
+    function init() {
+      const items = section.querySelectorAll('.item') as NodeListOf<HTMLAnchorElement>;
+
+      items.forEach((item) => {
+        const showMore = item.querySelector('.showMore') as HTMLElement;
+        let firstMove = false;
+        let animationFrameId: number;
+
+        const updatePosition = (e: MouseEvent) => {
+          const rect = item.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          const offsetX = showMore.offsetWidth / 2;
+          const offsetY = showMore.offsetHeight / 2;
+
+          showMore.style.transform = `translate(${x - offsetX}px, ${y - offsetY}px)`;
+          showMore.style.transition = firstMove
+            ? 'transform 300ms cubic-bezier(0.19, 1, 0.22, 1), opacity 100ms ease-out'
+            : 'opacity 100ms ease-out';
+          firstMove = true;
+        };
+
+        item.addEventListener('mouseenter', () => {
+          showMore.style.opacity = '1';
+          firstMove = false;
+        });
+
+        item.addEventListener('mouseleave', () => {
+          showMore.style.opacity = '0';
+          cancelAnimationFrame(animationFrameId);
+        });
+
+        item.addEventListener('mousemove', (e) => {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = requestAnimationFrame(() => updatePosition(e));
+        });
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+
+      observer.observe(section);
+    }
+
+    if (document.documentElement.classList.contains('fresh-visit')) {
+      init();
+    } else {
+      window.addEventListener('splashscreen:complete', () => {
+        init();
+      });
+    }
+  });
+</script>

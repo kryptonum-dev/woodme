@@ -11,6 +11,8 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
     className?: string;
     isLoading?: boolean;
     sendingMessage?: string;
+    customIcon?: string;
+    pathname?: string;
   };
 
 export default function Button({
@@ -22,13 +24,13 @@ export default function Button({
   shade = 'dark',
   className,
   isLoading,
+  pathname,
   ...props
 }: Props) {
-  console.log(shade);
   const Element = href ? 'a' : 'button';
   const isExternal = linkType === 'external';
   const renderedProps = {
-    ...(href && { href }),
+    ...(href && href !== pathname ? { href } : { href: '#' }),
     ...(isExternal && { target: '_blank', rel: 'noreferrer' }),
     'data-theme': theme,
     'data-shade': shade,

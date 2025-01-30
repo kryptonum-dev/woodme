@@ -1,0 +1,96 @@
+---
+import VideoPopup from '@/src/components/ui/videoPopup/VideoPopup';
+import { Image } from 'astro:assets';
+
+export const Video_Query = `
+  _type == "Video" => {
+    video {
+     asset-> {
+        playbackId,
+        data,
+        }
+    },
+    source {
+      name,
+      url,
+    },
+  },
+`;
+
+type Props = {
+  node: {
+    video: {
+      asset: {
+        playbackId: string;
+        data: {
+          aspect_ratio: string;
+          tracks: {
+            max_width: number;
+          }[];
+        };
+      };
+    };
+    source?: {
+      name: string;
+      url: string;
+    };
+  };
+};
+
+const { node } = Astro.props;
+---
+
+<section class="Video">
+  <VideoPopup
+    client:load
+    playbackId={node.video.asset.playbackId}
+    name={node.source?.name || ''}
+    aspectRatio={node.video.asset.data.aspect_ratio}
+    maxWidth={node.video.asset.data.tracks[0].max_width}
+    forceAspectRatio
+  >
+    <Image
+      src={`https://image.mux.com/${node.video.asset.playbackId}/thumbnail.jpg?width=${node.video.asset.data.tracks[0].max_width}&height=${Math.round(
+        node.video.asset.data.tracks[0].max_width *
+          (Number(node.video.asset.data.aspect_ratio.split(':')[1]) /
+            Number(node.video.asset.data.aspect_ratio.split(':')[0]))
+      )}`}
+      alt={node.source?.name || ''}
+      width={node.video.asset.data.tracks[0].max_width}
+      height={Math.round(
+        node.video.asset.data.tracks[0].max_width *
+          (Number(node.video.asset.data.aspect_ratio.split(':')[1]) /
+            Number(node.video.asset.data.aspect_ratio.split(':')[0]))
+      )}
+      sizes={`${node.video.asset.data.tracks[0].max_width}px`}
+      loading="lazy"
+    /></VideoPopup
+  >
+  {
+    node.source && (
+      <p class="source">
+        <span>Źródło:</span>
+        <a href={node.source.url} target="_blank" rel="noreferrer" class="link">
+          {node.source.name}
+        </a>
+      </p>
+    )
+  }
+</section>
+<style lang="scss">
+  .Video {
+    margin: clamp(2.5rem, calc(3.5vw / 0.48), 3.5rem) auto clamp(1.75rem, calc(2.5vw / 0.48), 2.5rem);
+    width: fit-content;
+
+    .source {
+      font-size: var(--typography-body-m, 0.875rem);
+      display: flex;
+      align-items: center;
+      gap: 0.125rem;
+
+      :global(a) {
+        color: var(--primary-900, #141915);
+      }
+    }
+  }
+</style>

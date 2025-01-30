@@ -1,0 +1,55 @@
+---
+export const slugPrefix = '/realizacje/';
+
+import sanityFetch from '@/src/utils/sanity.fetch';
+import metadataFetch from '@/src/utils/metadata.fetch';
+import Components, { Components_Query, type ComponentsProps } from '@/src/components/Components.astro';
+import Layout from '@/src/layouts/Layout.astro';
+import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
+import Hero, { Hero_Query, type HeroProps } from '@/src/components/Project/Single/Hero.astro';
+
+export const projects = await sanityFetch<{ slug: string }[]>({
+  query: `
+    *[_type == 'Project_Collection'][] {
+      "slug": slug.current,
+    }
+  `,
+});
+
+export async function getStaticPaths() {
+  return projects?.map(({ slug }) => ({ params: { slug: slug.replace(slugPrefix, '') } }));
+}
+
+const { slug: _slug } = Astro.params;
+
+const slug = `${slugPrefix}${_slug}`;
+
+if (!projects.find(({ slug }) => slug === slug)) return Astro.rewrite('/404');
+
+const page = await sanityFetch<HeroProps & { components: ComponentsProps; footerBackground: string }>({
+  query: `
+    *[_type == 'Project_Collection' && slug.current == $slug][0] {
+      ${Hero_Query}
+      ${Components_Query}
+      "footerBackground": components[-1].background,
+    }
+  `,
+  params: { slug: slug },
+});
+
+if (!page) return Astro.rewrite('/404');
+
+const metadata = await metadataFetch(slug);
+---
+
+<Layout {...metadata} footerBackground={page.footerBackground}>
+  <Breadcrumbs
+    data={[
+      { name: 'Realizacje', path: slugPrefix },
+      { name: page.name, path: slug },
+    ]}
+    firstItemType="Single_Project"
+  />
+  <Hero {...page} />
+  <Components data={page.components} hasPreviousSections={true} />
+</Layout>

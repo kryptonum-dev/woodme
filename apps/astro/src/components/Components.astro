@@ -4,11 +4,62 @@ import FullWidthPhoto, { FullWidthPhoto_Query } from '@/components/global/FullWi
 import CircleSwiper, { CircleSwiper_Query } from '@/components/global/CircleSwiper.astro';
 import SplitContentSection, { SplitContentSection_Query } from './global/SplitContentSection.astro';
 import BlogReference, { BlogReference_Query } from './global/BlogReference.astro';
+import CtaSection, { CtaSection_Query } from './global/CtaSection.astro';
+import ExpandingImages, { ExpandingImages_Query } from './global/ExpandingImages.astro';
+import GalleryLinks, { GalleryLinks_Query } from './global/GalleryLinks.astro';
+import TestimonialsSlider, { TestimonialsSlider_Query } from './global/TestimonialsSlider/index.astro';
+import SingleTestimonialSection, { SingleTestimonialSection_Query } from './global/SingleTestimonialSection.astro';
+import CenteredHeadingBackgroundImage, {
+  CenteredHeadingBackgroundImage_Query,
+} from './global/CenteredHeadingBackgroundImage.astro';
+import DualColumnSection, { DualColumnSection_Query } from './global/DualColumnSection.astro';
+import ChartsSection, { ChartsSection_Query } from './global/ChartsSection.astro';
+import ListPointsMiddlePhoto, { ListPointsMiddlePhoto_Query } from './global/ListPointsMiddlePhoto.astro';
+import SingleHeadingSection, { SingleHeadingSection_Query } from './global/SingleHeadingSection.astro';
+import MiddleImageCtas, { MiddleImageCtas_Query } from './global/MiddleImageCtas.astro';
+import ImageHeadingColumns, { ImageHeadingColumns_Query } from './global/ImageHeadingColumns.astro';
+import TextListWithImage, { TextListWithImage_Query } from './global/TextListWithImage.astro';
+import HeadingRowListCta, { HeadingRowListCta_Query } from './global/HeadingRowListCta.astro';
+import TimelineSection, { TimelineSection_Query } from './global/TimelineSection.astro';
+import TwoColumnsImageListCta, { TwoColumnsImageListCta_Query } from './global/TwoColumnsImageListCta.astro';
+import AnimatedProjectReferences, { AnimatedProjectReferences_Query } from './global/AnimatedProjectReferences.astro';
+import ContactForm, { ContactForm_Query } from './global/ContactForm/ContactForm.astro';
+import Faq, { Faq_Query } from './global/Faq/Faq.astro';
+import GallerySlider, { GallerySlider_Query } from './global/GallerySlider/index.astro';
+import TabsSection, { TabsSection_Query } from './global/TabsSection.astro';
+import ImageMarquee, { ImageMarquee_Query } from './global/ImageMarquee.astro';
+import NumbersSection, { NumbersSection_Query } from './global/NumbersSection.astro';
+import ExpandingText, { ExpandingText_Query } from './global/ExpandingText/index.astro';
+
 const components = {
   FullWidthPhoto,
   CircleSwiper,
   SplitContentSection,
   BlogReference,
+  CtaSection,
+  ExpandingImages,
+  GalleryLinks,
+  TestimonialsSlider,
+  SingleTestimonialSection,
+  CenteredHeadingBackgroundImage,
+  DualColumnSection,
+  ChartsSection,
+  ListPointsMiddlePhoto,
+  SingleHeadingSection,
+  MiddleImageCtas,
+  ImageHeadingColumns,
+  TextListWithImage,
+  HeadingRowListCta,
+  TimelineSection,
+  TwoColumnsImageListCta,
+  AnimatedProjectReferences,
+  ContactForm,
+  Faq,
+  GallerySlider,
+  TabsSection,
+  ImageMarquee,
+  NumbersSection,
+  ExpandingText,
 };
 
 type ComponentsMap = {
@@ -21,10 +72,10 @@ export type ComponentsProps = Array<ComponentsMap[keyof typeof components]>;
 
 type Props = {
   data: ComponentsProps;
-  indexStart?: number;
+  hasPreviousSections?: boolean;
 };
 
-const { data, indexStart = 0 } = Astro.props;
+const { data, hasPreviousSections = false } = Astro.props;
 
 export const Components_Query = /* groq */ `
   components[] {
@@ -34,6 +85,30 @@ export const Components_Query = /* groq */ `
     ${CircleSwiper_Query}
     ${SplitContentSection_Query}
     ${BlogReference_Query}
+    ${CtaSection_Query}
+    ${ExpandingImages_Query}
+    ${GalleryLinks_Query}
+    ${TestimonialsSlider_Query}
+    ${SingleTestimonialSection_Query}
+    ${CenteredHeadingBackgroundImage_Query}
+    ${DualColumnSection_Query}
+    ${ChartsSection_Query}
+    ${ListPointsMiddlePhoto_Query}
+    ${SingleHeadingSection_Query}
+    ${MiddleImageCtas_Query}
+    ${ImageHeadingColumns_Query}
+    ${TextListWithImage_Query}
+    ${HeadingRowListCta_Query}
+    ${TimelineSection_Query}
+    ${TwoColumnsImageListCta_Query}
+    ${AnimatedProjectReferences_Query}
+    ${ContactForm_Query}
+    ${Faq_Query}
+    ${GallerySlider_Query}
+    ${TabsSection_Query}
+    ${ImageMarquee_Query}
+    ${NumbersSection_Query}
+    ${ExpandingText_Query}
   },
 `;
 ---
@@ -44,6 +119,6 @@ export const Components_Query = /* groq */ `
     // the implementation and avoid creating separate typed interfaces for each component.
     const DynamicComponent = components[item._type] as any;
     if (!DynamicComponent) return null;
-    return <DynamicComponent {...item} index={indexStart + i} />;
+    return <DynamicComponent {...item} index={hasPreviousSections ? ++i : i} />;
   })
 }

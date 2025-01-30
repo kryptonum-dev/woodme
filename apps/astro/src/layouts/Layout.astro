@@ -1,22 +1,41 @@
 ---
-import '@/global/global.scss'
-import { LOCALE } from '@/global/constants'
-import Head, { type HeadProps } from './Head.astro'
+import '@/global/global.scss';
+import { LOCALE } from '@/global/constants';
+import Head, { type HeadProps } from './Head.astro';
+import Footer from './Footer.astro';
+import Header from './Header.astro';
+import SmoothScroll from './smooth-scroll.astro';
+import SplashScreen from '../components/ui/SplashScreen.astro';
 
+type Props = HeadProps & {
+  footerBackground?: string;
+};
 
-type Props = HeadProps
-
-const { ...props } = Astro.props
+const { footerBackground, ...props } = Astro.props;
 ---
 
 <!doctype html>
 <html lang={LOCALE}>
   <head>
     <Head {...props} />
+    <script is:inline src="https://cdn.usefathom.com/script.js" data-site="XFDBCWQI" defer></script>
+
+    <script is:inline>
+      const currentUrl = window.location.href;
+      const lastPage = sessionStorage.getItem('lastPage');
+
+      if (lastPage && currentUrl !== lastPage) document.documentElement.classList.add('fresh-visit');
+
+      sessionStorage.setItem('lastPage', currentUrl);
+    </script>
   </head>
   <body>
+    <SplashScreen />
+    <Header />
     <main id="main">
       <slot />
     </main>
+    <Footer background={footerBackground} />
+    <SmoothScroll />
   </body>
 </html>

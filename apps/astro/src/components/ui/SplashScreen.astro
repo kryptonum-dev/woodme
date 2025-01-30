@@ -1,0 +1,343 @@
+---
+import sanityFetch from '@/src/utils/sanity.fetch';
+import type { ImageDataProps } from './image';
+import Image, { ImageDataQuery } from './image';
+
+const { splashScreenImages } = await sanityFetch<{
+  splashScreenImages: ImageDataProps[];
+}>({
+  query: `
+    *[_type == "global"][0] {
+      "splashScreenImages": ${ImageDataQuery('splashScreenImages[]')}
+    }
+  `,
+});
+---
+
+<div class="SplashScreen">
+  <div class="SplashScreen_box">
+    <div class="SplashScreen_container max-width">
+      <div class="sygnet">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27 18" fill="none"
+          ><path
+            d="M26.521 6.815 24.123 4.15l-2.65-2.119A3.758 3.758 0 0 0 18.814.93H8.574c-.996 0-1.953.397-2.658 1.101l-2.65 2.12L.866 6.814C.162 7.519.002 8.477.002 9.472v9.174c0 .145.118.264.264.264h2.746a.264.264 0 0 0 .264-.264V5.767A1.61 1.61 0 0 1 4.448 4.22c.141-.041.29-.057.437-.057h8.681L11.18 6.815c-.706.706-.865 1.662-.865 2.657v9.174c0 .145.118.264.264.264h2.746a.264.264 0 0 0 .264-.264V5.767A1.61 1.61 0 0 1 14.76 4.22c.141-.041.29-.057.437-.057h7.306c.147 0 .296.016.437.057a1.61 1.61 0 0 1 1.173 1.548v12.88c0 .146.118.264.264.264h2.746a.264.264 0 0 0 .264-.264V9.474c0-.996-.16-1.953-.866-2.657v-.002Z"
+            fill="#68746B"></path><defs
+            ><clipPath id="a"
+              ><path fill="#fff" transform="translate(.001 .929)" d="M0 0h27.385v17.983H0z"></path></clipPath
+            ></defs
+          ></svg
+        >
+      </div>
+      <div class="images">
+        {
+          splashScreenImages.map((image, i) => (
+            <Image
+              {...image}
+              loading="eager"
+              fetchpriority={i === 2 ? 'high' : 'auto'}
+              sizes="(max-width: 37.4375rem) 31vw, (max-width: 56.25rem) 23vw, 220px"
+            />
+          ))
+        }
+      </div>
+      <div class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 17" fill="none"
+          ><path
+            d="M8.299 16.462H4.916a.307.307 0 0 1-.296-.225L.451 1.098A.307.307 0 0 1 .747.71h2.26c.14 0 .263.096.297.235l1.738 7.133c.44 2.026.88 3.964 1.263 5.985a.153.153 0 0 0 .15.124h.553a.153.153 0 0 0 .15-.126 100.2 100.2 0 0 1 1.263-5.983l1.884-7.14A.306.306 0 0 1 10.6.71h2.967c.14 0 .262.095.297.23l1.855 7.167c.469 1.938.881 3.904 1.263 5.954a.154.154 0 0 0 .15.126h.495a.153.153 0 0 0 .15-.124c.383-1.994.823-3.932 1.263-5.986L20.75.945a.306.306 0 0 1 .297-.235h2.11c.201 0 .349.192.295.387l-4.11 15.138a.308.308 0 0 1-.296.227h-3.502a.305.305 0 0 1-.298-.234l-1.53-6.355c-.468-1.939-1.083-4.627-1.472-6.792a.151.151 0 0 0-.15-.125h-.315a.151.151 0 0 0-.15.123c-.42 2.167-1.062 4.855-1.531 6.794l-1.5 6.353a.307.307 0 0 1-.3.236Z"
+            fill="#48514A"></path></svg
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17" fill="none"
+          ><path
+            d="M.08 8.555C.08 3.615 3.132.38 8.306.38c5.174 0 8.227 3.234 8.227 8.175 0 4.941-2.932 8.237-8.227 8.237S.08 13.467.08 8.555Zm13.79-.029c0-3.474-1.765-5.84-5.563-5.84s-5.563 2.366-5.563 5.84c0 3.474 1.735 5.96 5.563 5.96 3.829 0 5.564-2.366 5.564-5.96Z"
+            fill="#48514A"></path></svg
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17" fill="none"
+          ><path
+            d="M.08 8.555C.08 3.615 3.132.38 8.306.38c5.174 0 8.227 3.234 8.227 8.175 0 4.941-2.932 8.237-8.227 8.237S.08 13.467.08 8.555Zm13.79-.029c0-3.474-1.765-5.84-5.563-5.84s-5.563 2.366-5.563 5.84c0 3.474 1.735 5.96 5.563 5.96 3.829 0 5.564-2.366 5.564-5.96Z"
+            fill="#48514A"></path></svg
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 17" fill="none"
+          ><path
+            d="M.588 1.017C.588.848.726.71.894.71H7.11c5.654 0 8.316 2.756 8.316 7.757 0 5-3.14 7.995-8.287 7.995H.894a.308.308 0 0 1-.306-.306V1.016Zm2.691 2.062v11.014c0 .085.07.154.154.154h3.526c4.158 0 5.803-2.127 5.803-5.78 0-3.864-1.795-5.541-5.984-5.541H3.431a.154.154 0 0 0-.153.153h.001Z"
+            fill="#48514A"></path></svg
+        ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 17" fill="none">
+          <path
+            d="M2.85588 16.4621H0.956921C0.78833 16.4621 0.650391 16.324 0.650391 16.1552V1.01643C0.650391 0.847642 0.78833 0.709542 0.956921 0.709542H4.90044C5.02612 0.709542 5.13801 0.786264 5.18398 0.901347L7.97801 7.83701C8.38876 8.86355 9.08612 10.955 9.62102 12.7012C9.64095 12.7656 9.69918 12.8086 9.76662 12.8086H10.1988C10.2663 12.8086 10.326 12.7656 10.3444 12.7012C10.8763 10.9581 11.5184 8.92033 11.9874 7.74648L14.8106 0.898278C14.8581 0.783195 14.97 0.708008 15.0941 0.708008H18.8001C18.9687 0.708008 19.1066 0.846107 19.1066 1.0149V16.1537C19.1066 16.3225 18.9687 16.4606 18.8001 16.4606H16.7509C16.5823 16.4606 16.4444 16.3225 16.4444 16.1537V8.85281C16.4444 7.079 16.5011 4.79575 16.5593 3.02041C16.5624 2.93448 16.4934 2.8639 16.4061 2.8639H16.0796C16.0122 2.8639 15.9539 2.90686 15.934 2.97131C15.3378 4.89703 14.5163 7.21557 13.7239 9.30394L11.1705 15.3466C11.123 15.4601 11.0111 15.5338 10.8885 15.5338H8.60487C8.48073 15.5338 8.36884 15.4586 8.32132 15.3435L5.79705 9.21341C4.97554 7.00995 4.26899 4.83565 3.70497 2.97131C3.68505 2.90686 3.6268 2.8639 3.55937 2.8639H3.32027C3.23444 2.8639 3.16547 2.93295 3.16701 3.01887C3.19306 4.82031 3.16395 7.04985 3.16395 8.85435V16.1552C3.16395 16.324 3.02601 16.4621 2.85742 16.4621H2.85588Z"
+            fill="#48514A"></path>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13 17" fill="none">
+          <path
+            d="M1.02877 0.709961H12.0516C12.2202 0.709961 12.3581 0.848061 12.3581 1.01685V2.67865C12.3581 2.84744 12.2202 2.98553 12.0516 2.98553H3.56684C3.48255 2.98553 3.41358 3.05458 3.41358 3.13898V7.29424C3.41358 7.37864 3.48255 7.44769 3.56684 7.44769H11.1535C11.3221 7.44769 11.46 7.58579 11.46 7.75457V9.14784C11.46 9.31663 11.3221 9.45473 11.1535 9.45473H3.56684C3.48255 9.45473 3.41358 9.52378 3.41358 9.60818V14.0028C3.41358 14.0872 3.48255 14.1563 3.56684 14.1563H12.021C12.1896 14.1563 12.3275 14.2944 12.3275 14.4631V16.1556C12.3275 16.3244 12.1896 16.4625 12.021 16.4625H1.02723C0.858642 16.4625 0.720703 16.3244 0.720703 16.1556V1.01685C0.720703 0.848061 0.858642 0.709961 1.02723 0.709961H1.02877Z"
+            fill="#48514A"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style lang="scss">
+  .SplashScreen {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    z-index: 1000;
+
+    :global(html.fresh-visit) & {
+      display: none;
+    }
+
+    &_box {
+      width: 100%;
+      height: 100%;
+      background-color: var(--neutral-200, #e9f2ed);
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+      animation: SplashScreen_Box 10ms var(--easing) forwards 2300ms;
+
+      @keyframes SplashScreen_Box {
+        0% {
+          opacity: 1;
+          visibility: visible;
+        }
+        100% {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+    }
+
+    &_container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4rem;
+      .sygnet {
+        overflow: hidden;
+        > svg {
+          width: 4.5rem;
+          transform: translateY(100%);
+          animation: SplashScreen_Sygnet 1000ms var(--easing) forwards;
+          animation-delay: 600ms;
+
+          @keyframes SplashScreen_Sygnet {
+            0% {
+              transform: translateY(100%);
+            }
+            100% {
+              transform: translateY(0);
+            }
+          }
+        }
+      }
+
+      .images {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: auto;
+        overflow: hidden;
+
+        img {
+          flex: 1;
+          width: 100%;
+          max-width: 220px;
+          aspect-ratio: 3/4;
+          border-radius: 4px;
+          transform: translateY(110%);
+          animation: SplashScreen_Images 1800ms var(--easing) forwards;
+
+          &:nth-child(1) {
+            animation-delay: 350ms;
+          }
+          &:nth-child(2) {
+            animation-delay: 200ms;
+          }
+
+          &:nth-child(3) {
+            animation-delay: 50ms;
+          }
+        }
+
+        @keyframes SplashScreen_Images {
+          0% {
+            transform: translateY(110%);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+
+        svg {
+          height: 2.5rem;
+          transform: translateY(-110%);
+          animation: SplashScreen_Logo 1000ms var(--easing) forwards;
+          &:nth-of-type(1) {
+            animation-delay: 600ms;
+          }
+          &:nth-of-type(2) {
+            animation-delay: 675ms;
+          }
+          &:nth-of-type(3) {
+            animation-delay: 750ms;
+          }
+          &:nth-of-type(4) {
+            animation-delay: 825ms;
+          }
+          &:nth-of-type(5) {
+            animation-delay: 900ms;
+          }
+          &:nth-of-type(6) {
+            animation-delay: 975ms;
+          }
+        }
+
+        @keyframes SplashScreen_Logo {
+          0% {
+            transform: translateY(-100%);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+      }
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      background-color: var(--secondary-300, #e3dfd3);
+      z-index: 1200;
+      left: 0;
+      height: 50%;
+      width: 100%;
+      top: 0;
+      transform: scaleY(0);
+      animation: SplashScreen_Before 1800ms cubic-bezier(0.17, 0.84, 0.44, 1) forwards;
+      animation-delay: 1450ms;
+      transform-origin: bottom;
+    }
+
+    &::after {
+      top: unset;
+      bottom: 0;
+      animation: SplashScreen_After 1800ms cubic-bezier(0.17, 0.84, 0.44, 1) forwards;
+      animation-delay: 1450ms;
+      transform-origin: top;
+    }
+
+    @keyframes SplashScreen_After {
+      0%,
+      100% {
+        transform: scaleY(0);
+      }
+
+      50% {
+        transform: scaleY(1);
+      }
+
+      0%,
+      50% {
+        transform-origin: top;
+      }
+
+      51%,
+      100% {
+        transform-origin: bottom;
+        animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+      }
+    }
+
+    @keyframes SplashScreen_Before {
+      0%,
+      100% {
+        transform: scaleY(0);
+      }
+
+      50% {
+        transform: scaleY(1);
+      }
+
+      0%,
+      50% {
+        transform-origin: bottom;
+      }
+
+      51%,
+      100% {
+        transform-origin: top;
+        animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+      }
+    }
+
+    @media (max-width: 75rem) {
+      &_box {
+        padding: 0;
+      }
+      &_container {
+        flex-direction: column;
+        gap: clamp(2.5rem, calc(3vw / 0.48), 4rem);
+
+        .images {
+          margin-left: 0;
+          display: grid;
+          grid-template-columns: repeat(3, auto);
+          justify-content: center;
+          width: 100%;
+
+          img {
+            flex: 1;
+          }
+        }
+
+        .sygnet {
+          > svg {
+            width: clamp(2.5rem, calc(3.5vw / 0.48), 4.5rem);
+          }
+        }
+
+        .logo {
+          svg {
+            height: clamp(1.5rem, calc(2vw / 0.48), 2.5rem);
+          }
+        }
+      }
+    }
+
+    @media (max-width: 56.1875rem) {
+      &_container {
+        .images {
+          grid-template-columns: repeat(3, 1fr);
+
+          img {
+            max-width: 100%;
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  const SplashScreen = document.querySelector('.SplashScreen') as HTMLElement;
+
+  if (document.documentElement.classList.contains('fresh-visit')) {
+    SplashScreen.remove();
+  } else {
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('splashscreen:complete'));
+    }, 2400);
+
+    setTimeout(() => {
+      SplashScreen.remove();
+    }, 3050);
+  }
+</script>

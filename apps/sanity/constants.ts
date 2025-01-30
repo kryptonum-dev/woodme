@@ -4,7 +4,7 @@
  * @constant
  * @type {string}
  */
-export const DOMAIN: string = 'https://wood-me.pl'
+export const DOMAIN: string = 'https://woodme-git-dev-kryptonum.vercel.app';
 
 /**
  * The domain used for preview deployments.
@@ -13,4 +13,4 @@ export const DOMAIN: string = 'https://wood-me.pl'
  * @constant
  * @type {string}
  */
-export const PREVIEW_DEPLOYMENT_DOMAIN: string = process.env.SANITY_STUDIO_PREVIEW_DOMAIN ?? ''
+export const PREVIEW_DEPLOYMENT_DOMAIN: string = import.meta.env.SANITY_STUDIO_PREVIEW_DOMAIN ?? '';

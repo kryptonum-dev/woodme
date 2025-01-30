@@ -1,0 +1,208 @@
+---
+import ProjectCard, { ProjectCard_Query, type Props as ProjectCardProps } from '../ui/ProjectCard.astro';
+import Pagination from '../ui/Pagination.astro';
+import type { PortableTextValue } from '../ui/portable-text';
+import PortableText from '../ui/portable-text';
+import CategoryPill from '../ui/CategoryPill.astro';
+import { ITEMS_PER_PAGE } from '@/src/pages/realizacje/index.astro';
+
+export const Listing_Query = ({
+  currentPage = 1,
+  currentCategorySlug = '',
+}: {
+  currentPage?: number;
+  currentCategorySlug?: string;
+}) => {
+  const OFFSET = ITEMS_PER_PAGE * (currentPage - 1);
+  const PAGINATION_BEFORE = OFFSET;
+  const PAGINATION_AFTER = OFFSET + ITEMS_PER_PAGE;
+  return `
+      "totalProjects": count(*[_type == 'Project_Collection']),
+      "totalProjectsByCategory": count(*[_type == 'Project_Collection' ${currentCategorySlug ? `&& category -> slug.current == "${currentCategorySlug}"` : ''}]),
+      "categories": *[_type == 'ProjectCategory_Collection'] {
+        name,
+        "slug": slug.current,
+        "count": count(*[_type == 'Project_Collection' && references(^._id) && defined(category)])
+      },
+      "listing": *[_type == 'Project_Collection'
+        ${currentCategorySlug ? `&& category -> slug.current == "${currentCategorySlug}"` : ''}
+      ] | order(coalesce(publishedDate, _createdAt) desc) [${PAGINATION_BEFORE}...${PAGINATION_AFTER}] {
+        ${ProjectCard_Query}
+      },
+  `;
+};
+
+export type ListingProps = {
+  heading: PortableTextValue;
+  totalProjects: number;
+  totalProjectsByCategory: number;
+  currentPage: number;
+  categories: Array<{
+    name: string;
+    slug: string;
+    count: number;
+  }>;
+  listing: ProjectCardProps[];
+  currentCategorySlug?: string;
+  slugBase: string;
+};
+
+const {
+  heading,
+  totalProjects,
+  categories: _categories,
+  listing,
+  totalProjectsByCategory,
+  currentPage,
+  currentCategorySlug,
+  slugBase,
+} = Astro.props as ListingProps;
+
+const categories = _categories?.filter(({ count }) => count > 0);
+---
+
+<section class="Listing">
+  <div class="container max-width">
+    <header class="header">
+      <PortableText value={heading} heading="h1" class="heading" />
+      <div class="categories">
+        <p class="title">Kategorie</p>
+        <nav class="nav" role="navigation" aria-label="Kategorie projektów">
+          <CategoryPill
+            href="/realizacje"
+            isActive={!currentCategorySlug}
+            count={totalProjects}
+            aria-current={!currentCategorySlug ? 'page' : undefined}
+          >
+            Wszystkie
+          </CategoryPill>
+
+          {
+            categories?.map((category) => {
+              const isActive = currentCategorySlug === category.slug;
+              return (
+                <CategoryPill
+                  href={isActive ? '/realizacje' : category.slug}
+                  isActive={isActive}
+                  count={category.count}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {category.name}
+                </CategoryPill>
+              );
+            })
+          }
+        </nav>
+      </div>
+    </header>
+    <div class="list">
+      {
+        listing?.map((project, i) => (
+          <ProjectCard
+            {...project}
+            imgProps={{
+              priority: i === 0,
+              loading: i < 3 ? 'eager' : 'lazy',
+              sizes:
+                '(max-width: 37.5rem) 92w, (max-width: 47rem) 78w, (max-width: 56.25rem) 39w, (max-width: 60rem) 46vw, (max-width: 85.375rem) 32vw, 432px',
+            }}
+          />
+        ))
+      }
+    </div>
+    <Pagination
+      currentPage={currentPage}
+      totalItems={totalProjectsByCategory}
+      itemsPerPage={ITEMS_PER_PAGE}
+      slugBase={slugBase}
+    />
+  </div>
+</section>
+
+<style lang="scss">
+  .Listing {
+    padding: 2rem 0 clamp(3rem, calc(4vw / 0.48), 6rem);
+    background-color: var(--secondary-400);
+    .container {
+      .header {
+        display: flex;
+        justify-content: space-between;
+        gap: 1.25rem 2rem;
+        margin-bottom: clamp(0.75rem, calc(1.5vw / 0.48), 2rem);
+
+        .heading {
+          max-width: 27.375rem;
+          font-size: var(--typography-heading-m, 1.75rem);
+          line-height: 1.35;
+          letter-spacing: -0.02em;
+          color: var(--neutral-800);
+        }
+
+        .categories {
+          max-width: 42.25rem;
+          width: 100%;
+
+          .title {
+            margin-bottom: 1rem;
+          }
+
+          .nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+          }
+        }
+      }
+    }
+
+    .list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(1.75rem, calc(2vw / 0.48), 3.5rem) 1rem;
+      margin-bottom: clamp(3rem, calc(4vw / 0.48), 6rem);
+    }
+
+    @media (max-width: 60rem) {
+      padding-top: 0;
+      .container {
+        .header {
+          padding: clamp(1rem, calc(1.25vw / 0.48), 1.25rem);
+          background-color: var(--secondary-300);
+          flex-direction: column;
+          border-radius: 0 0 10px 10px;
+          .categories {
+            max-width: 100%;
+
+            .title {
+              padding-left: 0.5rem;
+            }
+
+            .nav {
+              column-gap: 0.25rem;
+            }
+          }
+        }
+
+        .list {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    }
+
+    @media (max-width: 32rem) {
+      .container {
+        .header {
+          width: 100vw;
+          margin-left: calc(-1 * var(--pageMargin));
+          padding-top: 1.5rem;
+          padding-bottom: 1.5rem;
+        }
+
+        .list {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+</style>

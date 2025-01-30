@@ -1,0 +1,287 @@
+---
+import Button from '@/src/components/ui/button/Button.astro';
+import Form from './index.tsx';
+import Loader from '@/src/components/ui/Loader.astro';
+import type { PortableTextValue } from '@/src/components/ui/portable-text';
+import PortableText from '@/src/components/ui/portable-text';
+import imageToInlineSvg from '@/src/components/ui/image/image-to-inline-svg';
+
+type Props = {
+  state: {
+    success: {
+      heading: PortableTextValue;
+      paragraph: PortableTextValue;
+      link: {
+        url: string;
+        icon: string;
+      };
+    };
+    error: {
+      heading: PortableTextValue;
+      paragraph: PortableTextValue;
+    };
+  };
+};
+
+const { state } = Astro.props;
+
+const svgContent = await imageToInlineSvg(state.success.link.icon);
+---
+
+<Form className="FaqForm" client:load>
+  <div class="submit-wrapper">
+    <Button type="button" theme="primary" className="next-step">Przejdź dalej</Button>
+    <Button theme="primary" id="submit" type="submit" className="submit-button">Wyślij Wiadomość</Button>
+    <Button type="button" theme="secondary" className="prev-step">Wróć</Button>
+  </div>
+  <Loader class="Loader" />
+  <div class="SuccessState">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+      ><path
+        stroke="#558F2F"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="m7.5 9.167 1.667 1.666 3.75-3.75M8.25 16l1.217 1.622c.18.241.271.362.382.405a.416.416 0 0 0 .302 0c.11-.043.201-.164.382-.405L11.75 16c.244-.326.366-.489.515-.613.2-.166.434-.283.685-.342.19-.045.393-.045.8-.045 1.165 0 1.747 0 2.207-.19a2.5 2.5 0 0 0 1.353-1.353c.19-.46.19-1.042.19-2.207V6.5c0-1.4 0-2.1-.273-2.635a2.5 2.5 0 0 0-1.092-1.093C15.6 2.5 14.9 2.5 13.5 2.5h-7c-1.4 0-2.1 0-2.635.272a2.5 2.5 0 0 0-1.093 1.093C2.5 4.4 2.5 5.1 2.5 6.5v4.75c0 1.165 0 1.747.19 2.207a2.5 2.5 0 0 0 1.353 1.353c.46.19 1.042.19 2.207.19.407 0 .61 0 .8.045.251.059.486.176.685.342.149.124.27.287.515.613Z"
+      >
+      </path>
+    </svg>
+    <PortableText value={state.success.heading} class="heading" />
+    <PortableText value={state.success.paragraph} class="paragraph" />
+    <a href={state.success.link.url} class="socialLink" aria-label="Odwiedź nasze social media!">
+      <Fragment set:html={svgContent} />
+    </a>
+  </div>
+  <div class="ErrorState">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
+      <path
+        stroke="#C23D3D"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="M9.998 7.5v3.334m0 3.333h.009M8.844 3.243 1.99 15.083c-.38.656-.57.984-.542 1.254a.834.834 0 0 0 .339.587c.219.16.598.16 1.357.16h13.708c.759 0 1.138 0 1.357-.16a.833.833 0 0 0 .34-.587c.027-.27-.163-.598-.543-1.255L11.152 3.243c-.379-.654-.568-.981-.815-1.091a.833.833 0 0 0-.677 0c-.248.11-.437.437-.816 1.091Z"
+      >
+      </path>
+    </svg>
+    <PortableText value={state.error.heading} class="heading" />
+    <PortableText value={state.error.paragraph} class="paragraph" />
+    <Button
+      theme="primary"
+      type="button"
+      className="tryAgain"
+      customIcon={`
+    <svg style="padding-bottom: 1px;" xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none">
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25" d="M1.664 6.583s1.17-1.593 2.12-2.544a5.25 5.25 0 1 1-1.331 5.17m-.789-2.626v-3.5m0 3.5h3.5"/>
+    </svg>
+  `}>Próbuję ponownie</Button
+    >
+  </div>
+</Form>
+
+<style lang="scss">
+  .FaqForm {
+    margin-top: auto;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: rgba(227, 223, 211, 0.3);
+      backdrop-filter: blur(4px);
+      border-radius: 8px;
+      z-index: 3;
+      display: none;
+    }
+
+    .submit-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    :global(> label) {
+      margin-bottom: 0.5rem;
+      transition: filter 500ms var(--easing);
+      will-change: filter;
+    }
+    .next-step,
+    .submit-button,
+    .tryAgain {
+      width: 100%;
+      max-width: 100%;
+      justify-content: stretch;
+
+      :global(div) {
+        width: 100%;
+        flex: 1;
+        justify-content: center;
+        max-width: 100%;
+      }
+    }
+
+    .Loader {
+      background-color: rgba(227, 223, 211, 0.3);
+      display: none;
+    }
+
+    .prev-step {
+      width: 4.5rem;
+      max-width: 100%;
+      justify-content: center;
+
+      & > :global(div) {
+        width: 100%;
+        & > :global(span:last-of-type) {
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        &::before {
+          width: 100%;
+        }
+      }
+
+      &:hover {
+        :global(div) {
+          width: 100%;
+          & > :global(span:last-of-type) {
+            left: 50%;
+            transform: translate(-50%, -100%);
+          }
+        }
+      }
+    }
+    .SuccessState,
+    .ErrorState {
+      position: absolute;
+      inset: 0;
+      z-index: 15;
+      display: none;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1.5rem 1.25rem 1.25rem;
+      background-color: var(--secondary-300, #e3dfd3);
+      animation: fadeInState 500ms ease;
+      z-index: 5;
+
+      @keyframes fadeInState {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      svg {
+        margin-bottom: 0.75rem;
+      }
+
+      .heading {
+        margin-bottom: 1rem;
+      }
+
+      .paragraph {
+        margin-top: auto;
+        font-size: var(--typography-body-m, 0.875rem);
+        margin-bottom: 1.25rem;
+      }
+    }
+
+    .SuccessState {
+      .heading {
+        color: var(--success-500, #558f2f);
+      }
+      .socialLink {
+        width: 2.7rem;
+        height: 2.75rem;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+
+        &::before {
+          transition-delay: 50ms;
+        }
+      }
+    }
+
+    .ErrorState {
+      .heading {
+        color: var(--error-500, #c23d3d);
+      }
+    }
+
+    &[data-step='1'] {
+      :global(> label:nth-child(2)),
+      :global(> label:nth-child(3)) {
+        filter: blur(8px);
+        visibility: hidden;
+        position: absolute;
+      }
+      .submit-wrapper {
+        .submit-button,
+        .prev-step {
+          display: none;
+        }
+      }
+    }
+    &[data-step='2'] {
+      :global(> label:nth-child(1)) {
+        filter: blur(8px);
+        visibility: hidden;
+        position: absolute;
+      }
+      .submit-wrapper {
+        .next-step {
+          display: none;
+        }
+      }
+    }
+
+    &[data-status='success'],
+    &[data-status='error'] {
+      :global(> label),
+      .submit-wrapper {
+        display: none;
+      }
+    }
+
+    &[data-status='loading'] {
+      .Loader {
+        display: grid;
+      }
+    }
+
+    &[data-status='success'],
+    &[data-status='error'] {
+      &::before {
+        display: grid;
+      }
+    }
+
+    &[data-status='success'] {
+      .SuccessState {
+        display: flex;
+      }
+    }
+
+    &[data-status='error'] {
+      .ErrorState {
+        display: flex;
+      }
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLDivElement>('.Faq').forEach((section) => {
+    section.querySelector<HTMLButtonElement>('.tryAgain')!.addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('Faq-TryAgain'));
+    });
+    section.querySelector<HTMLButtonElement>('.next-step')!.addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('Faq-NextStep'));
+    });
+    section.querySelector<HTMLButtonElement>('.prev-step')!.addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('Faq-PrevStep'));
+    });
+  });
+</script>

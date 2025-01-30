@@ -1,6 +1,5 @@
 import preact from '@astrojs/preact';
-import sitemap from '@astrojs/sitemap';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 import { defineConfig } from 'astro/config';
 import redirects from './redirects';
 import { DOMAIN } from './src/global/constants';
@@ -8,7 +7,7 @@ import { isPreviewDeployment } from './src/utils/is-preview-deployment';
 
 export default defineConfig({
   site: DOMAIN,
-  integrations: [sitemap(), preact({ compat: true })],
+  integrations: [preact({ compat: true })],
   image: {
     remotePatterns: [
       {
@@ -18,6 +17,9 @@ export default defineConfig({
     ],
   },
   vite: {
+    ssr: {
+      noExternal: ['react-hook-form', 'react-international-phone', '@mux/mux-player', 'embla-carousel-react'],
+    },
     css: {
       preprocessorOptions: {
         scss: {
@@ -30,6 +32,15 @@ export default defineConfig({
     prefetchAll: true,
   },
   redirects: redirects,
-  output: isPreviewDeployment ? 'server' : 'hybrid',
-  adapter: vercel(),
+  output: 'server',
+  adapter: vercel({
+    ...(!isPreviewDeployment
+      ? {
+          isr: {
+            bypassToken: process.env.VERCEL_DEPLOYMENT_ID,
+            exclude: ['/api/contact'],
+          },
+        }
+      : {}),
+  }),
 });

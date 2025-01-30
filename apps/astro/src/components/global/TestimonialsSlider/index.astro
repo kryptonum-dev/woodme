@@ -1,0 +1,99 @@
+---
+import type { GetImageResult } from 'astro';
+import { ImageDataQuery, type ImageDataProps } from '../../ui/image';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '../../ui/portable-text';
+import Slider from './Slider';
+import { portableTextToHtml } from '@/src/utils/portableText-to-html';
+import { optimizeImage } from '@/src/utils/optimize-images';
+
+export const TestimonialsSlider_Query = `
+  _type == "TestimonialsSlider" => {
+    ${PortableTextQuery('heading')}
+    testimonials[]->{
+      ${ImageDataQuery('image')}
+      video {
+        asset-> {
+          playbackId,
+          data,
+          }
+      },
+      date,
+      name,
+      service,
+      ${PortableTextQuery('review')}
+    },
+    "googleData": *[_type == "global"][0].googleData {
+      rating,
+      user_ratings_total,
+      url,
+    }
+  },
+`;
+
+export type TestimonialProps = {
+  review: string;
+  image?: GetImageResult | null;
+  date: string;
+  name: string;
+  service: string;
+  video: {
+    asset: {
+      playbackId: string;
+      data: {
+        aspect_ratio: string;
+        tracks: {
+          max_width: number;
+        }[];
+      };
+    };
+  };
+};
+
+export type ClientTestimonialProps = Omit<TestimonialProps, 'review'> & {
+  image?: GetImageResult | null;
+  review: string;
+};
+
+type Props = {
+  index: number;
+  sectionId?: string;
+  heading: PortableTextValue;
+  testimonials: (TestimonialProps & { review: PortableTextValue; image: ImageDataProps })[];
+  googleData?: {
+    rating: number;
+    user_ratings_total: number;
+  };
+};
+
+const { index, sectionId, heading, testimonials, googleData } = Astro.props as Props;
+
+const optimizedImages = await Promise.all(
+  testimonials.map((testimonial) => {
+    if (!testimonial.image) return null;
+    return optimizeImage(testimonial.image.asset.url, 44, 44);
+  })
+);
+
+const clientTestimonials = testimonials.map((testimonial, index) => {
+  return { ...testimonial, image: optimizedImages[index], review: portableTextToHtml(testimonial.review as any[]) };
+});
+---
+
+<section class="TestimonialsSlider max-width" id={sectionId}>
+  <Slider testimonials={clientTestimonials} index={index} client:load googleData={googleData}>
+    <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
+  </Slider>
+</section>
+
+<style lang="scss">
+  .TestimonialsSlider {
+    padding: clamp(3rem, calc(5vw / 0.48), 5rem) 0;
+    display: flex;
+    align-items: center;
+    gap: clamp(3.5rem, calc(5vw / 0.48), 5rem) 0.5rem;
+
+    @media (max-width: 64rem) {
+      flex-direction: column;
+    }
+  }
+</style>

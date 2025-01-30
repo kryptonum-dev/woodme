@@ -1,0 +1,144 @@
+---
+import { getEstimatedReadingTime } from '@/src/utils/get-estimated-reading-time';
+import Image, { ImageDataQuery, type ImageDataProps } from '.././image';
+import type { PortableTextProps } from 'astro-portabletext/types';
+import { ContentPT_Query } from '../../Blog/Post/content-pt/index.astro';
+import ReadMore from './ReadMore/ReadMore.tsx';
+
+export const BlogCard_Query = `
+  ${ImageDataQuery('image')}
+  name,
+  "slug": slug.current,
+  ${ContentPT_Query}
+`;
+
+export type Props = {
+  image: ImageDataProps;
+  name: string;
+  slug: string;
+  content: PortableTextProps['value'];
+  imgProps: {
+    sizes: string;
+    priority?: boolean;
+    loading?: 'eager' | 'lazy';
+  };
+};
+
+const { image, name, slug, content, imgProps } = Astro.props;
+---
+
+<article class="BlogCard">
+  <a href={slug} class="container">
+    <Image draggable="false" {...image} {...imgProps} sizes={imgProps.sizes} />
+    <div class="content">
+      <p class="title">{name}</p>
+      <div class="reading">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" fill="none">
+          <path
+            stroke="#9E9781"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.25"
+            d="M7.5 3.5V7l2.333 1.167M13.333 7A5.833 5.833 0 1 1 1.666 7a5.833 5.833 0 0 1 11.667 0Z"></path>
+        </svg>
+        <span>{getEstimatedReadingTime(content)}</span>
+      </div>
+    </div>
+    <ReadMore client:load />
+  </a>
+</article>
+
+<style lang="scss">
+  .BlogCard {
+    padding: 0.5rem;
+    border-radius: 12px;
+    background-color: var(--secondary-300, #e3dfd3);
+    transition: background-color 400ms;
+    position: relative;
+    overflow: hidden;
+
+    .container {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--secondary-400, #d2cdbf);
+      border-radius: 6px;
+      overflow: hidden;
+      height: 100%;
+      position: relative;
+      outline: none;
+      gap: 0;
+      transition:
+        transform 800ms var(--easing),
+        border-radius 800ms var(--easing);
+
+      img {
+        width: 100%;
+      }
+      .content {
+        padding: 1.25rem 1rem;
+        text-align: center;
+        height: 100%;
+
+        .title {
+          font-size: var(--typography-body-l, 1.125rem);
+          font-family: 'Inter', 'Inter Fallback', sans-serif;
+          color: var(--neutral-900, #141915);
+          font-weight: 400;
+          margin-bottom: 2.5rem;
+          transition: transform 800ms var(--easing);
+        }
+        .reading {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          font-size: var(--typography-body-m, 0.875rem);
+          transition: transform 800ms var(--easing);
+          svg {
+            margin-bottom: 0.375rem;
+          }
+        }
+      }
+    }
+
+    &:has(.container:focus:not(:focus-visible)) {
+      background-color: transparent;
+
+      .container {
+        transform: scale(1.02);
+        border-radius: 4px;
+
+        h2,
+        h3,
+        .reading {
+          transform: translateY(-0.25rem);
+        }
+      }
+    }
+
+    &:has(.container:focus-visible) {
+      outline: 3px solid var(--neutral-800, #48514a);
+      outline-offset: -3px;
+    }
+
+    .readMore {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      top: 0;
+      left: 0;
+      background-color: var(--neutral-200, #e9f2ed);
+      padding: 0.375rem 0.625rem;
+      pointer-events: none;
+      border-radius: 999px;
+      font-size: var(--typography-body-m, 0.875rem);
+      opacity: 0;
+      transition: opacity 200ms;
+
+      @media not all and (pointer: fine) {
+        display: none;
+      }
+    }
+  }
+</style>

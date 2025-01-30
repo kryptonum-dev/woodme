@@ -1,27 +1,22 @@
 ---
-import { Image as AstroImage } from 'astro:assets';
 import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
 import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
-import background from '@/assets/texture.webp';
 import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
 import Button from '../ui/button/Button.astro';
+import { DOMAIN } from '@/src/global/constants';
 
 export const CircleSwiper_Query = `
   _type == "CircleSwiper" => {
-  ${PortableTextQuery('heading')}
-  swiper[]{
+    swiper[]{
     ${ImageDataQuery('img')}
     title,
   },
+  ${PortableTextQuery('heading')}
   ${PortableTextQuery('paragraph')}
   ${ButtonDataQuery('cta')}
   additionalParagraph,
   downloadPdf {
-    pdf{
-      asset->{
-        url
-      }
-    },
+    "filename": pdf.asset->originalFilename,
     downloadText
   },
   },
@@ -29,18 +24,14 @@ export const CircleSwiper_Query = `
 
 type Props = {
   index: number;
-  heading: PortableTextValue;
   sectionId?: string;
   swiper: { img: ImageDataProps; title: string }[];
+  heading: PortableTextValue;
   paragraph: PortableTextValue;
   cta: ButtonDataProps;
   additionalParagraph: string;
   downloadPdf: {
-    pdf: {
-      asset: {
-        url: string;
-      };
-    };
+    filename: string;
     downloadText: string;
   };
 };
@@ -49,22 +40,23 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
 ---
 
 <section class="CircleSwiper max-width" id={sectionId}>
-  <header><PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" /></header>
+  <header>
+    <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
+  </header>
   <div class="container">
     <div class="cities">
-      <AstroImage src={background} alt="" />
       <div class="track">
         <div class="indicator" style={`width: ${100 / swiper.length}%`}></div>
       </div>
       <div class="swiper">
         <div class="wrapper">
           {
-            swiper.map(({ img, title }, i) => (
+            swiper.map(({ img, title }, i: number) => (
               <Image
                 {...img}
-                sizes="(max-width: 619px) 92vw, (max-width: 699px) 82vw, (max-width: 1024px) 504px, 480px"
-                priority={i === 0 && index === 0}
-                loading={i === 0 && index === 0 ? 'eager' : 'lazy'}
+                sizes="(max-width: 38.75rem) 92vw, (max-width: 43.75rem) 82vw, (max-width: 64rem) 504px, 480px"
+                loading={index === 0 ? 'eager' : 'lazy'}
+                fetchpriority={i === 0 && index === 0 ? 'high' : 'low'}
                 class="slide"
                 draggable={false}
                 data-title={title}
@@ -74,7 +66,7 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
         </div>
       </div>
       <div class="nav">
-        <button class="arrow arrow_left" disabled
+        <button class="arrow arrow_left" disabled aria-label="Poprzednie miasto"
           ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
             ><path
               stroke="currentColor"
@@ -84,8 +76,16 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
               d="M20 12H4m0 0 6 6m-6-6 6-6"></path></svg
           >
         </button>
-        <div class="name">{swiper[0].title}</div>
-        <button class="arrow_right arrow"
+        <div class="names">
+          {
+            swiper.map(({ title }, i) => (
+              <span class="name" hidden={i !== 0}>
+                {title}
+              </span>
+            ))
+          }
+        </div>
+        <button class="arrow_right arrow" aria-label="Następne miasto"
           ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
             ><path
               stroke="currentColor"
@@ -103,8 +103,8 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
       <div class="additionals">
         {additionalParagraph && <div class="additionalText">{additionalParagraph}</div>}
         {
-          downloadPdf?.pdf?.asset?.url && (
-            <a href={downloadPdf.pdf.asset.url} class="download" download target="_blank" rel="noreferrer">
+          downloadPdf?.filename && (
+            <a href={`${DOMAIN}/dokumenty/${downloadPdf.filename}`} class="download" target="_blank" rel="noreferrer">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
                 <path
                   stroke="#87988B"
@@ -136,6 +136,7 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
     .container {
       display: flex;
       align-items: stretch;
+
       .cities {
         width: 33rem;
         min-height: 33rem;
@@ -148,6 +149,13 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
+        &::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image: url('data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAAAyVBMVEUAAABWVlYbGxtiYmJcXFwhISH7+/sNDQ13d3c4ODgpKSkPDw8AAADz8/Pg4OC0tLSwsLCjo6OTk5NpaWlOTk5KSkoAAADW1tbIyMjBwcG9vb24uLhBQUE9PT0yMjIWFhbc3NzLy8ufn5+Xl5d0dHQuLi7v7+/Y2Nitra2mpqaPj4+BgYF4eHjs7Ozn5+fExMSJiYl7e3v29vbQ0NDPz8/Nzc2/v7+Ojo6EhIR+fn5vb29FRUX9/f3p6enk5OTb29vT09PS0tKoqKhMgcZDAAAAQ3RSTlMAVhxiXCL7DHc4KREF8+C0sKOTaE9LCNbIwby4QD0yFtzLnpd0Lu/YraaQgnns58SIfPbQz82+joV/bkX96eTb09KoGQ/pDwAAA0pJREFUaN7V2WlTGkEQgOF3uQQMiqJREBXBCyUE7yue//9HpQxl9bI9zGzjhtKn/GBRHLvTM909szyjtNCeIFrE7A76eGzwJWzxroZYldcd2gA/ebf9/ucWMdUqcYcYrGLwh3kYAQwNY1BkBj9QTANWIWCP+cjjt+4YvIMBCT0mLDPJtlg3Sa3XxOeIpAtSu5J/T/Doyr9rmBR8oy5f2IxN0o8FvoJZF5EPJVodyQ4Op6RVRWm718dW7GevZBR0ZlpCSbO6lsmMnlMPKC3D1DBccxe7AxKGZG6k62mOCXUcGjhZE8k52fvF2AtaCWBzXJplXe7TTlFnfpt+Xovw2w5mVT0pX0LJrIqJhH+Bf8og/UrMraP8SdopySTax6MhCfSeecjxn0Wk15TiEdD+RHea0pFMu8+xN6cL00IV/njkL8gyBe+LKOblXZm1v15P38Xue2/MvrbD26fTZL0p7Ki4WB177k07wW7oGfFHPfrdXabqpF2qMmAbyaIidmRqxmN0HasQS4j2x03cECA5OPyuO7QHiXGyq8y5vn7Fu81uRLMt64pqCO2aZGTXmkwzs+9JA3k1s7LSR6mn2Nw1UO7CXWtYl5m0M90UtDxpqEdCzbUhrKr3a+GI/ggELfwhee3Et2+NVEeUU7cYVvYuoUdjRCN4gyq3hNhmsL6lFb6EDakWtqOfuioHBdNmxN6w5orMJJIk3whVMPupU1l1VPK69jy+oO/rch6nnQ1X5a65k1aZgNFsvXQZq+1YyWyQgSNMqlAjMwuELDkuV+rYgGkG8dlxOLXhfJIQuX81x/x1PMOg3aTrLl+PLU3glbQIy55Tmh3DhrIUXLRF4F5ygEk+vHJc7xvMOl8zPcS9TnkEv2g++rlO1Ue8BR/pNO1b8WMWLY1IiXRq4fi0iDnTjwW+uV0KqorIhHnVzVedsL2pkeoGPqBmaz/UxdRVxEKhdS+DTUMPMGTt09vrPPNQj/9eP5Fpc/4uqKMD2MNlFFnOCtZw683rublstEuhRzMyWsfqrMjuVoqbvWUqoskiW5xsO87MD2bPQ/UunQty7vbpfGd8CFQJHnteJivTQybr5SyRZTruM+bKjJuoXQlQCQrTrsHstAUsVLH5C0nvJwY9LwbLAAAAAElFTkSuQmCC');
+        }
 
         > img {
           position: absolute;
@@ -165,7 +173,6 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
           margin: 1.375rem 0 0.875rem;
           width: 100%;
           z-index: 1;
-
           position: relative;
           border-radius: 12px;
 
@@ -175,7 +182,7 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
             position: absolute;
             top: -0.5px;
             left: 0;
-            transition: transform 0.2s var(--easing);
+            transition: transform 0.8s var(--easing);
             border-radius: 12px;
           }
         }
@@ -195,6 +202,7 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
             left: 0;
             align-items: center;
             width: 100%;
+            transition: transform 800ms cubic-bezier(0.19, 1, 0.22, 1);
           }
         }
 
@@ -207,12 +215,30 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
           width: 100%;
           z-index: 3;
           margin-top: -1.5rem;
-          .name {
-            padding: 0.25rem 0.625rem;
-            background-color: var(--neutral-200, #e9f2ed);
-            border-radius: 4px;
-            text-align: center;
+          .names {
             justify-self: center;
+            width: 1rem;
+            position: relative;
+            height: 100%;
+            .name {
+              padding: 0.25rem 0.625rem;
+              background-color: var(--neutral-200, #e9f2ed);
+              border-radius: 4px;
+              text-align: center;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              width: fit-content;
+              transform: translate(-50%, -50%);
+              transition: filter 550ms;
+              will-change: filter;
+
+              &[hidden] {
+                display: block;
+                filter: blur(4px);
+                visibility: hidden;
+              }
+            }
           }
 
           .arrow {
@@ -223,9 +249,9 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
             justify-content: center;
             cursor: pointer;
             color: #5f6d62;
-            transition: color 0.25s var(--easing);
+            transition: color 0.25s;
             svg {
-              transition: transform 0.25s var(--easing);
+              transition: transform 700ms var(--easing);
             }
 
             &_left {
@@ -316,7 +342,7 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
           border-radius: 4px;
           background-color: var(--neutral-200, #e9f2ed);
           color: #4f4a40;
-          transition: background-color 0.25s var(--easing);
+          transition: background-color 250ms ease-out;
           padding: 0.625rem;
 
           &:hover {
@@ -351,103 +377,107 @@ const { index, sectionId, heading, paragraph, swiper, cta, additionalParagraph, 
 </style>
 
 <script>
-  const wrapper = document.querySelector('.wrapper')! as HTMLElement;
-  const slides = document.querySelectorAll('.slide') as NodeListOf<HTMLImageElement>;
-  const slidesLength = slides.length;
-  const arrowLeft = document.querySelector('.arrow_left')! as HTMLButtonElement;
-  const arrowRight = document.querySelector('.arrow_right')! as HTMLButtonElement;
-  const cityNameElement = document.querySelector('.name') as HTMLElement;
-  const indicator = document.querySelector('.indicator')! as HTMLElement;
+  document.querySelectorAll<HTMLDivElement>('.CircleSwiper').forEach((swiper) => {
+    const wrapper = swiper.querySelector('.wrapper')! as HTMLElement;
+    const slides = swiper.querySelectorAll('.slide') as NodeListOf<HTMLImageElement>;
+    const slidesLength = slides.length;
+    const arrowLeft = swiper.querySelector('.arrow_left')! as HTMLButtonElement;
+    const arrowRight = swiper.querySelector('.arrow_right')! as HTMLButtonElement;
+    const cities = swiper.querySelectorAll('.name') as NodeListOf<HTMLSpanElement>;
+    const indicator = swiper.querySelector('.indicator')! as HTMLElement;
 
-  let currentIndex = 0;
-  let startX = 0;
-  let currentTranslate = 0;
-  let prevTranslate = 0;
-  let isDragging = false;
+    let currentIndex = 0;
+    let startX = 0;
+    let currentTranslate = 0;
+    let prevTranslate = 0;
+    let isDragging = false;
 
-  const checkIsPointerCoarse = () => window.matchMedia('(pointer: coarse)').matches;
+    const checkIsPointerCoarse = () => window.matchMedia('(pointer: coarse)').matches;
 
-  const updateSwipe = () => {
-    cityNameElement.textContent = slides[currentIndex].getAttribute('data-title')!;
-    arrowLeft.disabled = currentIndex === 0;
-    arrowRight.disabled = currentIndex === slidesLength - 1;
-    indicator.style.transform = `translateX( ${currentIndex * 100}%)`;
-  };
+    const updateSwipe = () => {
+      cities.forEach((city, i) => {
+        city.hidden = i !== currentIndex;
+      });
+      arrowLeft.disabled = currentIndex === 0;
+      arrowRight.disabled = currentIndex === slidesLength - 1;
+      indicator.style.transform = `translateX( ${currentIndex * 100}%)`;
+    };
 
-  const handleSwipeStart = (event: PointerEvent | TouchEvent) => {
-    isDragging = true;
-    startX = 'touches' in event ? event.touches[0].clientX : event.clientX;
-    prevTranslate = 0;
-    wrapper.style.transition = 'none';
-  };
+    const handleSwipeStart = (event: PointerEvent | TouchEvent) => {
+      isDragging = true;
+      startX = 'touches' in event ? event.touches[0].clientX : event.clientX;
+      prevTranslate = 0;
+      wrapper.style.transition = 'none';
+    };
 
-  const handleSwipeMove = (event: PointerEvent | TouchEvent) => {
-    if (!isDragging) return;
-    const currentX = 'touches' in event ? event.touches[0].clientX : event.clientX;
-    const diffX = currentX - startX;
-    if ((currentIndex === 0 && diffX > 0) || (currentIndex === slidesLength - 1 && diffX < 0)) return;
-    currentTranslate = prevTranslate + diffX;
-    wrapper.style.transform = `translateX(calc(${currentIndex * -100}% + ${currentTranslate}px))`;
-  };
+    const handleSwipeMove = (event: PointerEvent | TouchEvent) => {
+      if (!isDragging) return;
+      const currentX = 'touches' in event ? event.touches[0].clientX : event.clientX;
+      const diffX = currentX - startX;
+      if ((currentIndex === 0 && diffX > 0) || (currentIndex === slidesLength - 1 && diffX < 0)) return;
+      currentTranslate = prevTranslate + diffX;
+      wrapper.style.transform = `translateX(calc(${currentIndex * -100}% + ${currentTranslate}px))`;
+    };
 
-  const handleSwipeEnd = () => {
-    if (!isDragging) return;
-    isDragging = false;
-    const slideWidth = slides[0].clientWidth;
-    const movedBy = currentTranslate - prevTranslate;
+    const handleSwipeEnd = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      const slideWidth = slides[0].clientWidth;
+      const movedBy = currentTranslate - prevTranslate;
 
-    if (movedBy < -slideWidth / 3 && currentIndex < slidesLength - 1) {
-      currentIndex++;
-    } else if (movedBy > slideWidth / 3 && currentIndex > 0) {
-      currentIndex--;
-    }
+      if (movedBy < -slideWidth / 3 && currentIndex < slidesLength - 1) {
+        currentIndex++;
+      } else if (movedBy > slideWidth / 3 && currentIndex > 0) {
+        currentIndex--;
+      }
 
-    wrapper.style.transition = 'transform 0.25s ease';
-    wrapper.style.transform = `translateX(${currentIndex * -100}%)`;
-    currentTranslate = 0;
-    updateSwipe();
-  };
-
-  // Events on arrow buttons
-
-  arrowLeft.addEventListener('click', () => {
-    if (currentIndex > 0) {
-      currentIndex--;
+      wrapper.style.transition = 'transform 800ms cubic-bezier(0.19, 1, 0.22, 1)';
       wrapper.style.transform = `translateX(${currentIndex * -100}%)`;
+      currentTranslate = 0;
       updateSwipe();
-    }
-  });
+    };
 
-  arrowRight.addEventListener('click', () => {
-    if (currentIndex < slidesLength - 1) {
-      currentIndex++;
-      wrapper.style.transform = `translateX(${currentIndex * -100}%)`;
-      updateSwipe();
-    }
-  });
+    // Events on arrow buttons
 
-  // Events on mouse
+    arrowLeft.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        wrapper.style.transform = `translateX(${currentIndex * -100}%)`;
+        updateSwipe();
+      }
+    });
 
-  wrapper.addEventListener('pointerdown', (event) => {
-    if (!checkIsPointerCoarse()) handleSwipeStart(event);
-  });
-  wrapper.addEventListener('pointermove', (event) => {
-    if (!checkIsPointerCoarse()) handleSwipeMove(event as PointerEvent);
-  });
-  wrapper.addEventListener('pointerup', () => {
-    if (!checkIsPointerCoarse()) handleSwipeEnd();
-  });
-  wrapper.addEventListener('pointercancel', () => {
-    if (!checkIsPointerCoarse()) handleSwipeEnd();
-  });
-  wrapper.addEventListener('pointerleave', () => {
-    if (!checkIsPointerCoarse()) handleSwipeEnd();
-  });
+    arrowRight.addEventListener('click', () => {
+      if (currentIndex < slidesLength - 1) {
+        currentIndex++;
+        wrapper.style.transform = `translateX(${currentIndex * -100}%)`;
+        updateSwipe();
+      }
+    });
 
-  // Events on touch
+    // Events on mouse
 
-  wrapper.addEventListener('touchstart', handleSwipeStart);
-  wrapper.addEventListener('touchmove', handleSwipeMove as EventListener);
-  wrapper.addEventListener('touchend', handleSwipeEnd);
-  wrapper.addEventListener('touchcancel', handleSwipeEnd);
+    wrapper.addEventListener('pointerdown', (event) => {
+      if (!checkIsPointerCoarse()) handleSwipeStart(event);
+    });
+    wrapper.addEventListener('pointermove', (event) => {
+      if (!checkIsPointerCoarse()) handleSwipeMove(event as PointerEvent);
+    });
+    wrapper.addEventListener('pointerup', () => {
+      if (!checkIsPointerCoarse()) handleSwipeEnd();
+    });
+    wrapper.addEventListener('pointercancel', () => {
+      if (!checkIsPointerCoarse()) handleSwipeEnd();
+    });
+    wrapper.addEventListener('pointerleave', () => {
+      if (!checkIsPointerCoarse()) handleSwipeEnd();
+    });
+
+    // Events on touch
+
+    wrapper.addEventListener('touchstart', handleSwipeStart);
+    wrapper.addEventListener('touchmove', handleSwipeMove as EventListener);
+    wrapper.addEventListener('touchend', handleSwipeEnd);
+    wrapper.addEventListener('touchcancel', handleSwipeEnd);
+  });
 </script>

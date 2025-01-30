@@ -1,0 +1,100 @@
+.Input {
+  font-size: var(--typography-body-s, 0.75rem);
+  .wrapper {
+    margin-bottom: 0.25rem;
+    line-height: 1.6;
+
+    > * {
+      margin-bottom: 0;
+    }
+    .label {
+      color: var(--neutral-900, #141915);
+      transition: color 300ms ease;
+    }
+  }
+
+  input,
+  textarea {
+    border: 1px solid var(--neutral-600, #87988b);
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-size: var(--typography-body-m, 0.875rem);
+    color: var(--neutral-900, #141915);
+    width: 100%;
+    transition:
+      border-radius 300ms ease,
+      border-color 300ms ease;
+
+    &::placeholder {
+      color: var(--neutral-700, #5f6d62);
+    }
+
+    &:hover {
+      border-radius: 0;
+    }
+
+    &:focus-visible {
+      border-color: var(--neutral-800, #333d37);
+      outline: none;
+    }
+
+    &[aria-invalid='true'] {
+      border-color: var(--error-500, #c23d3d);
+    }
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      -webkit-text-border-radius: 0;
+    }
+    &:-webkit-autofill:focus {
+      border-color: var(--neutral-800, #333d37) !important;
+    }
+  }
+
+  input {
+    height: 2.5rem;
+  }
+
+  textarea {
+    min-height: 5rem;
+    max-height: 8rem;
+    resize: none;
+  }
+
+  &:has(input:autofill) {
+    input {
+      outline: 1px dashed #c1d1c8;
+      outline-offset: 2px;
+      border-color: var(--success-500, #558f2f);
+    }
+    .label {
+      color: var(--success-500, #558f2f);
+      &::after {
+        content: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMyIgZmlsbD0ibm9uZSI+PHBhdGggc3Ryb2tlPSIjNTU4RjJGIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGQ9Ik02LjUgMS41IDIuMDQ3IDYuODQ0Yy0uMTc0LjIxLS4yNjEuMzE0LS4yNjMuNDAyYS4yNS4yNSAwIDAgMCAuMDkzLjE5OGMuMDY5LjA1Ni4yMDUuMDU2LjQ3Ny4wNTZINmwtLjUgNCA0LjQ1NC01LjM0NGMuMTc0LS4yMS4yNjEtLjMxNC4yNjMtLjQwMmEuMjUuMjUgMCAwIDAtLjA5My0uMTk4Yy0uMDY5LS4wNTYtLjIwNS0uMDU2LS40NzgtLjA1Nkg2bC41LTRaIi8+PC9zdmc+');
+        display: inline-block;
+        animation: Input_Autocomplete_Icon 500ms var(--easing) forwards;
+        @keyframes Input_Autocomplete_Icon {
+          0% {
+            opacity: 0;
+            transform: translateX(-0.5rem);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+      }
+    }
+  }
+
+  &[data-is-phone='true'] {
+    input {
+      border: none;
+    }
+    label {
+      pointer-events: none;
+    }
+  }
+}

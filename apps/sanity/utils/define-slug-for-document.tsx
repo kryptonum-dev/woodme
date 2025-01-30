@@ -47,7 +47,7 @@ export const defineSlugForDocument = ({
     ),
     ...(!!slug && {
       initialValue: { current: slug },
-      readOnly: false,
+      readOnly: true,
     }),
     options: {
       source: source || 'title',

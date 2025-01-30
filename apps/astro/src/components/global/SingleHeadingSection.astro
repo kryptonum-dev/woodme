@@ -1,0 +1,46 @@
+---
+import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
+
+export const SingleHeadingSection_Query = `
+  _type == "SingleHeadingSection" => {
+    ${PortableTextQuery('heading')}
+
+  },
+`;
+
+type Props = {
+  index: number;
+  sectionId?: string;
+  heading: PortableTextValue;
+};
+
+const { index, sectionId, heading } = Astro.props;
+---
+
+<section class="SingleHeadingSection" id={sectionId}>
+  <header class="header max-width">
+    <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
+  </header>
+</section>
+
+<style lang="scss">
+  .SingleHeadingSection {
+    background-color: var(--neutral-100, #f2faf6);
+
+    .header {
+      margin: 0 auto;
+      max-width: 41.125rem;
+      padding: clamp(1.5rem, calc(2vw / 0.48), 4rem) 0;
+
+      .heading {
+        font-size: var(--typography-body-2xl, 1.5rem);
+        color: var(--neutral-800, #48514a);
+        font-family: 'Inter', 'Inter Fallback', sans-serif;
+        font-weight: 400;
+        line-height: 1.5;
+        letter-spacing: -0.035em;
+        text-align: center;
+      }
+    }
+  }
+</style>

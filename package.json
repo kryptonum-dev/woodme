@@ -21,9 +21,5 @@
   },
   "workspaces": [
     "apps/*"
-  ],
-  "dependencies": {
-    "@types/animejs": "^3.1.12",
-    "save-dev": "^0.0.1-security"
-  }
+  ]
 }

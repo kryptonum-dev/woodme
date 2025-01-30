@@ -8,20 +8,20 @@ export const SplitContentSection_Query = `
   _type == "SplitContentSection" => {
     ${ImageDataQuery('image')}
     ${ImageDataQuery('additionalImages[]')}
-    ${PortableTextQuery('paragraph')}
     ${PortableTextQuery('heading')}
+    ${PortableTextQuery('paragraph')}
     ${ButtonDataQuery('cta')}
   },
 `;
 
 type Props = {
   index: number;
-  heading: PortableTextValue;
   sectionId?: string;
   image: ImageDataProps;
+  additionalImages: ImageDataProps[];
+  heading: PortableTextValue;
   paragraph: PortableTextValue;
   cta: ButtonDataProps;
-  additionalImages: ImageDataProps[];
 };
 
 const { index, sectionId, heading, image, paragraph, cta, additionalImages } = Astro.props;
@@ -33,7 +33,6 @@ const { index, sectionId, heading, image, paragraph, cta, additionalImages } = A
       {...image}
       sizes="(max-width: 816px) 100vw, (max-width: 1024px) 816px, 790px"
       priority={index === 0}
-      loading={index === 0 ? 'eager' : 'lazy'}
       class="mainImage"
     />
     <div class="additionalImages">
@@ -42,14 +41,16 @@ const { index, sectionId, heading, image, paragraph, cta, additionalImages } = A
           <Image
             {...img}
             sizes={`${i === 0 ? '(max-width: 420px) 137px, (max-width: 768px) 32vw, 244px' : '(max-width: 420px) 91px, (max-width: 768px) 22vw, 162px'}`}
-            loading="lazy"
+            loading={index === 0 ? 'eager' : 'lazy'}
           />
         ))
       }
     </div>
   </div>
   <div class="content">
-    <header><PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" /></header>
+    <header>
+      <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
+    </header>
     <PortableText class="paragraph" value={paragraph} />
     <Button shade="dark" {...cta} />
   </div>
@@ -60,7 +61,6 @@ const { index, sectionId, heading, image, paragraph, cta, additionalImages } = A
     max-width: 85.375rem;
     margin: 0 auto;
     display: flex;
-    margin-bottom: 120px;
 
     .imagesContainer {
       max-width: clamp(25rem, calc(28vw / 0.48), 49.375rem);
@@ -89,18 +89,18 @@ const { index, sectionId, heading, image, paragraph, cta, additionalImages } = A
 
           &:last-child {
             height: clamp(113px, calc(202vw / 7.68), 202px);
-            transform: translateY(15px);
+            transform: translateY(3rem);
             transition:
-              opacity 0.6s var(--easing),
-              transform 0.6s var(--easing);
+              opacity 800ms,
+              transform 1200ms var(--easing);
           }
 
           &:first-child {
             height: clamp(171px, calc(305vw / 7.68), 305px);
-            transform: translateY(20px);
+            transform: translateY(2.5rem);
             transition:
-              opacity 0.75s var(--easing),
-              transform 0.75s var(--easing);
+              opacity 900ms,
+              transform 1400ms var(--easing);
           }
         }
 
@@ -141,7 +141,7 @@ const { index, sectionId, heading, image, paragraph, cta, additionalImages } = A
         margin-bottom: clamp(2rem, calc(3vw / 0.48), 3rem);
 
         :global(p):not(:last-child) {
-          margin-bottom: 2rem;
+          margin-bottom: 1.5rem;
         }
       }
     }
@@ -165,20 +165,22 @@ const { index, sectionId, heading, image, paragraph, cta, additionalImages } = A
 </style>
 
 <script>
-  const threshold = window.innerWidth < 1024 ? 0.4 : 0.8;
+  const threshold = window.innerWidth < 1024 ? 0.4 : 0.9;
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.querySelectorAll('.additionalImages img').forEach((img) => {
-            img.classList.add('visible');
-          });
-        }
-      });
-    },
-    { threshold }
-  );
+  document.querySelectorAll<HTMLDivElement>('.SplitContentSection').forEach((section) => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.querySelectorAll('.additionalImages img').forEach((img) => {
+              img.classList.add('visible');
+            });
+          }
+        });
+      },
+      { threshold }
+    );
 
-  observer.observe(document.querySelector('.SplitContentSection')! as HTMLElement);
+    observer.observe(section);
+  });
 </script>

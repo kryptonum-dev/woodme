@@ -1,0 +1,96 @@
+---
+import sanityFetch from '@/src/utils/sanity.fetch';
+import { ITEMS_PER_PAGE, type QueryProps } from '../../../index.astro';
+import { slugPrefix } from '../../[category].astro';
+import { PortableTextQuery } from '@/src/components/ui/portable-text';
+import Components, { Components_Query } from '@/src/components/Components.astro';
+import Listing, { Listing_Query } from '@/src/components/Blog/Listing.astro';
+import Layout from '@/src/layouts/Layout.astro';
+import { DOMAIN } from '@/src/global/constants';
+import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
+import metadataFetch from '@/src/utils/metadata.fetch';
+
+export async function getCategoryData() {
+  return await sanityFetch<{ name: string; slug: string; postCount: number }[]>({
+    query: `
+      *[_type == 'BlogCategory_Collection'][] {
+        name,
+        "slug": slug.current,
+        "postCount": count(*[_type == "BlogPost_Collection" && references(^._id) && defined(category)]),
+      }
+    `,
+  });
+}
+
+export async function getStaticPaths() {
+  const categories = await getCategoryData();
+  return categories.flatMap(({ slug, postCount }) => {
+    const totalPages = Math.ceil(postCount / ITEMS_PER_PAGE);
+    return Array.from({ length: totalPages - 1 }, (_, i) => ({
+      params: {
+        category: slug.replace(slugPrefix, ''),
+        page: (i + 2).toString(),
+      },
+    }));
+  });
+}
+
+const categories = await getCategoryData();
+const { category: _category, page: _page } = Astro.params;
+const category = categories.find(({ slug }) => slug === `${slugPrefix}${_category}`);
+const currentPage = parseInt(_page);
+
+const postCount = category?.postCount || 0;
+const totalPages = Math.ceil(postCount / ITEMS_PER_PAGE);
+if (currentPage < 2 || currentPage > totalPages) return Astro.rewrite('/404');
+if (!category) return Astro.rewrite('/404');
+
+const page = await sanityFetch<QueryProps>({
+  query: `
+    *[_type == "Blog_Page"][0] {
+        name,
+        "slug": slug.current,
+        ${PortableTextQuery('heading')}
+        ${PortableTextQuery('paragraph')}   
+        ${Listing_Query({ currentPage: currentPage, currentCategorySlug: category.slug })}
+        ${Components_Query} 
+    }
+  `,
+});
+
+const metadata = await metadataFetch(category.slug);
+---
+
+<Layout
+  title={`${metadata.title} | Strona ${currentPage}`}
+  description={metadata.description}
+  openGraphImage={metadata.openGraphImage}
+  path={Astro.url.pathname}
+>
+  <Fragment slot="Head">
+    {currentPage > 2 && <link rel="prev" href={`${DOMAIN}/blog/strona/${currentPage - 1}`} />}
+    {currentPage < totalPages && <link rel="next" href={`${DOMAIN}/blog/strona/${currentPage + 1}`} />}
+  </Fragment>
+  <Breadcrumbs
+    data={[
+      { name: page.name, path: page.slug },
+      { name: category.name, path: category.slug },
+      { name: `Strona ${currentPage}`, path: `${category.slug}/strona/${currentPage}` },
+    ]}
+    firstItemType="Blog_Page"
+  />
+  <Listing
+    heading={page.heading}
+    paragraph={page.paragraph}
+    currentPage={currentPage}
+    listing={page.listing}
+    totalBlogPosts={page.totalBlogPosts}
+    totalPostsByCategory={page.totalPostsByCategory}
+    categories={page.categories}
+    slugBase={category.slug}
+    heading={page.heading}
+    currentCategorySlug={category.slug}
+    paragraph={page.paragraph}
+  />
+  <Components data={page.components} hasPreviousSections={true} />
+</Layout>

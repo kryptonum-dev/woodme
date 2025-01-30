@@ -1,11 +1,11 @@
-import { Box, Text, Tooltip } from '@sanity/ui'
-import { defineField, defineType } from 'sanity'
-import { InternalLinkableTypes } from '../../structure/internal-linkable-types'
-import { isValidUrl } from '../../utils/is-valid-url'
+import { Box, Text, Tooltip } from '@sanity/ui';
+import { defineField, defineType } from 'sanity';
+import { InternalLinkableTypes } from '../../structure/internal-linkable-types';
+import { isValidUrl } from '../../utils/is-valid-url';
 
-const name = 'cta'
-const title = 'Call To Action (CTA)'
-const icon = () => '👆'
+const name = 'cta';
+const title = 'Call To Action (CTA)';
+const icon = () => '👆';
 
 export default defineType({
   name,
@@ -62,15 +62,15 @@ export default defineType({
       hidden: ({ parent }) => parent?.linkType !== 'external',
       validation: (Rule) => [
         Rule.custom((value, { parent }) => {
-          const linkType = (parent as { linkType?: string })?.linkType
+          const linkType = (parent as { linkType?: string })?.linkType;
           if (linkType === 'external') {
-            if (!value) return 'URL is required'
+            if (!value) return 'URL is required';
             if (!value.startsWith('https://')) {
-              return 'External link must start with the "https://" protocol'
+              return 'External link must start with the "https://" protocol';
             }
-            if (!isValidUrl(value)) return 'Invalid URL'
+            if (!isValidUrl(value)) return 'Invalid URL';
           }
-          return true
+          return true;
         }),
       ],
     }),
@@ -87,9 +87,9 @@ export default defineType({
       hidden: ({ parent }) => parent?.linkType !== 'internal',
       validation: (rule) => [
         rule.custom((value, { parent }) => {
-          const linkType = (parent as { linkType?: string })?.linkType
-          if (linkType === 'internal' && !value?._ref) return 'You have to choose internal page to link to.'
-          return true
+          const linkType = (parent as { linkType?: string })?.linkType;
+          if (linkType === 'internal' && !value?._ref) return 'You have to choose internal page to link to.';
+          return true;
         }),
       ],
     }),
@@ -112,8 +112,8 @@ export default defineType({
       internal: 'internal.slug.current',
     },
     prepare({ title, theme, linkType, external, internal }) {
-      const isExternal = linkType === 'external'
-      const icon = isExternal ? '🌐' : '🔗'
+      const isExternal = linkType === 'external';
+      const icon = isExternal ? '🌐' : '🔗';
       return {
         title: `${title}`,
         subtitle: isExternal ? external : internal,
@@ -134,7 +134,7 @@ export default defineType({
             <span>{icon}</span>
           </Tooltip>
         ),
-      }
+      };
     },
   },
-})
+});

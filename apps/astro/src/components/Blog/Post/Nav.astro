@@ -1,0 +1,269 @@
+---
+import type { PortableTextProps } from 'astro-portabletext/types';
+import type { PortableTextBlock } from '@portabletext/types';
+import { toPlainText } from 'astro-portabletext/utils';
+import { slugify } from '@/src/utils/slugify';
+import Button from '../../ui/button/Button.astro';
+
+type Props = {
+  headings: PortableTextProps['value'][];
+};
+
+export type NavProps = Props;
+
+export const Nav_Query = `
+  "headings": content[length(style) == 2 && string::startsWith(style, "h")],
+`;
+
+const { headings } = Astro.props as NavProps;
+
+type HeadingGroup = {
+  heading: { text: string; slug: string };
+  subHeadings: { text: string; slug: string }[];
+};
+
+const groupedHeadings = headings?.reduce<HeadingGroup[]>((acc, heading) => {
+  const style = (heading as PortableTextBlock).style as string;
+  const text = toPlainText(heading as PortableTextBlock).replace('❧ ', '');
+  const slug = slugify(text);
+  if (style === 'h2') {
+    acc.push({ heading: { text, slug }, subHeadings: [] });
+  } else if (style === 'h3' && acc.length > 0) {
+    acc[acc.length - 1].subHeadings.push({ text, slug });
+  }
+  return acc;
+}, []);
+
+const initialVisible = 3;
+---
+
+<nav class="content-nav" data-initial-visible={initialVisible}>
+  {
+    groupedHeadings && (
+      <ul class="list" data-expanded={false}>
+        {groupedHeadings.map(({ heading, subHeadings }, i) => (
+          <li data-sliced={i > initialVisible} class="item">
+            <a
+              href={`#${heading.slug}`}
+              aria-current="false"
+              aria-hidden={i === initialVisible}
+              tabindex={i === initialVisible ? -1 : 0}
+            >
+              {heading.text}
+              {subHeadings.length > 0 && (
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 12">
+                  <path
+                    stroke="#48514A"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.25"
+                    d="m3 4.5 3 3 3-3"
+                  />
+                </svg>
+              )}
+            </a>
+            {subHeadings.length > 0 && (
+              <ul class="subheadings">
+                {subHeadings.map(({ text, slug }) => (
+                  <li>
+                    <a href={`#${slug}`} aria-current="false">
+                      {text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <div class="load-more" data-expanded={false}>
+    <Button theme="secondary">Wczytaj więcej</Button>
+  </div>
+</nav>
+
+<style lang="scss">
+  .content-nav {
+    .list {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      li {
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 0.375rem;
+
+        ul {
+          display: none;
+          font-size: var(--typography-body-s, 0.75rem);
+        }
+
+        &:has(a[aria-current='true']),
+        &:focus-within:not(:active) {
+          background-color: var(--neutral-100, #f2faf6);
+
+          svg {
+            transform: rotate(180deg);
+          }
+          ul {
+            display: block;
+          }
+        }
+
+        svg {
+          width: 0.875rem;
+          height: 0.875rem;
+          flex-shrink: 0;
+          margin-top: 0.375rem;
+          transition: transform 900ms var(--easing);
+          will-change: transform;
+        }
+
+        a {
+          min-height: 2.75rem;
+          display: flex;
+          align-items: flex-start;
+          padding: 0.25rem 0.375rem;
+          font-size: var(----typography-body-m, 0.875rem);
+          justify-content: space-between;
+          transition: background-color 300ms;
+          gap: 0.75rem;
+          &[aria-current='true'] {
+            + ul {
+              display: block;
+            }
+          }
+
+          &:hover {
+            background-color: #fafdfb;
+          }
+
+          &:focus-visible {
+            outline-offset: -2px;
+            outline: 2px solid var(--neutral-700, #48514a);
+            background-color: #fafdfb;
+            border-radius: 4px;
+          }
+
+          &[aria-current='true'] {
+            background-color: #fafdfb;
+          }
+        }
+      }
+    }
+
+    .load-more {
+      display: none;
+      position: absolute;
+      width: 100%;
+      left: 0%;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(242, 250, 246, 0.4) 20%, #e8f2ed 75%);
+      min-height: 3.25rem;
+      align-items: center;
+      justify-content: center;
+
+      &[data-expanded='true'] {
+        position: static;
+        background: none;
+      }
+
+      :global(button > div::before) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 69rem) {
+      position: relative !important;
+      top: 0 !important;
+      width: 100%;
+      padding: 0 3.5rem 0.5rem;
+      background-color: var(--neutral-100, #f2faf6);
+
+      .load-more {
+        display: flex;
+      }
+
+      .list {
+        li[data-sliced='true'] {
+          display: none;
+        }
+      }
+    }
+    @media (max-width: 48rem) {
+      padding-left: var(--pageMargin);
+      padding-right: var(--pageMargin);
+    }
+
+    @media (max-width: 30rem) {
+      .load-more {
+        background: linear-gradient(180deg, rgba(242, 250, 246, 0.8) 20%, #e8f2ed 75%);
+      }
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLDivElement>('.content-nav')?.forEach((nav) => {
+    const contentBody = nav.closest('.content')?.querySelector('.content-body');
+    if (!contentBody) {
+      throw new Error('It seems that .content-body is not present in the .content, where it is supposed to be.');
+    }
+    const navLinks = nav.querySelectorAll('a');
+    const headings = Array.from(contentBody.querySelectorAll(':scope > h2, :scope > h3'));
+    function updateActiveHeading() {
+      const triggerPoint = 124;
+      const currentHeading = headings.reduce((current, heading) => {
+        const headingTop = heading.getBoundingClientRect().top;
+        if (headingTop <= triggerPoint) return heading;
+        return current;
+      }, headings[0]);
+      navLinks.forEach((link) => link.setAttribute('aria-current', 'false'));
+      if (currentHeading) {
+        const id = currentHeading.getAttribute('id');
+        nav.querySelector(`a[href="#${id}"]`)?.setAttribute('aria-current', 'true');
+      }
+    }
+    window.addEventListener('scroll', () => requestAnimationFrame(updateActiveHeading));
+    updateActiveHeading();
+  });
+
+  let dataExpanded = false;
+
+  const loadMoreButton = document.querySelector('.content-nav .load-more')! as HTMLButtonElement;
+  const loadMoreSpans = document.querySelectorAll('.content-nav .load-more span') as NodeListOf<HTMLSpanElement>;
+
+  loadMoreButton.addEventListener('click', () => {
+    const listItems = document.querySelectorAll('.content-nav .list .item') as NodeListOf<HTMLLIElement>;
+    const initialVisible = (document.querySelector('.content-nav') as HTMLDivElement).dataset.initialVisible;
+    listItems.forEach((item, i) => {
+      if (i <= Number(initialVisible)) return;
+
+      if (dataExpanded) {
+        item.dataset.sliced = 'true';
+        loadMoreButton.dataset.expanded = 'false';
+        loadMoreSpans.forEach((span) => {
+          span.textContent = 'Wczytaj więcej';
+        });
+
+        if (i === Number(initialVisible)) {
+          item.setAttribute('aria-hidden', 'false');
+          item.setAttribute('tabindex', '0');
+        }
+      } else {
+        item.dataset.sliced = 'false';
+        loadMoreButton.dataset.expanded = 'true';
+        loadMoreSpans.forEach((span) => {
+          span.textContent = 'Wczytaj mniej';
+        });
+        if (i === Number(initialVisible)) {
+          item.setAttribute('aria-hidden', 'true');
+          item.setAttribute('tabindex', '-1');
+        }
+      }
+    });
+    dataExpanded = !dataExpanded;
+  });
+</script>

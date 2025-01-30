@@ -1,0 +1,33 @@
+---
+import Layout from '@/src/layouts/Layout.astro';
+import sanityFetch from '@/src/utils/sanity.fetch';
+import metadataFetch from '@/src/utils/metadata.fetch';
+import Content, { Content_Query, type ContentProps } from '@/src/components/global/Legal/Content/index.astro';
+import { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
+import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
+
+const page = await sanityFetch<{
+  name: string;
+  slug: string;
+  heading: PortableTextValue;
+  paragraph: PortableTextValue;
+  content: ContentProps;
+}>({
+  query: `
+    *[_type == "PrivacyPolicy_Page"][0] {
+      name,
+      "slug": slug.current,
+      ${PortableTextQuery('heading')}
+      ${PortableTextQuery('paragraph')}
+      ${Content_Query}
+    }
+  `,
+});
+
+const metadata = await metadataFetch(page.slug);
+---
+
+<Layout {...metadata}>
+  <Breadcrumbs data={[{ name: page.name, path: page.slug }]} firstItemType="PrivacyPolicy_Page" />
+  <Content {...page.content} heading={page.heading} paragraph={page.paragraph} />
+</Layout>

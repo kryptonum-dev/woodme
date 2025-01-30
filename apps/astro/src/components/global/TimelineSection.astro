@@ -1,0 +1,415 @@
+---
+import { ButtonDataQuery, type ButtonDataProps } from '../ui/button';
+import Button from '../ui/button/Button.astro';
+import Image, { ImageDataQuery, type ImageDataProps } from '../ui/image';
+import PortableText, { PortableTextQuery, type PortableTextValue } from '../ui/portable-text';
+
+export const TimelineSection_Query = `
+  _type == "TimelineSection" => {
+    ${PortableTextQuery('heading')}
+    ${ImageDataQuery('backgroundImages[]')}
+    ctaBox{
+        ${PortableTextQuery('heading')}
+        ${PortableTextQuery('paragraph')}
+        ${ButtonDataQuery('cta')}
+    },
+    timeline[]{
+        title,
+        ${PortableTextQuery('description')}
+    },
+  },
+`;
+
+type Props = {
+  index: number;
+  sectionId?: string;
+  heading: PortableTextValue;
+  backgroundImages: ImageDataProps[];
+  ctaBox: {
+    heading: PortableTextValue;
+    paragraph: PortableTextValue;
+    cta: ButtonDataProps;
+  };
+  timeline: {
+    title: string;
+    description: PortableTextValue;
+  }[];
+};
+
+const { index, sectionId, heading, backgroundImages, ctaBox, timeline } = Astro.props;
+---
+
+<section class="TimelineSection max-width" id={sectionId}>
+  <header class="header">
+    <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
+  </header>
+  <div class="container">
+    {
+      backgroundImages.map((image, i) => (
+        <Image
+          fetchpriority={index === 0 && i === 0 ? 'high' : 'low'}
+          loading={index === 0 ? 'eager' : 'lazy'}
+          {...image}
+          sizes="(max-width: 56.25rem) 100vw, (max-width: 85.375rem) 50vw, 683px"
+          class="image"
+        />
+      ))
+    }
+    <div class="box">
+      <div class="content">
+        <PortableText value={ctaBox.heading} heading={index === 0 ? 'h2' : 'h3'} class="contentHeading" />
+        <PortableText value={ctaBox.paragraph} class="paragraph" />
+        <Button {...ctaBox.cta} />
+      </div>
+      <ul class="timeline">
+        {
+          timeline.map((item, i) => (
+            <li class={`item ${i !== 0 ? 'hidden' : ''}`}>
+              <div class="line" />
+              <div class="text">
+                <button class="title" disabled={i === 0}>
+                  {item.title}
+                </button>
+                <div class="descriptionContainer">
+                  <PortableText value={item.description} class="description" />
+                </div>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .TimelineSection {
+    padding: clamp(4rem, calc(6vw / 0.48), 6rem) 0;
+    .header {
+      margin-bottom: clamp(2rem, calc(3vw / 0.48), 3rem);
+      max-width: 41.25rem;
+
+      .heading {
+      }
+    }
+
+    .container {
+      position: relative;
+      min-height: 48rem;
+      display: grid;
+      place-items: center;
+      width: calc(100% + 2 * var(--pageMargin));
+      margin-left: calc(var(--pageMargin) * -1);
+      padding: var(--pageMargin);
+
+      .image {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 50%;
+        z-index: -1;
+        &:first-of-type {
+          left: 0;
+        }
+
+        &:last-of-type {
+          right: 0;
+        }
+      }
+      .box {
+        display: flex;
+        align-items: stretch;
+
+        .content {
+          padding: clamp(1.25rem, calc(2.75vw / 0.48), 2.75rem) clamp(1.25rem, calc(2.5vw / 0.48), 2.5rem);
+          border-radius: 12px;
+          background-color: var(--tertiary-400, #acc1cf);
+          display: flex;
+          flex-direction: column;
+
+          max-width: 31.25rem;
+
+          .contentHeading {
+            color: var(--neutral-900, #141915);
+            font-size: var(--typography-heading-m, 1.75rem);
+            line-height: 1.35;
+            margin-bottom: 2.25rem;
+          }
+
+          .paragraph {
+            color: var(--neutral-900, #141915);
+            line-height: 1.35;
+            margin-bottom: 2.25rem;
+            margin-top: auto;
+          }
+        }
+
+        .timeline {
+          background-color: var(--neutral-100, #f2faf6);
+          border-radius: 12px;
+          display: flex;
+          flex-direction: column;
+          padding: clamp(1.25rem, calc(2.75vw / 0.48), 2.75rem) clamp(1.25rem, calc(3.5vw / 0.48), 3.5rem);
+          width: 100%;
+          max-width: 39rem;
+          gap: 1.25rem;
+          transition: transform 1600ms var(--easing);
+
+          .item {
+            display: flex;
+            align-items: flex-start;
+            counter-increment: section;
+
+            .line {
+              width: 2px;
+              background-color: var(--neutral-400, #87988b);
+              height: 100%;
+              flex-shrink: 0;
+              position: relative;
+
+              &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: var(--neutral-600, #87988b);
+                transform: scaleY(1);
+                transform-origin: top;
+                transition: transform 1200ms var(--easing);
+              }
+            }
+
+            .text {
+              padding: 0.375rem 0rem 0.375rem clamp(0.675rem, calc(3vw / 0.48), 3rem);
+              .title {
+                display: flex;
+                align-items: flex-start;
+                transition: color 300ms;
+                text-align: start;
+
+                &[disabled] {
+                  pointer-events: none;
+                }
+
+                &::before {
+                  content: counter(section, decimal-leading-zero);
+                  margin-right: clamp(0.675rem, calc(0.75vw / 0.48), 0.75rem);
+                  font-size: var(--typography-body-s, 0.75rem);
+                  letter-spacing: -0.01em;
+                  width: 1.5rem;
+                  text-align: start;
+                }
+
+                &:hover:not([disabled]) {
+                  color: var(--neutral-900, #5f6d62);
+                }
+
+                &:focus-visible:not([disabled]) {
+                  outline: 2px solid var(--neutral-700, #5f6d62);
+                  outline-offset: 8px;
+                }
+              }
+              .descriptionContainer {
+                display: grid;
+                transition: grid-template-rows 1800ms var(--easing);
+                grid-template-rows: 1fr;
+                .description {
+                  margin-left: 2.25rem;
+                  :global(p:first-of-type) {
+                    margin-top: 0.75rem;
+                  }
+                  overflow: hidden;
+                }
+              }
+            }
+          }
+
+          .item.hidden {
+            .line {
+              &::before {
+                transform: scaleY(0);
+                transform-origin: bottom;
+                transition-duration: 800ms;
+              }
+            }
+            .text {
+              .descriptionContainer {
+                grid-template-rows: 0fr;
+                .description {
+                }
+              }
+            }
+          }
+        }
+      }
+
+      @media (max-width: 56.25rem) {
+        min-height: clamp(55.75rem, calc(107.75vw / 0.48), 107.75rem);
+
+        .image {
+          &:first-of-type {
+            top: 0;
+            height: 50%;
+            width: 100%;
+          }
+
+          &:last-of-type {
+            left: 0;
+            right: unset;
+            top: unset;
+            bottom: 0;
+            width: 100%;
+            height: 50%;
+          }
+        }
+
+        .box {
+          display: block;
+
+          .content {
+            border-radius: 10px;
+            max-width: 38rem;
+            width: 100%;
+
+            .contentHeading {
+              margin-bottom: clamp(2.25rem, calc(4vw / 0.48), 4rem);
+            }
+          }
+
+          .timeline {
+            max-width: 38rem;
+            border-radius: 10px;
+
+            .item {
+              position: relative;
+              .line {
+                position: absolute;
+              }
+            }
+          }
+        }
+      }
+      @media (max-width: 27.5rem) {
+        .box {
+          .content {
+            border-radius: 8px;
+          }
+
+          .timeline {
+            border-radius: 8px;
+
+            .item {
+              .number {
+                margin-left: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<script>
+  function initTimelineScroll() {
+    const timeline = document.querySelector('.timeline');
+    const items = [...document.querySelectorAll('.timeline .item')];
+
+    const threshold = window.innerHeight / 5;
+    let currentIndex = 0;
+    let scrollAccumulator = 0;
+    let isTimelineInView = false;
+    let lastScrollY = window.scrollY;
+
+    if (!timeline) return;
+
+    items.forEach((item, index) => {
+      if (index !== 0) {
+        item.classList.add('hidden');
+      } else {
+        item.classList.remove('hidden');
+      }
+    });
+
+    function updateTimelineItem(delta: number) {
+      if (delta > 0 && currentIndex < items.length - 1) {
+        items[currentIndex].classList.add('hidden');
+        items[currentIndex + 1].classList.remove('hidden');
+        items[currentIndex + 1].querySelector('.title')?.setAttribute('disabled', 'true');
+        items[currentIndex].querySelector('.title')?.removeAttribute('disabled');
+        currentIndex++;
+      } else if (delta < 0 && currentIndex > 0) {
+        items[currentIndex].classList.add('hidden');
+        items[currentIndex - 1].classList.remove('hidden');
+        items[currentIndex - 1].querySelector('.title')?.removeAttribute('disabled');
+        items[currentIndex].querySelector('.title')?.setAttribute('disabled', 'true');
+        currentIndex--;
+      }
+      scrollAccumulator = 0;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isTimelineInView = entry.isIntersecting;
+        });
+      },
+      {
+        threshold: 0.2,
+      }
+    );
+
+    observer.observe(timeline);
+
+    function handleWheel(e: WheelEvent) {
+      if (!isTimelineInView) return;
+      scrollAccumulator += e.deltaY;
+
+      if (Math.abs(scrollAccumulator) >= threshold) {
+        updateTimelineItem(e.deltaY);
+      }
+    }
+
+    function handleScroll() {
+      if (!isTimelineInView) return;
+
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - lastScrollY;
+
+      scrollAccumulator += scrollDelta;
+
+      if (Math.abs(scrollAccumulator) >= threshold) {
+        updateTimelineItem(scrollDelta);
+      }
+
+      lastScrollY = currentScrollY;
+    }
+
+    function handleItemClick(clickedItem: Element, clickedIndex: number) {
+      scrollAccumulator = 0;
+
+      items.forEach((item, i) => {
+        if (i !== clickedIndex) {
+          item.classList.add('hidden');
+
+          item.querySelector('.title')?.removeAttribute('disabled');
+        }
+      });
+
+      clickedItem.classList.remove('hidden');
+      clickedItem.querySelector('.title')?.setAttribute('disabled', 'true');
+      currentIndex = clickedIndex;
+    }
+
+    items.forEach((item, index) => {
+      item.addEventListener('click', () => handleItemClick(item, index));
+    });
+
+    window.addEventListener('wheel', handleWheel);
+    window.addEventListener('scroll', handleScroll);
+  }
+
+  initTimelineScroll();
+</script>
