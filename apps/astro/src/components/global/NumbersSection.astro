@@ -45,6 +45,8 @@ const { index, sectionId, heading, numbers, paragraph } = Astro.props;
 <style lang="scss">
   .NumbersSection {
     padding: 3rem 0;
+    color: var(--neutral-900, #141915);
+
     background-color: var(--tertiary-200, #ccdde9);
 
     .container {
@@ -64,6 +66,7 @@ const { index, sectionId, heading, numbers, paragraph } = Astro.props;
           line-height: 1.35;
           letter-spacing: -0.02em;
           font-size: var(--typography-heading-m, 1.75rem);
+          color: var(--neutral-900, #141915);
         }
       }
 

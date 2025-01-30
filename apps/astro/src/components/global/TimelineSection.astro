@@ -64,7 +64,7 @@ const { index, sectionId, heading, backgroundImages, ctaBox, timeline } = Astro.
       <ul class="timeline">
         {
           timeline.map((item, i) => (
-            <div class={`item ${i !== 0 ? 'hidden' : ''}`}>
+            <li class={`item ${i !== 0 ? 'hidden' : ''}`}>
               <div class="line" />
               <div class="text">
                 <button class="title" disabled={i === 0}>
@@ -74,7 +74,7 @@ const { index, sectionId, heading, backgroundImages, ctaBox, timeline } = Astro.
                   <PortableText value={item.description} class="description" />
                 </div>
               </div>
-            </div>
+            </li>
           ))
         }
       </ul>

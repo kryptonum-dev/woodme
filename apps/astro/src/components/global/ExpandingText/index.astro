@@ -63,7 +63,7 @@ const { sectionId, textContent, cta } = Astro.props;
           transition-property: height;
           transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
 
-          &[aria-expanded='true'] {
+          &[data-expanded='true'] {
             height: auto !important;
           }
 
@@ -79,7 +79,7 @@ const { sectionId, textContent, cta } = Astro.props;
             background: linear-gradient(to bottom, transparent, var(--neutral-100, #f2faf6));
           }
 
-          &[aria-expanded='true']::after {
+          &[data-expanded='true']::after {
             opacity: 0;
           }
 
@@ -151,7 +151,7 @@ const { sectionId, textContent, cta } = Astro.props;
       }
     }
 
-    .content[aria-expanded='true'] {
+    .content[data-expanded='true'] {
       .ctas .cta-button {
         display: flex;
       }
@@ -190,16 +190,16 @@ const { sectionId, textContent, cta } = Astro.props;
       content.id = contentId;
       trigger.setAttribute('aria-controls', contentId);
 
-      content.setAttribute('aria-expanded', 'false');
+      content.setAttribute('data-expanded', 'false');
       if (ctaButton) ctaButton.style.display = 'none';
 
       trigger.addEventListener('click', (event) => {
         event.preventDefault();
 
-        if (content.getAttribute('aria-expanded') === 'false') {
+        if (content.getAttribute('data-expanded') === 'false') {
           trigger.textContent = 'Zwiń tekst';
 
-          content.removeAttribute('aria-expanded');
+          content.removeAttribute('data-expanded');
 
           const startHeight = content.offsetHeight;
           const endHeight = content.scrollHeight;
@@ -213,7 +213,7 @@ const { sectionId, textContent, cta } = Astro.props;
             content.addEventListener(
               'transitionend',
               () => {
-                content.setAttribute('aria-expanded', 'true');
+                content.setAttribute('data-expanded', 'true');
                 content.style.height = '';
               },
               { once: true }
@@ -236,7 +236,7 @@ const { sectionId, textContent, cta } = Astro.props;
 
           content.style.transitionDuration = `${duration}ms`;
           content.style.height = `${startHeight}px`;
-          content.removeAttribute('aria-expanded');
+          content.removeAttribute('data-expanded');
 
           if (window.innerWidth <= 600) {
             section.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -247,7 +247,7 @@ const { sectionId, textContent, cta } = Astro.props;
             content.addEventListener(
               'transitionend',
               () => {
-                content.setAttribute('aria-expanded', 'false');
+                content.setAttribute('data-expanded', 'false');
               },
               { once: true }
             );

@@ -126,7 +126,7 @@ export default function Slider({ galleryList, index }: SliderProps) {
       <div className={styles.gallerySelect}>
         {galleryList.map((gallery, i) => (
           <button
-            aria-selected={currentGalleryOpen === i}
+            data-selected={currentGalleryOpen === i}
             onClick={() => handleGallerySwitch(i)}
             className={styles.tab}
           >

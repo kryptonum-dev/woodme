@@ -371,28 +371,3 @@ const thumbnail = await optimizeImage(
     }
   }
 </style>
-
-<script>
-  import { openVideoPopup } from '@/src/utils/open-video-popup';
-
-  document.querySelectorAll<HTMLDivElement>('.SingleTestimonialSection').forEach((section) => {
-    function setupVideoPopup() {
-      const showVideoBtn = section.querySelector('.showVideo')! as HTMLElement;
-
-      if (!showVideoBtn) return;
-      const container = section.querySelector('.container') as HTMLElement;
-      if (!container) return;
-      const maxWidth = Number(container.getAttribute('data-max-width'));
-      const aspectRatio =
-        container.getAttribute('data-aspect-ratio')!.split(':')[0] +
-        '/' +
-        container.getAttribute('data-aspect-ratio')!.split(':')[1];
-      const name = container.getAttribute('data-name')!;
-      const playbackId = container.getAttribute('data-playback-id')!;
-
-      openVideoPopup(showVideoBtn, playbackId, name, aspectRatio, maxWidth);
-    }
-
-    setupVideoPopup();
-  });
-</script>
