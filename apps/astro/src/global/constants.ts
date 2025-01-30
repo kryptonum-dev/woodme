@@ -62,10 +62,3 @@ export const REGEX: { email: RegExp; phone: RegExp; string: RegExp } = {
   phone: /^(?:\+(?:\d{1,3}))?(?:[ -]?\(?\d{1,4}\)?[ -]?\d{1,5}[ -]?\d{1,5}[ -]?\d{1,6})$/,
   string: /^(?!\s+$)(.*?)\s*$/,
 };
-
-/**
- * Global declaration of the easing function for JS animations.
- * @constant
- * @type {number[]}
- */
-export const EASING: number[] = [0.6, -0.15, 0.27, 1.15];
