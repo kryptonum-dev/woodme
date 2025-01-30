@@ -24,8 +24,8 @@ export default defineField({
       type: 'array',
       title: 'Images',
       of: [{ type: 'image' }],
-      description: 'List of images that will be displayed in a marquee (Minimum 6 images are required)',
-      validation: (Rule) => Rule.required().min(6),
+      description: 'List of images that will be displayed in a marquee (Minimum 5 images are required)',
+      validation: (Rule) => Rule.required().min(5),
     }),
     defineField({
       name: 'background',

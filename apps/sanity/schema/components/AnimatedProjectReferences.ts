@@ -29,7 +29,7 @@ export default defineField({
       name: 'highlightedProjects',
       type: 'array',
       title: 'Highlighted Projects',
-      validation: (Rule) => Rule.required().length(2).unique(),
+      validation: (Rule) => Rule.required().max(2).unique(),
       description:
         'The projects references will be animated (moving from the section botton to the top - dekstop only).',
       of: [{ type: 'reference', to: [{ type: 'Project_Collection' }] }],

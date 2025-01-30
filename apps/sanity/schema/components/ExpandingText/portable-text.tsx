@@ -18,7 +18,7 @@ export default defineField({
           component: ({ children }) => <h2 style={{ fontSize: '1.875rem', fontWeight: 500, margin: 0 }}>{children}</h2>,
         },
       ],
-      lists: [],
+      lists: [{ title: 'Bullet', value: 'bullet' }],
       marks: {
         decorators: [
           {

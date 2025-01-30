@@ -24,7 +24,7 @@ const { index, sectionId, heading, images } = Astro.props;
     <PortableText value={heading} class="heading" heading={index === 0 ? 'h1' : 'h2'} />
   </header>
   <div class="max-width container">
-    <div class="marquee" style={`animation-duration: ${images.length * 8}s;`}>
+    <div class="marquee" style={`animation-duration: ${images.length * 12}s;`}>
       <ul>
         {
           [...images, ...images].map((image, i) => (

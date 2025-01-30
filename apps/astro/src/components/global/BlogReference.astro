@@ -94,18 +94,16 @@ const { index, heading, paragraph, highlightedBlogPosts, cta, sectionId } = Astr
       }
 
       nav {
-        display: flex;
-        justify-content: center;
-        flex-grow: 1;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 0.5rem;
-        align-self: center;
 
         @media (max-width: 56.25rem) {
-          flex-direction: column;
+          grid-template-columns: 1fr;
         }
       }
 
-      @media (max-width: 64rem) {
+      @media (max-width: 67.5rem) {
         flex-direction: column;
 
         header {

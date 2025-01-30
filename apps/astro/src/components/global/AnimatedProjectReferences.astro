@@ -344,7 +344,7 @@ const Heading = index === 0 ? 'h1' : 'h2';
               const currentScrollY = window.scrollY;
               const scrollDirection = currentScrollY > lastScrollY ? -1 : 1;
               projects.forEach((project) => {
-                const speed = 0.3;
+                const speed = 0.43;
                 const yOffset = scrollProgress * speed;
                 scrollProgress = scrollProgress + 10 * scrollDirection;
 
