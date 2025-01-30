@@ -8,7 +8,7 @@ export const Preview = ({ document }: { document: IframeProps['document'] }) => 
     <Iframe
       document={document}
       options={{
-        url: `${PREVIEW_DEPLOYMENT_DOMAIN}${slug}`,
+        url: new URL(slug, PREVIEW_DEPLOYMENT_DOMAIN).toString(),
         reload: { button: true },
       }}
     />
