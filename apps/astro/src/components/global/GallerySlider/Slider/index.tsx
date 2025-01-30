@@ -41,7 +41,6 @@ export default function Slider({ galleryList, index }: SliderProps) {
     };
 
     emblaApi.on('select', onSelect);
-    // Initial check
     onSelect();
 
     return () => {
