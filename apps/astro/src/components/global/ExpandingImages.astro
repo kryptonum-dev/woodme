@@ -62,7 +62,7 @@ const headingDelay = splitHeading(heading).length * 150 - splitHeading(heading).
           {
             [...images, ...images, ...images].map((image, i) => (
               <li
-                style={`animation-delay: ${i - 5 === 2 ? headingDelay : i - 5 === 0 || i - 5 === 4 ? headingDelay + 200 : headingDelay + 100}ms, ${i < 5 || i > 9 ? 'animation: none' : ''}`}
+                style={`animation-delay: ${i - 5 === 2 ? headingDelay : i - 5 === 0 || i - 5 === 4 ? headingDelay + 200 : headingDelay + 100}ms; ${i < 5 || i > 9 ? 'animation: none; transform: translateY(0); opacity: 1;' : ''}`}
                 class="image"
               >
                 <Image
@@ -390,7 +390,7 @@ const headingDelay = splitHeading(heading).length * 150 - splitHeading(heading).
 
       setTimeout(() => {
         section.querySelector('.marquee')!.classList.add('animation-started');
-      }, 2200);
+      }, 1800);
     }
 
     if (document.documentElement.classList.contains('fresh-visit')) {
