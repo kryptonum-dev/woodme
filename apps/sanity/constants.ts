@@ -4,7 +4,7 @@
  * @constant
  * @type {string}
  */
-export const DOMAIN: string = 'https://woodme-git-dev-kryptonum.vercel.app';
+export const DOMAIN: string = 'https://wood-me.pl';
 
 /**
  * The domain used for preview deployments.
