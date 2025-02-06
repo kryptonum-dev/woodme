@@ -28,11 +28,10 @@ export const LOCALE: string = 'pl';
  * @constant
  * @type {string}
  */
-export const DOMAIN: string = 'https://woodme-git-dev-kryptonum.vercel.app/';
-
-//TODO: Change to production domain
+export const DOMAIN: string = 'https://wood-me.pl';
 
 /**
+
  * Global declaration of the default title for the application.
  * This constant is used as a fallback title when a specific page title is not provided.
  * @constant
