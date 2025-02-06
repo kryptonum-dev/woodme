@@ -331,8 +331,6 @@ const MainHeading = index === 0 ? 'h1' : 'h2';
           left: 50%;
           transform: translateX(-50%);
           max-width: 20.5rem;
-          opacity: 1;
-          animation: none;
 
           .col {
             flex-direction: row;
@@ -380,11 +378,29 @@ const MainHeading = index === 0 ? 'h1' : 'h2';
           @keyframes DualColumnSection_fadeInCta {
             0% {
               opacity: 0;
-              transform: translateX(2rem);
+              transform: translateY(2rem);
             }
+
             100% {
               opacity: 1;
               transform: translateY(0);
+            }
+          }
+
+          @media (max-width: 31.25rem) {
+            animation-name: DualColumnSection_fadeInCta_mobile;
+            animation-delay: 400ms;
+
+            @keyframes DualColumnSection_fadeInCta_mobile {
+              0% {
+                opacity: 0;
+                transform: translate(-50%, 1.5rem);
+              }
+
+              100% {
+                opacity: 1;
+                transform: translate(-50%, 0);
+              }
             }
           }
         }
