@@ -27,7 +27,6 @@ A high-performance website for WOODME - a company specializing in custom woodwor
   - Animated project references
   - Dynamic blog system with reading time estimation
   - Interactive galleries and sliders
-  - Expandable content sections
   - Contact forms with international phone support
 - Fully managed through Sanity Studio with live previews
 
@@ -38,7 +37,6 @@ A high-performance website for WOODME - a company specializing in custom woodwor
   - Automated WebP conversion
   - Responsive images with proper srcset
   - Lazy loading implementation
-- Client-side routing for faster page transitions
 - Minified and bundled assets via TurboPack
 
 ### ♿ Accessibility
@@ -49,7 +47,6 @@ A high-performance website for WOODME - a company specializing in custom woodwor
   - Proper heading hierarchy
 - Interactive elements with minimum 44px touch targets
 - Keyboard navigation support
-- High contrast color scheme
 
 ### 🔍 SEO & Meta
 
@@ -59,7 +56,6 @@ A high-performance website for WOODME - a company specializing in custom woodwor
   - Organization
   - Blog posts
   - Projects
-- OpenGraph and Twitter card support
 - Canonical URL management
 
 ## Why This Approach
@@ -68,7 +64,6 @@ A high-performance website for WOODME - a company specializing in custom woodwor
 
 - Astro-powered static generation for optimal performance
 - Strategic hydration with client:load, client:idle, and client:visible directives
-- Automated asset optimization pipeline
 - Type-safe development with TypeScript and Astro's built-in checking
 
 ### 💻 Developer Workflow
@@ -76,14 +71,12 @@ A high-performance website for WOODME - a company specializing in custom woodwor
 - Monorepo structure with TurboPack for efficient builds
 - Organized component library with 45+ reusable sections
 - Consistent code style with ESLint and Prettier
-- Hot module replacement for rapid development
 
 ### 🎯 Business Advantages
 
 - Content management through intuitive Sanity Studio interface
 - Real-time preview capabilities for content editors
 - Optimized Core Web Vitals for better SEO rankings
-- Scalable architecture supporting future growth
 
 ## Authors
 
