@@ -8,6 +8,7 @@ import Layout from '@/src/layouts/Layout.astro';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import { Hero_Query, type HeroProps } from '@/src/components/Blog/Post/Hero.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
+import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
 
 export const blogPosts = await sanityFetch<{ slug: string }[]>({
   query: `
@@ -42,6 +43,7 @@ const data = await fetchPageData(
   ${Content_Query}
   ${Components_Query}
   "footerBackground": components[-1].background,
+  ${Faq_Questions_Query}
 }`,
   { slug: slug }
 );

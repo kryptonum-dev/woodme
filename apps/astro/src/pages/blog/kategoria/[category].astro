@@ -8,6 +8,7 @@ import Layout from '@/src/layouts/Layout.astro';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import Listing from '@/src/components/Blog/Listing.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
+import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
 
 export const slugPrefix = '/blog/kategoria/';
 
@@ -44,6 +45,7 @@ const data = await fetchPageData(
         ${PortableTextQuery('paragraph')}   
         ${Listing_Query({ currentPage: 1, currentCategorySlug: categorySlug })}
         ${Components_Query} 
+        ${Faq_Questions_Query}
     }
   `
 );

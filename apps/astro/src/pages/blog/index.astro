@@ -1,6 +1,7 @@
 ---
 import Listing, { Listing_Query } from '@/src/components/Blog/Listing.astro';
 import Components, { Components_Query, type ComponentsProps } from '@/src/components/Components.astro';
+import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
 import { type Props as BlogCardProps } from '@/src/components/ui/BlogCard/BlogCard.astro';
 import { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
@@ -34,6 +35,7 @@ const data = await fetchPageData(
         ${PortableTextQuery('paragraph')}   
         ${Listing_Query({ currentPage })}
         ${Components_Query} 
+        ${Faq_Questions_Query}
     }
   `
 );

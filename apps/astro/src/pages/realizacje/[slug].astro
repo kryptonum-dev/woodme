@@ -7,6 +7,10 @@ import Layout from '@/src/layouts/Layout.astro';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import Hero, { Hero_Query } from '@/src/components/Project/Single/Hero.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
+import type { PortableTextValue } from '@/src/components/ui/portable-text';
+import type { Props as ProjectCardProps } from '@/src/components/ui/ProjectCard.astro';
+import type { ComponentsProps } from '@/src/components/Components.astro';
+import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
 
 export const projects = await sanityFetch<{ slug: string }[]>({
   query: `
@@ -19,6 +23,18 @@ export const projects = await sanityFetch<{ slug: string }[]>({
 export async function getStaticPaths() {
   return projects?.map(({ slug }) => ({ params: { slug: slug.replace(slugPrefix, '') } }));
 }
+
+export type QueryProps = {
+  name: string;
+  slug: string;
+  footerBackground: string;
+  heading: PortableTextValue;
+  totalProjects: number;
+  totalProjectsByCategory: number;
+  categories: { name: string; slug: string; count: number }[];
+  listing: ProjectCardProps[];
+  components: ComponentsProps;
+};
 
 const { slug: _slug } = Astro.params;
 
@@ -33,16 +49,17 @@ const data = await fetchPageData(
       ${Hero_Query}
       ${Components_Query}
       "footerBackground": components[-1].background,
+      ${Faq_Questions_Query}
     }`,
   { slug: slug }
 );
 
 if (!data) return Astro.rewrite('/404');
 
-const { page, metadata } = data;
+const { page, metadata, faqItems } = data as typeof data & { page: QueryProps };
 ---
 
-<Layout {...metadata} footerBackground={page.footerBackground}>
+<Layout {...metadata} footerBackground={page.footerBackground} faqItems={faqItems}>
   <Breadcrumbs
     data={[
       { name: 'Realizacje', path: slugPrefix },

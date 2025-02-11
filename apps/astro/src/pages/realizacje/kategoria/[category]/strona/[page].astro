@@ -9,6 +9,7 @@ import Layout from '@/src/layouts/Layout.astro';
 import { DOMAIN } from '@/src/global/constants';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
+import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
 
 export async function getCategoryData() {
   return await sanityFetch<{ name: string; slug: string; postCount: number }[]>({
@@ -55,6 +56,7 @@ const data = await fetchPageData(
         ${Listing_Query({ currentPage: currentPage, currentCategorySlug: category.slug })}
         ${Components_Query} 
         "footerBackground": components[-1].background,
+        ${Faq_Questions_Query}
     }
   `
 );

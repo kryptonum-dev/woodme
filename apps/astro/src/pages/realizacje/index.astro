@@ -6,6 +6,7 @@ import { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/p
 import Layout from '@/src/layouts/Layout.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
+import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
 
 export const ITEMS_PER_PAGE = 6;
 const currentPage = 1;
@@ -33,7 +34,7 @@ const data = await fetchPageData(
         ${PortableTextQuery('heading')} 
         ${Listing_Query({ currentPage })}
         ${Components_Query} 
-    }
+        ${Faq_Questions_Query}
   `
 );
 
