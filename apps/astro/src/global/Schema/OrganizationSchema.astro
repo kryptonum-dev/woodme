@@ -1,0 +1,105 @@
+---
+import sanityFetch from '@/utils/sanity.fetch';
+import { DOMAIN } from '@/global/constants';
+
+const {
+  socials,
+  OrganizationSchema: organizationSchema,
+  email,
+  phone,
+  openHours,
+  address,
+  googleData,
+} = await sanityFetch<{
+  socials: { facebook: string; instagram: string; linkedin: string; tiktok: string };
+  OrganizationSchema: { name: string; description: string };
+  email: string;
+  phone: string;
+  openHours: { from: string; to: string; closedWeekends: boolean };
+  address: { addressText: string; mapLink: string };
+  googleData: { rating: number; user_ratings_total: number };
+}>({
+  query: `
+    *[_type == "global"][0] {
+      socials,
+      OrganizationSchema,
+      email,
+      phone,
+      openHours,
+      address,
+      googleData,
+    }
+  `,
+});
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: organizationSchema.name,
+  description: organizationSchema.description,
+  url: DOMAIN,
+  ...(email && { email: email }),
+  ...(phone && { telephone: phone }),
+  sameAs: [socials.facebook, socials.instagram, socials.linkedin, socials.tiktok].filter(Boolean),
+  logo: {
+    '@type': 'ImageObject',
+    url: `${DOMAIN}/logo.svg`,
+    width: '512',
+    height: '512',
+    caption: organizationSchema.name,
+  },
+  '@id': `${DOMAIN}/#organization`,
+  ...(openHours && {
+    openingHoursSpecification: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: openHours.closedWeekends
+        ? ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+        : ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: openHours.from,
+      closes: openHours.to,
+    },
+  }),
+  ...(address && {
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: address.addressText,
+      addressLocality: 'Tychy',
+      postalCode: '43-100',
+      addressCountry: 'PL',
+    },
+  }),
+  ...(googleData && {
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: googleData.rating,
+      ratingCount: googleData.user_ratings_total,
+      bestRating: '5',
+      worstRating: '1',
+    },
+  }),
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer service',
+    ...(email && { email: email }),
+    ...(phone && { telephone: phone }),
+    availableLanguage: ['pl'],
+  },
+  foundingDate: '2021-06-28',
+  vatID: 'PL6312381386',
+  taxID: '6312381386',
+  legalName: 'WoodMe Piotr Knitter',
+  founder: {
+    '@type': 'Person',
+    name: 'Piotr Knitter',
+  },
+  areaServed: {
+    '@type': 'Place',
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'PL',
+    },
+  },
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />

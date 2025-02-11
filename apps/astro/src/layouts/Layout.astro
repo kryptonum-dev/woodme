@@ -6,6 +6,7 @@ import Footer from './Footer.astro';
 import Header from './Header.astro';
 import SmoothScroll from './smooth-scroll.astro';
 import SplashScreen from '../components/ui/SplashScreen.astro';
+import OrganizationSchema from '../global/Schema/OrganizationSchema.astro';
 
 type Props = HeadProps & {
   footerBackground?: string;
@@ -18,8 +19,8 @@ const { footerBackground, ...props } = Astro.props;
 <html lang={LOCALE}>
   <head>
     <Head {...props} />
+    <OrganizationSchema />
     <script is:inline src="https://cdn.usefathom.com/script.js" data-site="XFDBCWQI" defer></script>
-
     <script is:inline>
       const currentUrl = window.location.href;
       const lastPage = sessionStorage.getItem('lastPage');
