@@ -42,6 +42,15 @@ const schema = {
   ...(email && { email: email }),
   ...(phone && { telephone: phone }),
   sameAs: [socials.facebook, socials.instagram, socials.linkedin, socials.tiktok].filter(Boolean),
+  priceRange: '$$',
+  image: [
+    {
+      '@type': 'ImageObject',
+      url: icon.src,
+      width: '512',
+      height: '512',
+    },
+  ],
   logo: {
     '@type': 'ImageObject',
     url: icon.src,
