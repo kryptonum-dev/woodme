@@ -3,7 +3,7 @@ import { PortableTextQuery } from '../components/ui/portable-text';
 import metadataFetch from './metadata.fetch';
 import sanityFetch from './sanity.fetch';
 
-type QueryProps = {
+export type QueryProps = {
   name: string;
   slug: string;
   footerBackground: string;
@@ -17,7 +17,7 @@ type QueryProps = {
   }[];
 };
 
-export const fetchPageData = async (pageName: string, customQuery?: string) => {
+export const fetchPageData = async (pageName: string, customQuery?: string, params?: Record<string, any>) => {
   const page = await sanityFetch<QueryProps>({
     query:
       customQuery ||
@@ -38,6 +38,7 @@ export const fetchPageData = async (pageName: string, customQuery?: string) => {
             },
           }
         `,
+    params,
   });
 
   if (!page) return null;
