@@ -1,6 +1,7 @@
 ---
 import sanityFetch from '@/utils/sanity.fetch';
 import { DOMAIN } from '@/global/constants';
+import icon from '@/assets/icon.png';
 
 const {
   socials,
@@ -43,7 +44,7 @@ const schema = {
   sameAs: [socials.facebook, socials.instagram, socials.linkedin, socials.tiktok].filter(Boolean),
   logo: {
     '@type': 'ImageObject',
-    url: `${DOMAIN}/logo.svg`,
+    url: icon.src,
     width: '512',
     height: '512',
     caption: organizationSchema.name,
