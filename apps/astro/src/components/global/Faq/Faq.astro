@@ -5,6 +5,17 @@ import Button from '@/src/components/ui/button/Button.astro';
 import PortableText, { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
 import FormWrapper from './Form/FormWrapper.astro';
 
+export const Faq_Questions_Query = `
+  "faqSections": components[]{
+          _type == "Faq" => {
+            faqItems[] -> {
+              question,
+              ${PortableTextQuery('answer')}
+            },
+          }
+    },
+`;
+
 export const Faq_Query = `
   _type == "Faq" => {
     ${PortableTextQuery('heading')}
@@ -164,7 +175,7 @@ const openHours = getOpenHours({
               </path>
             </svg>
           </div>
-          <span class="title">Zadaj je w formularzu</span>
+          <span class="title">Zadaj je w formularzu</span>
         </div>
         <FormWrapper state={contactBox.state} />
       </div>

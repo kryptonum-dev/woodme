@@ -8,7 +8,7 @@ import Listing, { Listing_Query } from '@/src/components/Blog/Listing.astro';
 import Layout from '@/src/layouts/Layout.astro';
 import { DOMAIN } from '@/src/global/constants';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
-import metadataFetch from '@/src/utils/metadata.fetch';
+import { fetchPageData } from '@/src/utils/fetch-page-data';
 
 export async function getCategoryData() {
   return await sanityFetch<{ name: string; slug: string; postCount: number }[]>({
@@ -45,8 +45,9 @@ const totalPages = Math.ceil(postCount / ITEMS_PER_PAGE);
 if (currentPage < 2 || currentPage > totalPages) return Astro.rewrite('/404');
 if (!category) return Astro.rewrite('/404');
 
-const page = await sanityFetch<QueryProps>({
-  query: `
+const data = await fetchPageData(
+  'Blog_Page',
+  `
     *[_type == "Blog_Page"][0] {
         name,
         "slug": slug.current,
@@ -56,10 +57,16 @@ const page = await sanityFetch<QueryProps>({
         ${Listing_Query({ currentPage: currentPage, currentCategorySlug: category.slug })}
         ${Components_Query} 
     }
-  `,
-});
+  `
+);
 
-const metadata = await metadataFetch(category.slug);
+if (!data) {
+  return Astro.redirect('/404');
+}
+
+const { page, metadata, faqItems } = data as typeof data & {
+  page: QueryProps;
+};
 ---
 
 <Layout
@@ -68,6 +75,7 @@ const metadata = await metadataFetch(category.slug);
   openGraphImage={metadata.openGraphImage}
   path={Astro.url.pathname}
   footerBackground={page.footerBackground}
+  faqItems={faqItems}
 >
   <Fragment slot="Head">
     {currentPage > 2 && <link rel="prev" href={`${DOMAIN}/blog/strona/${currentPage - 1}`} />}

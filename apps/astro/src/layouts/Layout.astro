@@ -7,12 +7,15 @@ import Header from './Header.astro';
 import SmoothScroll from './smooth-scroll.astro';
 import SplashScreen from '../components/ui/SplashScreen.astro';
 import OrganizationSchema from '../global/Schema/OrganizationSchema.astro';
+import FaqSchema from '../global/Schema/FaqSchema.astro';
+import type { FaqItem } from '../utils/faq.fetch';
 
 type Props = HeadProps & {
   footerBackground?: string;
+  faqItems?: FaqItem[];
 };
 
-const { footerBackground, ...props } = Astro.props;
+const { footerBackground, faqItems, ...props } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,6 +23,7 @@ const { footerBackground, ...props } = Astro.props;
   <head>
     <Head {...props} />
     <OrganizationSchema />
+    {faqItems && faqItems.length > 0 && <FaqSchema faqItems={faqItems} />}
     <script is:inline src="https://cdn.usefathom.com/script.js" data-site="XFDBCWQI" defer></script>
     <script is:inline>
       const currentUrl = window.location.href;

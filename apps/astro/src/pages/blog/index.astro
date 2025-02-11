@@ -5,8 +5,7 @@ import { type Props as BlogCardProps } from '@/src/components/ui/BlogCard/BlogCa
 import { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import Layout from '@/src/layouts/Layout.astro';
-import metadataFetch from '@/src/utils/metadata.fetch';
-import sanityFetch from '@/src/utils/sanity.fetch';
+import { fetchPageData } from '@/src/utils/fetch-page-data';
 
 export const ITEMS_PER_PAGE = 8;
 const currentPage = 1;
@@ -24,8 +23,9 @@ export type QueryProps = {
   components: ComponentsProps;
 };
 
-const page = await sanityFetch<QueryProps>({
-  query: `
+const data = await fetchPageData(
+  'Blog_Page',
+  `
     *[_type == "Blog_Page"][0] {
         name,
         "slug": slug.current,
@@ -35,13 +35,19 @@ const page = await sanityFetch<QueryProps>({
         ${Listing_Query({ currentPage })}
         ${Components_Query} 
     }
-  `,
-});
+  `
+);
 
-const metadata = await metadataFetch(page.slug);
+if (!data) {
+  return Astro.redirect('/404');
+}
+
+const { page, metadata, faqItems } = data as typeof data & {
+  page: QueryProps;
+};
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata}>
+<Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems}>
   <Breadcrumbs data={[{ name: page.name, path: page.slug }]} firstItemType="Blog_Page" />
   <Listing
     heading={page.heading}

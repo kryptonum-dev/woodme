@@ -4,10 +4,10 @@ import { ITEMS_PER_PAGE, type QueryProps } from '../index.astro';
 import { PortableTextQuery } from '@/src/components/ui/portable-text';
 import Listing, { Listing_Query } from '@/src/components/Blog/Listing.astro';
 import Components, { Components_Query } from '@/src/components/Components.astro';
-import metadataFetch from '@/src/utils/metadata.fetch';
 import Layout from '@/src/layouts/Layout.astro';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import { DOMAIN } from '@/src/global/constants';
+import { fetchPageData } from '@/src/utils/fetch-page-data';
 
 export const totalPosts = await sanityFetch<number>({
   query: `count(*[_type == "BlogPost_Collection"])`,
@@ -21,12 +21,13 @@ export async function getStaticPaths() {
 }
 
 const { page: _page } = Astro.params;
-const currentPage = parseInt(_page);
+const currentPage = parseInt(_page!);
 
 if (currentPage < 2 || currentPage > totalPages) return Astro.rewrite('/404');
 
-const page = await sanityFetch<QueryProps>({
-  query: `
+const data = await fetchPageData(
+  'Blog_Page',
+  `
     *[_type == "Blog_Page"][0] {
         name,
         "slug": slug.current,
@@ -36,10 +37,16 @@ const page = await sanityFetch<QueryProps>({
         ${Listing_Query({ currentPage })}
         ${Components_Query} 
     }
-  `,
-});
+  `
+);
 
-const metadata = await metadataFetch(page.slug);
+if (!data) {
+  return Astro.redirect('/404');
+}
+
+const { page, metadata, faqItems } = data as typeof data & {
+  page: QueryProps;
+};
 ---
 
 <Layout
@@ -48,6 +55,7 @@ const metadata = await metadataFetch(page.slug);
   openGraphImage={metadata.openGraphImage}
   path={Astro.url.pathname}
   footerBackground={page.footerBackground}
+  faqItems={faqItems}
 >
   <Fragment slot="Head">
     {currentPage > 2 && <link rel="prev" href={`${DOMAIN}/blog/strona/${currentPage - 1}`} />}
