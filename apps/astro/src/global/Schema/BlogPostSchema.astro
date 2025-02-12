@@ -1,4 +1,6 @@
 ---
+import { DOMAIN } from '../constants';
+
 export type BlogSchema = {
   title: string;
   description: string;
@@ -24,11 +26,13 @@ const schema = {
     '@type': 'Organization',
     name: 'Woodme',
     '@id': 'https://woodme.pl/#organization',
+    url: DOMAIN,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Woodme',
     '@id': 'https://woodme.pl/#organization',
+    url: DOMAIN,
   },
   mainEntityOfPage: {
     '@type': 'WebPage',
