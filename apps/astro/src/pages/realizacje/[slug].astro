@@ -11,6 +11,7 @@ import type { PortableTextValue } from '@/src/components/ui/portable-text';
 import type { Props as ProjectCardProps } from '@/src/components/ui/ProjectCard.astro';
 import type { ComponentsProps } from '@/src/components/Components.astro';
 import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
+import { fetchSingleReview } from '@/src/utils/reviews.fetch';
 
 export const projects = await sanityFetch<{ slug: string }[]>({
   query: `
@@ -57,9 +58,17 @@ const data = await fetchPageData(
 if (!data) return Astro.rewrite('/404');
 
 const { page, metadata, faqItems } = data as typeof data & { page: QueryProps };
+
+// Fetch single review from components
+const singleReview = await fetchSingleReview(page.components);
 ---
 
-<Layout {...metadata} footerBackground={page.footerBackground} faqItems={faqItems}>
+<Layout
+  {...metadata}
+  footerBackground={page.footerBackground}
+  faqItems={faqItems}
+  reviews={singleReview ? [singleReview] : undefined}
+>
   <Breadcrumbs
     data={[
       { name: 'Realizacje', path: slugPrefix },

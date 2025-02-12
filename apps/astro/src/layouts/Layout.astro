@@ -8,14 +8,17 @@ import SmoothScroll from './smooth-scroll.astro';
 import SplashScreen from '../components/ui/SplashScreen.astro';
 import OrganizationSchema from '../global/Schema/OrganizationSchema.astro';
 import FaqSchema from '../global/Schema/FaqSchema.astro';
+import ReviewsSchema from '../global/Schema/ReviewsSchema.astro';
 import type { FaqItem } from '../utils/faq.fetch';
+import type { PlainReview } from '../utils/reviews.fetch';
 
 type Props = HeadProps & {
   footerBackground?: string;
   faqItems?: FaqItem[];
+  reviews?: PlainReview[];
 };
 
-const { footerBackground, faqItems, ...props } = Astro.props;
+const { footerBackground, faqItems, reviews, ...props } = Astro.props;
 ---
 
 <!doctype html>
@@ -24,6 +27,7 @@ const { footerBackground, faqItems, ...props } = Astro.props;
     <Head {...props} />
     <OrganizationSchema />
     {faqItems && faqItems.length > 0 && <FaqSchema faqItems={faqItems} />}
+    {reviews && reviews.length > 0 && <ReviewsSchema reviews={reviews} />}
     <script is:inline src="https://cdn.usefathom.com/script.js" data-site="XFDBCWQI" defer></script>
     <script is:inline>
       const currentUrl = window.location.href;
