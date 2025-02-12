@@ -9,7 +9,7 @@ import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import Listing from '@/src/components/Blog/Listing.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
 import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
-import BlogPageSchema from '@/src/global/Schema/BlogPageSchema.astro';
+import BlogPageSchema, { type BlogPageSchemaProps } from '@/src/global/Schema/BlogPageSchema.astro';
 
 export const slugPrefix = '/blog/kategoria/';
 
@@ -60,14 +60,21 @@ const { page, metadata, faqItems } = data as typeof data & {
 };
 
 const blogSchema = {
-  name: `${page.name} | ${currentCategory.name}`,
-  description: metadata.description,
-  url: `${Astro.site}blog/kategoria/${_category}`,
-  image: metadata.openGraphImage,
-};
+  name: `${metadata?.title} - Kategoria: ${currentCategory.name}`,
+  description: metadata?.description,
+  url: `${page.slug}/kategoria/${currentCategory.slug}`,
+  posts: page.listing.map((post) => ({
+    name: post.name,
+    url: `${page.slug}${post.slug}`,
+    description: post.seo?.description,
+    image: post.image?.asset?.url,
+    title: post.seo?.title,
+    datePublished: post._createdAt,
+  })),
+} as BlogPageSchemaProps;
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems}>
+<Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems} blogPageSchema={blogSchema}>
   <BlogPageSchema slot="schema" {...blogSchema} />
   <Breadcrumbs
     data={[

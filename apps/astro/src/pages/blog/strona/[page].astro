@@ -9,7 +9,7 @@ import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import { DOMAIN } from '@/src/global/constants';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
 import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
-import BlogPageSchema from '@/src/global/Schema/BlogPageSchema.astro';
+import BlogPageSchema, { type BlogPageSchemaProps } from '@/src/global/Schema/BlogPageSchema.astro';
 
 export const totalPosts = await sanityFetch<number>({
   query: `count(*[_type == "BlogPost_Collection"])`,
@@ -51,11 +51,18 @@ const { page, metadata, faqItems } = data as typeof data & {
 };
 
 const blogSchema = {
-  name: `${page.name} | Strona ${currentPage}`,
-  description: metadata.description,
-  url: `${Astro.site}blog/strona/${currentPage}`,
-  image: metadata.openGraphImage,
-};
+  name: `${metadata?.title} - Strona ${currentPage}`,
+  description: metadata?.description,
+  url: `${page.slug}/strona/${currentPage}`,
+  posts: page.listing.map((post) => ({
+    name: post.name,
+    url: `${page.slug}${post.slug}`,
+    description: post.seo?.description,
+    image: post.image?.asset?.url,
+    title: post.seo?.title,
+    datePublished: post._createdAt,
+  })),
+} as BlogPageSchemaProps;
 ---
 
 <Layout
@@ -65,6 +72,7 @@ const blogSchema = {
   path={Astro.url.pathname}
   footerBackground={page.footerBackground}
   faqItems={faqItems}
+  blogPageSchema={blogSchema}
 >
   <BlogPageSchema slot="schema" {...blogSchema} />
   <Fragment slot="Head">
