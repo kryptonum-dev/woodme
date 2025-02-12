@@ -13,7 +13,17 @@ const {
   googleData,
 } = await sanityFetch<{
   socials: { facebook: string; instagram: string; linkedin: string; tiktok: string };
-  OrganizationSchema: { name: string; description: string };
+  OrganizationSchema: {
+    name: string;
+    description: string;
+    businessDetails?: {
+      vatID?: string;
+      regon?: string;
+      legalName?: string;
+      foundingDate?: string;
+      founder?: string;
+    };
+  };
   email: string;
   phone: string;
   openHours: { from: string; to: string; closedWeekends: boolean };
@@ -32,6 +42,8 @@ const {
     }
   `,
 });
+
+console.log(organizationSchema);
 
 const schema = {
   '@context': 'https://schema.org',
@@ -67,7 +79,7 @@ const schema = {
         : ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
       opens: openHours.from,
       closes: openHours.to,
-      validFrom: '2021-06-28',
+      validFrom: organizationSchema.businessDetails?.foundingDate,
     },
   }),
   ...(address && {
@@ -95,16 +107,22 @@ const schema = {
     ...(phone && { telephone: phone }),
     availableLanguage: ['pl'],
   },
-  foundingDate: '2021-06-28',
-  vatID: 'PL6312381386',
-  taxID: '6312381386',
+  ...(organizationSchema.businessDetails?.foundingDate && {
+    foundingDate: organizationSchema.businessDetails.foundingDate,
+  }),
+  ...(organizationSchema.businessDetails?.vatID && {
+    vatID: organizationSchema.businessDetails.vatID,
+    taxID: organizationSchema.businessDetails.vatID,
+  }),
   naics: '337110',
-  iso6523Code: '0191:364594517',
-  legalName: 'WoodMe Piotr Knitter',
-  founder: {
-    '@type': 'Person',
-    name: 'Piotr Knitter',
-  },
+  ...(organizationSchema.businessDetails?.regon && { iso6523Code: `0191:${organizationSchema.businessDetails.regon}` }),
+  ...(organizationSchema.businessDetails?.legalName && { legalName: organizationSchema.businessDetails.legalName }),
+  ...(organizationSchema.businessDetails?.founder && {
+    founder: {
+      '@type': 'Person',
+      name: organizationSchema.businessDetails.founder,
+    },
+  }),
   areaServed: {
     '@type': 'Place',
     address: {
