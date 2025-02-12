@@ -19,14 +19,13 @@ const { name, description, url, posts } = Astro.props as BlogPageSchemaProps;
 
 const schema = {
   '@context': 'https://schema.org',
-  '@type': 'Blog',
+  '@type': 'CollectionPage',
   '@id': url,
   name,
   description,
   url,
-
   ...(posts && {
-    blogPosts: {
+    mainEntity: {
       '@type': 'ItemList',
       itemListElement: posts.map((post, index) => ({
         '@type': 'ListItem',
