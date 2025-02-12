@@ -17,8 +17,6 @@ export type BlogPageSchemaProps = {
 
 const { name, description, url, posts } = Astro.props as BlogPageSchemaProps;
 
-console.log(posts?.[0]);
-
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'Blog',
@@ -59,8 +57,6 @@ const schema = {
     },
   }),
 };
-
-console.log(schema.blogPosts?.itemListElement);
 ---
 
 <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
