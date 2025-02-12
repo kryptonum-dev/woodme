@@ -17,6 +17,8 @@ export type BlogPageSchemaProps = {
 
 const { name, description, url, posts } = Astro.props as BlogPageSchemaProps;
 
+console.log(posts?.[0]);
+
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'Blog',
@@ -31,12 +33,11 @@ const schema = {
       itemListElement: posts.map((post, index) => ({
         '@type': 'ListItem',
         position: index + 1,
-        name: post.name,
-        headline: post.title,
         item: {
           '@type': 'BlogPosting',
           '@id': post.url,
           name: post.name,
+          headline: post.title,
           url: post.url,
           ...(post.description && { description: post.description }),
           ...(post.image && { image: [post.image] }),
@@ -58,6 +59,8 @@ const schema = {
     },
   }),
 };
+
+console.log(schema.blogPosts?.itemListElement);
 ---
 
 <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
