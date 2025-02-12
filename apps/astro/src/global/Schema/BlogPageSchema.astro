@@ -1,10 +1,13 @@
 ---
+import { DOMAIN } from '../constants';
+
 export type BlogPageSchemaProps = {
   name: string;
   description?: string;
   url: string;
   posts?: {
     name: string;
+    title: string;
     url: string;
     description?: string;
     image?: string;
@@ -21,12 +24,15 @@ const schema = {
   name,
   description,
   url,
+
   ...(posts && {
     blogPosts: {
       '@type': 'ItemList',
       itemListElement: posts.map((post, index) => ({
         '@type': 'ListItem',
         position: index + 1,
+        name: post.name,
+        headline: post.title,
         item: {
           '@type': 'BlogPosting',
           '@id': post.url,
@@ -35,6 +41,18 @@ const schema = {
           ...(post.description && { description: post.description }),
           ...(post.image && { image: [post.image] }),
           ...(post.datePublished && { datePublished: post.datePublished }),
+          author: {
+            '@type': 'Organization',
+            name: 'Woodme',
+            '@id': 'https://woodme.pl/#organization',
+            url: DOMAIN,
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: 'Woodme',
+            '@id': 'https://woodme.pl/#organization',
+            url: DOMAIN,
+          },
         },
       })),
     },

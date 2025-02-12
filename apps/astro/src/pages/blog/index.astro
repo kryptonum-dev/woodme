@@ -4,6 +4,7 @@ import Components, { Components_Query, type ComponentsProps } from '@/src/compon
 import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
 import { type Props as BlogCardProps } from '@/src/components/ui/BlogCard/BlogCard.astro';
 import { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
+import type { BlogPageSchemaProps } from '@/src/global/Schema/BlogPageSchema.astro';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import Layout from '@/src/layouts/Layout.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
@@ -55,10 +56,12 @@ const blogSchema = {
   posts: page.listing.map((post) => ({
     name: post.name,
     url: `${page.slug}${post.slug}`,
-    description: post.metaDescription,
+    description: post.seo?.description,
     image: post.image?.asset?.url,
+    title: post.seo?.title,
+    datePublished: post._createdAt,
   })),
-};
+} as BlogPageSchemaProps;
 ---
 
 <Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems} blogPageSchema={blogSchema}>
