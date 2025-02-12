@@ -1,31 +1,19 @@
 ---
-import sanityFetch from '../utils/sanity.fetch';
-import metadataFetch from '../utils/metadata.fetch';
-import Components, { Components_Query, type ComponentsProps } from '../components/Components.astro';
 import Layout from '../layouts/Layout.astro';
 import Breadcrumbs from '../layouts/Breadcrumbs.astro';
+import { fetchPageData } from '../utils/fetch-page-data';
+import Components from '../components/Components.astro';
 
-type QueryProps = {
-  slug: string;
-  footerBackground: string;
-  firstItemType: string;
-  components: ComponentsProps;
-};
+const data = await fetchPageData('Index_Page');
 
-const page = await sanityFetch<QueryProps>({
-  query: `
-    *[_type == "Index_Page"][0] {
-      "slug": slug.current,
-      "footerBackground": components[-1].background,
-      ${Components_Query}
-    }
-  `,
-});
+if (!data) {
+  return Astro.redirect('/404');
+}
 
-const metadata = await metadataFetch(page.slug);
+const { page, metadata, faqItems } = data;
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata}>
+<Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems}>
   <Breadcrumbs />
   <Components data={page.components} />
 </Layout>

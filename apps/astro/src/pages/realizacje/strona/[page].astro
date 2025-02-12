@@ -4,10 +4,12 @@ import { ITEMS_PER_PAGE, type QueryProps } from '../index.astro';
 import { PortableTextQuery } from '@/src/components/ui/portable-text';
 import Listing, { Listing_Query } from '@/src/components/Project/Listing.astro';
 import Components, { Components_Query } from '@/src/components/Components.astro';
-import metadataFetch from '@/src/utils/metadata.fetch';
 import Layout from '@/src/layouts/Layout.astro';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import { DOMAIN } from '@/src/global/constants';
+import { fetchPageData } from '@/src/utils/fetch-page-data';
+import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
+import { fetchReviews } from '@/src/utils/reviews.fetch';
 
 export const totalPosts = await sanityFetch<number>({
   query: `count(*[_type == "Project_Collection"])`,
@@ -25,20 +27,28 @@ const currentPage = parseInt(_page);
 
 if (currentPage < 2 || currentPage > totalPages) return Astro.rewrite('/404');
 
-const page = await sanityFetch<QueryProps>({
-  query: `
+const data = await fetchPageData(
+  'Projects_Page',
+  `
     *[_type == "Projects_Page"][0] {
         name,
         "slug": slug.current,
         ${PortableTextQuery('heading')}
         ${Listing_Query({ currentPage })}
         ${Components_Query} 
-        "footerBackground": components[-1].background,
-    }
-  `,
-});
+        ${Faq_Questions_Query}
+  `
+);
 
-const metadata = await metadataFetch(page.slug);
+if (!data) {
+  return Astro.redirect('/404');
+}
+
+const { page, metadata, faqItems } = data as typeof data & {
+  page: QueryProps;
+};
+
+const reviews = await fetchReviews();
 ---
 
 <Layout
@@ -47,6 +57,8 @@ const metadata = await metadataFetch(page.slug);
   openGraphImage={metadata.openGraphImage}
   path={Astro.url.pathname}
   footerBackground={page.footerBackground}
+  faqItems={faqItems}
+  reviews={reviews}
 >
   <Fragment slot="Head">
     {currentPage > 2 && <link rel="prev" href={`${DOMAIN}/realizacje/strona/${currentPage - 1}`} />}

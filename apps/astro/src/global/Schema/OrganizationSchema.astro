@@ -1,0 +1,134 @@
+---
+import sanityFetch from '@/utils/sanity.fetch';
+import { DOMAIN } from '@/global/constants';
+import icon from '@/assets/icon.png';
+
+const {
+  socials,
+  OrganizationSchema: organizationSchema,
+  email,
+  phone,
+  openHours,
+  address,
+  googleData,
+} = await sanityFetch<{
+  socials: { facebook: string; instagram: string; linkedin: string; tiktok: string };
+  OrganizationSchema: {
+    name: string;
+    description: string;
+    businessDetails?: {
+      vatID?: string;
+      regon?: string;
+      legalName?: string;
+      foundingDate?: string;
+      founder?: string;
+    };
+  };
+  email: string;
+  phone: string;
+  openHours: { from: string; to: string; closedWeekends: boolean };
+  address: { addressText: string; mapLink: string };
+  googleData: { rating: number; user_ratings_total: number };
+}>({
+  query: `
+    *[_type == "global"][0] {
+      socials,
+      OrganizationSchema,
+      email,
+      phone,
+      openHours,
+      address,
+      googleData,
+    }
+  `,
+});
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': ['LocalBusiness', 'Manufacturer', 'HomeAndConstructionBusiness'],
+  name: organizationSchema.name,
+  description: organizationSchema.description,
+  url: DOMAIN,
+  ...(email && { email: email }),
+  ...(phone && { telephone: phone }),
+  sameAs: [socials.facebook, socials.instagram, socials.linkedin, socials.tiktok].filter(Boolean),
+  priceRange: '$$',
+  image: [
+    {
+      '@type': 'ImageObject',
+      url: icon.src,
+      width: '512',
+      height: '512',
+    },
+  ],
+  logo: {
+    '@type': 'ImageObject',
+    url: icon.src,
+    width: '512',
+    height: '512',
+    caption: organizationSchema.name,
+  },
+  '@id': `${DOMAIN}/#organization`,
+  ...(openHours && {
+    openingHoursSpecification: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: openHours.closedWeekends
+        ? ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+        : ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: openHours.from,
+      closes: openHours.to,
+      validFrom: organizationSchema.businessDetails?.foundingDate,
+    },
+  }),
+  ...(address && {
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: address.addressText,
+      addressLocality: 'Tychy',
+      postalCode: '43-100',
+      addressCountry: 'PL',
+    },
+  }),
+  ...(googleData && {
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: googleData.rating,
+      ratingCount: googleData.user_ratings_total,
+      bestRating: '5',
+      worstRating: '1',
+    },
+  }),
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer service',
+    ...(email && { email: email }),
+    ...(phone && { telephone: phone }),
+    availableLanguage: ['pl'],
+  },
+  ...(organizationSchema.businessDetails?.foundingDate && {
+    foundingDate: organizationSchema.businessDetails.foundingDate,
+  }),
+  ...(organizationSchema.businessDetails?.vatID && {
+    vatID: organizationSchema.businessDetails.vatID,
+    taxID: organizationSchema.businessDetails.vatID,
+  }),
+  naics: '337110',
+  ...(organizationSchema.businessDetails?.regon && { iso6523Code: `0191:${organizationSchema.businessDetails.regon}` }),
+  ...(organizationSchema.businessDetails?.legalName && { legalName: organizationSchema.businessDetails.legalName }),
+  ...(organizationSchema.businessDetails?.founder && {
+    founder: {
+      '@type': 'Person',
+      name: organizationSchema.businessDetails.founder,
+    },
+  }),
+  areaServed: {
+    '@type': 'Place',
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'PL',
+    },
+  },
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />

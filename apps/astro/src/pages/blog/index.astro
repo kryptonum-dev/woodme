@@ -1,12 +1,13 @@
 ---
 import Listing, { Listing_Query } from '@/src/components/Blog/Listing.astro';
 import Components, { Components_Query, type ComponentsProps } from '@/src/components/Components.astro';
+import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
 import { type Props as BlogCardProps } from '@/src/components/ui/BlogCard/BlogCard.astro';
 import { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
+import type { BlogPageSchemaProps } from '@/src/global/Schema/BlogPageSchema.astro';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import Layout from '@/src/layouts/Layout.astro';
-import metadataFetch from '@/src/utils/metadata.fetch';
-import sanityFetch from '@/src/utils/sanity.fetch';
+import { fetchPageData } from '@/src/utils/fetch-page-data';
 
 export const ITEMS_PER_PAGE = 8;
 const currentPage = 1;
@@ -24,8 +25,9 @@ export type QueryProps = {
   components: ComponentsProps;
 };
 
-const page = await sanityFetch<QueryProps>({
-  query: `
+const data = await fetchPageData(
+  'Blog_Page',
+  `
     *[_type == "Blog_Page"][0] {
         name,
         "slug": slug.current,
@@ -34,14 +36,35 @@ const page = await sanityFetch<QueryProps>({
         ${PortableTextQuery('paragraph')}   
         ${Listing_Query({ currentPage })}
         ${Components_Query} 
+        ${Faq_Questions_Query}
     }
-  `,
-});
+  `
+);
 
-const metadata = await metadataFetch(page.slug);
+if (!data) {
+  return Astro.redirect('/404');
+}
+
+const { page, metadata, faqItems } = data as typeof data & {
+  page: QueryProps;
+};
+
+const blogSchema = {
+  name: metadata?.title,
+  description: metadata?.description,
+  url: page.slug,
+  posts: page.listing.map((post) => ({
+    name: post.name,
+    url: `${page.slug}${post.slug}`,
+    description: post.seo?.description,
+    image: post.image?.asset?.url,
+    title: post.seo?.title,
+    datePublished: post._createdAt,
+  })),
+} as BlogPageSchemaProps;
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata}>
+<Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems} blogPageSchema={blogSchema}>
   <Breadcrumbs data={[{ name: page.name, path: page.slug }]} firstItemType="Blog_Page" />
   <Listing
     heading={page.heading}

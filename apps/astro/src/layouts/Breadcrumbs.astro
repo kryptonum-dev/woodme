@@ -16,6 +16,9 @@ const breadcrumbsData = [{ name: 'Strona główna', path: '/' }, ...data];
 const schema = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
+  '@id': `${DOMAIN}#breadcrumb`,
+  'itemListOrder': 'ItemListOrderAscending',
+  'numberOfItems': breadcrumbsData.length,
   itemListElement: breadcrumbsData.map(({ name, path }, i) => ({
     '@type': 'ListItem',
     position: i + 1,

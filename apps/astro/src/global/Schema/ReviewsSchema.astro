@@ -1,0 +1,29 @@
+---
+import { DOMAIN } from '@/global/constants';
+import type { PlainReview } from '@/src/utils/reviews.fetch';
+
+type Props = {
+  reviews: PlainReview[];
+};
+
+const { reviews } = Astro.props;
+
+const reviewsSchema = reviews.map((review) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Review',
+  datePublished: review.date,
+  name: `${review.service} - Opinia Klienta`,
+  reviewBody: review.review,
+  author: {
+    '@type': 'Person',
+    name: review.name,
+  },
+  itemReviewed: {
+    '@type': 'LocalBusiness',
+    name: 'WoodMe',
+    '@id': `${DOMAIN}/#organization`,
+  },
+}));
+---
+
+{reviewsSchema.map((schema) => <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />)}

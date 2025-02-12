@@ -3,11 +3,14 @@ export const slugPrefix = '/blog/';
 
 import Content, { Content_Query, type ContentProps } from '@/src/components/Blog/Post/index.astro';
 import sanityFetch from '@/src/utils/sanity.fetch';
-import metadataFetch from '@/src/utils/metadata.fetch';
 import Components, { Components_Query, type ComponentsProps } from '@/src/components/Components.astro';
 import Layout from '@/src/layouts/Layout.astro';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import { Hero_Query, type HeroProps } from '@/src/components/Blog/Post/Hero.astro';
+import { fetchPageData } from '@/src/utils/fetch-page-data';
+import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
+import { DOMAIN } from '@/src/global/constants';
+import { ArticleToPlainText } from '@/src/utils/get-estimated-reading-time';
 
 export const blogPosts = await sanityFetch<{ slug: string }[]>({
   query: `
@@ -20,35 +23,54 @@ export async function getStaticPaths() {
   return blogPosts?.map(({ slug }) => ({ params: { slug: slug.replace(slugPrefix, '') } }));
 }
 
-const { slug: _slug } = Astro.params;
-const slug = `${slugPrefix}${_slug}`;
-
-if (!blogPosts.find(({ slug }) => slug === slug)) return Astro.rewrite('/404');
-
-const page = await sanityFetch<{
+type QueryProps = {
   name: string;
   hero: HeroProps;
   content: ContentProps;
   components: ComponentsProps;
   footerBackground: string;
-}>({
-  query: `
-    *[_type == 'BlogPost_Collection' && slug.current == $slug][0] {
-      name,
-      ${Hero_Query}
-      ${Content_Query}
-      ${Components_Query}
-      "footerBackground": components[-1].background,
-    }
-  `,
-  params: { slug: slug },
-});
-if (!page) return Astro.rewrite('/404');
+  faqItems?: { question: string; answer: string }[];
+};
 
-const metadata = await metadataFetch(slug);
+const { slug: _slug } = Astro.params;
+const slug = `${slugPrefix}${_slug}`;
+
+if (!blogPosts.find(({ slug }) => slug === slug)) return Astro.rewrite('/404');
+
+const data = await fetchPageData(
+  'BlogPost_Collection',
+  `*[_type == 'BlogPost_Collection' && slug.current == $slug][0] {
+  name,
+  "slug": slug.current,
+  "metadata": {
+    "title": coalesce(seo.title, name),
+    "description": seo.description,
+  },
+  ${Hero_Query}
+  ${Content_Query}
+  ${Components_Query}
+  "footerBackground": components[-1].background,
+  ${Faq_Questions_Query}
+}`,
+  { slug: slug }
+);
+
+if (!data) return Astro.rewrite('/404');
+
+const { page, metadata, faqItems } = data as typeof data & { page: QueryProps };
+
+const blogSchema = {
+  title: metadata.title,
+  description: metadata.description,
+  publishDate: page.hero._createdAt as unknown as string,
+  updatedDate: page.hero._updatedAt as unknown as string,
+  content: ArticleToPlainText(page.content.content),
+  image: page.hero.image.asset.url,
+  url: `${DOMAIN}${slug}`,
+};
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata}>
+<Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems} blogSchema={blogSchema}>
   <Breadcrumbs
     data={[
       { name: 'Blog', path: slugPrefix },
@@ -58,4 +80,4 @@ const metadata = await metadataFetch(slug);
   />
   <Content {...page.content} hero={page.hero} />
   <Components data={page.components} hasPreviousSections={true} />
-</Layout>
+</Layout>;
