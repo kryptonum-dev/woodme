@@ -9,6 +9,7 @@ import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import Listing from '@/src/components/Blog/Listing.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
 import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
+import BlogPageSchema from '@/src/global/Schema/BlogPageSchema.astro';
 
 export const slugPrefix = '/blog/kategoria/';
 
@@ -57,9 +58,17 @@ if (!data) {
 const { page, metadata, faqItems } = data as typeof data & {
   page: QueryProps;
 };
+
+const blogSchema = {
+  name: `${page.name} | ${currentCategory.name}`,
+  description: metadata.description,
+  url: `${Astro.site}blog/kategoria/${_category}`,
+  image: metadata.openGraphImage,
+};
 ---
 
 <Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems}>
+  <BlogPageSchema slot="schema" {...blogSchema} />
   <Breadcrumbs
     data={[
       { name: page.name, path: page.slug },

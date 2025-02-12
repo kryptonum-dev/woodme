@@ -8,6 +8,7 @@ import ReadMore from './ReadMore/ReadMore.tsx';
 export const BlogCard_Query = `
   ${ImageDataQuery('image')}
   name,
+  "metaDescription": seo.description,
   "slug": slug.current,
   ${ContentPT_Query}
 `;
@@ -16,6 +17,7 @@ export type Props = {
   image: ImageDataProps;
   name: string;
   slug: string;
+  metaDescription: string;
   content: PortableTextProps['value'];
   imgProps: {
     sizes: string;

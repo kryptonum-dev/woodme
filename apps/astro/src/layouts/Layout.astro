@@ -12,15 +12,18 @@ import ReviewsSchema from '../global/Schema/ReviewsSchema.astro';
 import BlogPostSchema, { type BlogSchema } from '../global/Schema/BlogPostSchema.astro';
 import type { FaqItem } from '../utils/faq.fetch';
 import type { PlainReview } from '../utils/reviews.fetch';
+import type { BlogPageSchemaProps } from '../global/Schema/BlogPageSchema.astro';
+import BlogPageSchema from '../global/Schema/BlogPageSchema.astro';
 
 type Props = HeadProps & {
   footerBackground?: string;
   faqItems?: FaqItem[];
   reviews?: PlainReview[];
   blogSchema?: BlogSchema;
+  blogPageSchema?: BlogPageSchemaProps;
 };
 
-const { footerBackground, faqItems, reviews, blogSchema, ...props } = Astro.props;
+const { footerBackground, faqItems, reviews, blogSchema, blogPageSchema, ...props } = Astro.props;
 ---
 
 <!doctype html>
@@ -31,6 +34,7 @@ const { footerBackground, faqItems, reviews, blogSchema, ...props } = Astro.prop
     {faqItems && faqItems.length > 0 && <FaqSchema faqItems={faqItems} />}
     {reviews && reviews.length > 0 && <ReviewsSchema reviews={reviews} />}
     {blogSchema && <BlogPostSchema {...blogSchema} />}
+    {blogPageSchema && <BlogPageSchema {...blogPageSchema} />}
     <script is:inline src="https://cdn.usefathom.com/script.js" data-site="XFDBCWQI" defer></script>
     <script is:inline>
       const currentUrl = window.location.href;

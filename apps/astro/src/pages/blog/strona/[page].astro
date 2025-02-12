@@ -9,6 +9,7 @@ import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import { DOMAIN } from '@/src/global/constants';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
 import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
+import BlogPageSchema from '@/src/global/Schema/BlogPageSchema.astro';
 
 export const totalPosts = await sanityFetch<number>({
   query: `count(*[_type == "BlogPost_Collection"])`,
@@ -48,6 +49,13 @@ if (!data) {
 const { page, metadata, faqItems } = data as typeof data & {
   page: QueryProps;
 };
+
+const blogSchema = {
+  name: `${page.name} | Strona ${currentPage}`,
+  description: metadata.description,
+  url: `${Astro.site}blog/strona/${currentPage}`,
+  image: metadata.openGraphImage,
+};
 ---
 
 <Layout
@@ -58,6 +66,7 @@ const { page, metadata, faqItems } = data as typeof data & {
   footerBackground={page.footerBackground}
   faqItems={faqItems}
 >
+  <BlogPageSchema slot="schema" {...blogSchema} />
   <Fragment slot="Head">
     {currentPage > 2 && <link rel="prev" href={`${DOMAIN}/blog/strona/${currentPage - 1}`} />}
     {currentPage < totalPages && <link rel="next" href={`${DOMAIN}/blog/strona/${currentPage + 1}`} />}
