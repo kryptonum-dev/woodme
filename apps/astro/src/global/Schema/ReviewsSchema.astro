@@ -12,7 +12,7 @@ const reviewsSchema = reviews.map((review) => ({
   '@context': 'https://schema.org',
   '@type': 'Review',
   datePublished: review.date,
-  name: review.service,
+  name: `${review.service} - Opinia Klienta`,
   reviewBody: review.review,
   author: {
     '@type': 'Person',
