@@ -20,6 +20,11 @@ const schema = {
   datePublished: publishDate,
   dateModified: updatedDate,
   articleBody: content,
+  author: {
+    '@type': 'Organization',
+    name: 'Woodme',
+    '@id': 'https://woodme.pl/#organization',
+  },
   publisher: {
     '@type': 'Organization',
     name: 'Woodme',

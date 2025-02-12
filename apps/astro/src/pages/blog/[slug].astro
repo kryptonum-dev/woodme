@@ -62,8 +62,8 @@ const { page, metadata, faqItems } = data as typeof data & { page: QueryProps };
 const blogSchema = {
   title: metadata.title,
   description: metadata.description,
-  publishDate: (page.hero._createdAt as unknown as string).split('T')[0],
-  updatedDate: (page.hero._updatedAt as unknown as string).split('T')[0],
+  publishDate: page.hero._createdAt as unknown as string,
+  updatedDate: page.hero._updatedAt as unknown as string,
   content: ArticleToPlainText(page.content.content),
   image: page.hero.image.asset.url,
   url: `${DOMAIN}${slug}`,
