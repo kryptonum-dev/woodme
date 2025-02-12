@@ -9,6 +9,8 @@ import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import { Hero_Query, type HeroProps } from '@/src/components/Blog/Post/Hero.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
 import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
+import { DOMAIN } from '@/src/global/constants';
+import { ArticleToPlainText } from '@/src/utils/get-estimated-reading-time';
 
 export const blogPosts = await sanityFetch<{ slug: string }[]>({
   query: `
@@ -27,6 +29,7 @@ type QueryProps = {
   content: ContentProps;
   components: ComponentsProps;
   footerBackground: string;
+  faqItems?: { question: string; answer: string }[];
 };
 
 const { slug: _slug } = Astro.params;
@@ -39,6 +42,10 @@ const data = await fetchPageData(
   `*[_type == 'BlogPost_Collection' && slug.current == $slug][0] {
   name,
   "slug": slug.current,
+  "metadata": {
+    "title": coalesce(seo.title, name),
+    "description": seo.description,
+  },
   ${Hero_Query}
   ${Content_Query}
   ${Components_Query}
@@ -51,9 +58,19 @@ const data = await fetchPageData(
 if (!data) return Astro.rewrite('/404');
 
 const { page, metadata, faqItems } = data as typeof data & { page: QueryProps };
+
+const blogSchema = {
+  title: metadata.title,
+  description: metadata.description,
+  publishDate: (page.hero._createdAt as unknown as string).split('T')[0],
+  updatedDate: (page.hero._updatedAt as unknown as string).split('T')[0],
+  content: ArticleToPlainText(page.content.content),
+  image: page.hero.image.asset.url,
+  url: `${DOMAIN}${slug}`,
+};
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems}>
+<Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems} blogSchema={blogSchema}>
   <Breadcrumbs
     data={[
       { name: 'Blog', path: slugPrefix },
@@ -63,4 +80,4 @@ const { page, metadata, faqItems } = data as typeof data & { page: QueryProps };
   />
   <Content {...page.content} hero={page.hero} />
   <Components data={page.components} hasPreviousSections={true} />
-</Layout>
+</Layout>;
