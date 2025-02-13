@@ -7,7 +7,6 @@ import Header from './Header.astro';
 import SmoothScroll from './smooth-scroll.astro';
 import SplashScreen from '../components/ui/SplashScreen.astro';
 import OrganizationSchema from '../global/Schema/OrganizationSchema.astro';
-import FaqSchema from '../global/Schema/FaqSchema.astro';
 import ReviewsSchema from '../global/Schema/ReviewsSchema.astro';
 import BlogPostSchema, { type BlogSchema } from '../global/Schema/BlogPostSchema.astro';
 import type { FaqItem } from '../utils/faq.fetch';
@@ -23,7 +22,7 @@ type Props = HeadProps & {
   blogPageSchema?: BlogPageSchemaProps;
 };
 
-const { footerBackground, faqItems, reviews, blogSchema, blogPageSchema, ...props } = Astro.props;
+const { footerBackground, reviews, blogSchema, blogPageSchema, ...props } = Astro.props;
 ---
 
 <!doctype html>
@@ -32,7 +31,8 @@ const { footerBackground, faqItems, reviews, blogSchema, blogPageSchema, ...prop
     <Head {...props} />
     <OrganizationSchema />
     <slot name="head" />
-    {faqItems && faqItems.length > 0 && <FaqSchema faqItems={faqItems} />}
+    <slot name="faq-schema" />
+    <!-- {faqItems && faqItems.length > 0 && <FaqSchema faqItems={faqItems} />} -->
     {reviews && reviews.length > 0 && <ReviewsSchema reviews={reviews} />}
     {blogSchema && <BlogPostSchema {...blogSchema} />}
     {blogPageSchema && <BlogPageSchema {...blogPageSchema} />}

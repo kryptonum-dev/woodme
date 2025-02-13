@@ -101,9 +101,11 @@ const openHours = getOpenHours({
   to: contact.openHours.to,
   closeWeekends: contact.openHours.closedWeekends,
 });
+
+const hasExistingSchema = await Astro.slots.has('faq-schema');
 ---
 
-<FaqSchema faqItems={faqItems} slot="head" />
+{!hasExistingSchema && <FaqSchema faqItems={faqItems} slot="faq-schema" />}
 <section class="Faq" id={sectionId}>
   <div class="container">
     <div class="icon">
