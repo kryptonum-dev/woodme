@@ -491,6 +491,21 @@ export default defineType({
               type: 'string',
               title: 'Founder (Full Name)',
             }),
+            defineField({
+              name: 'priceRange',
+              type: 'number',
+              title: 'Price Range',
+              description: 'Select a price range from 1 ($) to 4 ($$$$)',
+              validation: (Rule) => Rule.min(1).max(4).integer(),
+              options: {
+                list: [
+                  { title: '$ - Budget', value: 1 },
+                  { title: '$$ - Moderate', value: 2 },
+                  { title: '$$$ - Expensive', value: 3 },
+                  { title: '$$$$ - Luxury', value: 4 },
+                ],
+              },
+            }),
           ],
         }),
       ],

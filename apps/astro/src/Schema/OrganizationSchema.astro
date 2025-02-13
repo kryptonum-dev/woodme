@@ -22,6 +22,7 @@ const {
       legalName?: string;
       foundingDate?: string;
       founder?: string;
+      priceRange?: number;
     };
   };
   email: string;
@@ -45,7 +46,7 @@ const {
 
 const schema = {
   '@context': 'https://schema.org',
-  '@type': ['Organization', 'HomeAndConstructionBusiness'],
+  '@type': 'GeneralContractor',
   name: organizationSchema.name,
   description: organizationSchema.description,
   url: DOMAIN,
@@ -119,6 +120,9 @@ const schema = {
       '@type': 'Person',
       name: organizationSchema.businessDetails.founder,
     },
+  }),
+  ...(organizationSchema.businessDetails?.priceRange && {
+    priceRange: '$'.repeat(organizationSchema.businessDetails.priceRange),
   }),
   areaServed: {
     '@type': 'Place',
