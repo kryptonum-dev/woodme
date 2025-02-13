@@ -60,10 +60,10 @@ const { page, metadata } = data as typeof data & {
 const blogSchema = {
   name: metadata?.title,
   description: metadata?.description,
-  url: `${page.slug}/kategoria/${currentCategory.slug}`,
+  url: Astro.url.pathname,
   posts: page.listing.map((post) => ({
     name: post.name,
-    url: Astro.url.pathname,
+    url: `${page.slug}${post.slug}`,
     description: post.seo?.description,
     image: post.image?.asset?.url,
     title: post.seo?.title,
