@@ -5,6 +5,8 @@ import PortableText, { PortableTextQuery, type PortableTextValue } from '../../u
 import Slider from './Slider';
 import { portableTextToHtml } from '@/src/utils/portableText-to-html';
 import { optimizeImage } from '@/src/utils/optimize-images';
+import ReviewsSchema from '@/src/global/Schema/ReviewsSchema.astro';
+import { toPlainText } from '@/src/utils/to-plain-text';
 
 export const TestimonialsSlider_Query = `
   _type == "TestimonialsSlider" => {
@@ -77,9 +79,19 @@ const optimizedImages = await Promise.all(
 const clientTestimonials = testimonials.map((testimonial, index) => {
   return { ...testimonial, image: optimizedImages[index], review: portableTextToHtml(testimonial.review as any[]) };
 });
+
+const reviews = testimonials.map((testimonial) => {
+  return {
+    date: testimonial.date,
+    name: testimonial.name,
+    service: testimonial.service,
+    review: toPlainText(testimonial.review),
+  };
+});
 ---
 
 <section class="TestimonialsSlider max-width" id={sectionId}>
+  <ReviewsSchema slot="head" reviews={reviews} />
   <Slider testimonials={clientTestimonials} index={index} client:load googleData={googleData}>
     <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
   </Slider>

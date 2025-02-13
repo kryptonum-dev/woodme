@@ -1,9 +1,13 @@
 ---
 import { DOMAIN } from '@/global/constants';
-import type { PlainReview } from '@/src/utils/reviews.fetch';
 
 type Props = {
-  reviews: PlainReview[];
+  reviews: {
+    date: string;
+    name: string;
+    service: string;
+    review: string;
+  }[];
 };
 
 const { reviews } = Astro.props;

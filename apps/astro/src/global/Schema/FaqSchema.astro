@@ -1,5 +1,6 @@
 ---
 import type { PortableTextValue } from '@/src/components/ui/portable-text';
+import { DOMAIN } from '../constants';
 
 type Props = {
   faqItems: {
@@ -13,6 +14,7 @@ const { faqItems } = Astro.props;
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
+  '@id': `${DOMAIN}/#faq/${crypto.randomUUID()}`,
   mainEntity: faqItems.map((item) => ({
     '@type': 'Question',
     name: item.question,
