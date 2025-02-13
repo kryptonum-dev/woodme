@@ -8,7 +8,6 @@ import Layout from '@/src/layouts/Layout.astro';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import Listing from '@/src/components/Project/Listing.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
-import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
 import { fetchReviews } from '@/src/utils/reviews.fetch';
 export const slugPrefix = '/realizacje/kategoria/';
 
@@ -44,7 +43,6 @@ const data = await fetchPageData(
         ${Listing_Query({ currentPage: 1, currentCategorySlug: categorySlug })}
         ${Components_Query} 
         "footerBackground": components[-1].background,
-        ${Faq_Questions_Query}
   `
 );
 
@@ -52,14 +50,14 @@ if (!data) {
   return Astro.redirect('/404');
 }
 
-const { page, metadata, faqItems } = data as typeof data & {
+const { page, metadata } = data as typeof data & {
   page: QueryProps;
 };
 
 const reviews = await fetchReviews();
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems} reviews={reviews}>
+<Layout footerBackground={page.footerBackground} {...metadata} reviews={reviews}>
   <Breadcrumbs
     data={[
       { name: page.name, path: page.slug },

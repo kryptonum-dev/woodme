@@ -10,10 +10,10 @@ if (!data) {
   return Astro.redirect('/404');
 }
 
-const { page, metadata, faqItems } = data;
+const { page, metadata } = data;
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems}>
+<Layout footerBackground={page.footerBackground} {...metadata}>
   <Breadcrumbs />
   <Components data={page.components} />
 </Layout>

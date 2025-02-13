@@ -4,7 +4,6 @@ import { ButtonDataQuery, type ButtonDataProps } from '@/src/components/ui/butto
 import Button from '@/src/components/ui/button/Button.astro';
 import PortableText, { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
 import FormWrapper from './Form/FormWrapper.astro';
-import FaqSchema from '@/src/global/Schema/FaqSchema.astro';
 
 export const Faq_Questions_Query = `
   "faqSections": components[]{
@@ -101,11 +100,8 @@ const openHours = getOpenHours({
   to: contact.openHours.to,
   closeWeekends: contact.openHours.closedWeekends,
 });
-
-const hasExistingSchema = await Astro.slots.has('faq-schema');
 ---
 
-{!hasExistingSchema && <FaqSchema faqItems={faqItems} slot="faq-schema" />}
 <section class="Faq" id={sectionId}>
   <div class="container">
     <div class="icon">

@@ -9,12 +9,6 @@ export type QueryProps = {
   footerBackground: string;
   firstItemType: string;
   components: ComponentsProps;
-  faqSections: {
-    faqItems: {
-      question: string;
-      answer: string;
-    }[];
-  }[];
 };
 
 export const fetchPageData = async (pageName: string, customQuery?: string, params?: Record<string, any>) => {
@@ -28,14 +22,6 @@ export const fetchPageData = async (pageName: string, customQuery?: string, para
             "footerBackground": components[-1].background,
             "firstItemType": components[0]._type,
             ${Components_Query}
-            "faqSections": components[]{
-              _type == "Faq" => {
-                 faqItems[] -> {
-                  question,
-                  ${PortableTextQuery('answer')}
-                }
-              }
-            },
           }
         `,
     params,
@@ -45,12 +31,8 @@ export const fetchPageData = async (pageName: string, customQuery?: string, para
 
   const metadata = await metadataFetch(page.slug);
 
-  const faqItems =
-    page.faqSections?.filter((section) => section?.faqItems).flatMap((section) => section.faqItems) || [];
-
   return {
     page,
     metadata,
-    faqItems,
   };
 };

@@ -1,7 +1,6 @@
 ---
 import Listing, { Listing_Query } from '@/src/components/Blog/Listing.astro';
 import Components, { Components_Query, type ComponentsProps } from '@/src/components/Components.astro';
-import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
 import { type Props as BlogCardProps } from '@/src/components/ui/BlogCard/BlogCard.astro';
 import { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
 import type { BlogPageSchemaProps } from '@/src/global/Schema/BlogPageSchema.astro';
@@ -35,8 +34,7 @@ const data = await fetchPageData(
         ${PortableTextQuery('heading')}
         ${PortableTextQuery('paragraph')}   
         ${Listing_Query({ currentPage })}
-        ${Components_Query} 
-        ${Faq_Questions_Query}
+        ${Components_Query}
     }
   `
 );
@@ -45,7 +43,7 @@ if (!data) {
   return Astro.redirect('/404');
 }
 
-const { page, metadata, faqItems } = data as typeof data & {
+const { page, metadata } = data as typeof data & {
   page: QueryProps;
 };
 
@@ -64,7 +62,7 @@ const blogSchema = {
 } as BlogPageSchemaProps;
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems} blogPageSchema={blogSchema}>
+<Layout footerBackground={page.footerBackground} {...metadata} blogPageSchema={blogSchema}>
   <Breadcrumbs data={[{ name: page.name, path: page.slug }]} firstItemType="Blog_Page" />
   <Listing
     heading={page.heading}

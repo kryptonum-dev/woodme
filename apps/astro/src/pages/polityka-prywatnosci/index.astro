@@ -30,12 +30,12 @@ if (!data) {
   return Astro.redirect('/404');
 }
 
-const { page, metadata, faqItems } = data as typeof data & {
+const { page, metadata } = data as typeof data & {
   page: QueryProps;
 };
 ---
 
-<Layout {...metadata} faqItems={faqItems}>
+<Layout {...metadata}>
   <Breadcrumbs data={[{ name: page.name, path: page.slug }]} firstItemType="PrivacyPolicy_Page" />
   <Content {...page.content} heading={page.heading} paragraph={page.paragraph} />
 </Layout>
