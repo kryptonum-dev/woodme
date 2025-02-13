@@ -41,16 +41,21 @@ const faqItems = page.components
 
 if (faqItems.length === 0) return null;
 
-const schemas = faqItems.map((item) => ({
+const schema = {
   '@context': 'https://schema.org',
-  '@type': 'Question',
-  '@id': `${DOMAIN}/#faq-question/${crypto.randomUUID()}`,
-  name: item.question,
-  acceptedAnswer: {
-    '@type': 'Answer',
-    text: Array.isArray(item.answer) ? item.answer.map((block: any) => block.children?.[0]?.text || '').join(' ') : '',
-  },
-}));
+  '@type': 'FAQPage',
+  '@id': `${DOMAIN}/#faq/${crypto.randomUUID()}`,
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: Array.isArray(item.answer)
+        ? item.answer.map((block: any) => block.children?.[0]?.text || '').join(' ')
+        : '',
+    },
+  })),
+};
 ---
 
-{schemas.map((schema) => <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />)}
+<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
