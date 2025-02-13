@@ -69,7 +69,7 @@ const blogSchema = {
 };
 ---
 
-<BlogPostSchema slot="head" blogPostSchema={blogSchema} />
+<BlogPostSchema slot="head" {...blogSchema} />
 <Layout footerBackground={page.footerBackground} {...metadata}>
   <Breadcrumbs
     data={[

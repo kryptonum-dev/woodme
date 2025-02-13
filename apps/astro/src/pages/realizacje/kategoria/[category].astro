@@ -42,6 +42,8 @@ const data = await fetchPageData(
         ${Listing_Query({ currentPage: 1, currentCategorySlug: categorySlug })}
         ${Components_Query} 
         "footerBackground": components[-1].background,
+        "firstItemType": components[0]._type,
+    }
   `
 );
 

@@ -49,9 +49,9 @@ const { page, metadata } = data as typeof data & {
 };
 
 const blogSchema = {
-  name: `${metadata?.title} - Strona ${currentPage}`,
+  name: `${metadata?.title} | Strona ${currentPage}`,
   description: metadata?.description,
-  url: `${page.slug}/strona/${currentPage}`,
+  url: Astro.url.pathname,
   posts: page.listing.map((post) => ({
     name: post.name,
     url: `${page.slug}${post.slug}`,
@@ -63,7 +63,7 @@ const blogSchema = {
 } as BlogPageSchemaProps;
 ---
 
-<BlogPageSchema slot="head" blogPageSchema={blogSchema} />
+<BlogPageSchema slot="head" {...blogSchema} />
 <Layout
   title={`${metadata.title} | Strona ${currentPage}`}
   description={metadata.description}

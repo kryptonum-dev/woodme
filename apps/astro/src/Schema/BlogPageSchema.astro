@@ -17,6 +17,8 @@ export type BlogPageSchemaProps = {
 
 const { name, description, url, posts } = Astro.props as BlogPageSchemaProps;
 
+console.log(name);
+
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',

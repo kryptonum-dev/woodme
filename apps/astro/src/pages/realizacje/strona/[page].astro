@@ -34,6 +34,8 @@ const data = await fetchPageData(
         ${PortableTextQuery('heading')}
         ${Listing_Query({ currentPage })}
         ${Components_Query} 
+        "firstItemType": components[0]._type,
+    }
   `
 );
 

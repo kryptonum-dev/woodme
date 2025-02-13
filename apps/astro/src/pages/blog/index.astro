@@ -54,7 +54,7 @@ const blogSchema = {
   url: page.slug,
   posts: page.listing.map((post) => ({
     name: post.name,
-    url: `${page.slug}${post.slug}`,
+    url: Astro.url.pathname,
     description: post.seo?.description,
     image: post.image?.asset?.url,
     title: post.seo?.title,
@@ -63,7 +63,7 @@ const blogSchema = {
 } as BlogPageSchemaProps;
 ---
 
-<BlogPageSchema slot="head" blogPageSchema={blogSchema} />
+<BlogPageSchema slot="head" {...blogSchema} />
 <Layout footerBackground={page.footerBackground} {...metadata}>
   <Breadcrumbs data={[{ name: page.name, path: page.slug }]} firstItemType="Blog_Page" />
   <Listing
