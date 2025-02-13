@@ -5,6 +5,8 @@ import { type Props as BlogCardProps } from '@/src/components/ui/BlogCard/BlogCa
 import { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import Layout from '@/src/layouts/Layout.astro';
+import type { BlogPageSchemaProps } from '@/src/Schema/BlogPageSchema.astro';
+import BlogPageSchema from '@/src/Schema/BlogPageSchema.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
 
 export const ITEMS_PER_PAGE = 8;
@@ -46,21 +48,22 @@ const { page, metadata } = data as typeof data & {
   page: QueryProps;
 };
 
-// const blogSchema = {
-//   name: metadata?.title,
-//   description: metadata?.description,
-//   url: page.slug,
-//   posts: page.listing.map((post) => ({
-//     name: post.name,
-//     url: `${page.slug}${post.slug}`,
-//     description: post.seo?.description,
-//     image: post.image?.asset?.url,
-//     title: post.seo?.title,
-//     datePublished: post._createdAt,
-//   })),
-// } as BlogPageSchemaProps;
+const blogSchema = {
+  name: metadata?.title,
+  description: metadata?.description,
+  url: page.slug,
+  posts: page.listing.map((post) => ({
+    name: post.name,
+    url: `${page.slug}${post.slug}`,
+    description: post.seo?.description,
+    image: post.image?.asset?.url,
+    title: post.seo?.title,
+    datePublished: post._createdAt,
+  })),
+} as BlogPageSchemaProps;
 ---
 
+<BlogPageSchema slot="head" blogPageSchema={blogSchema} />
 <Layout footerBackground={page.footerBackground} {...metadata}>
   <Breadcrumbs data={[{ name: page.name, path: page.slug }]} firstItemType="Blog_Page" />
   <Listing

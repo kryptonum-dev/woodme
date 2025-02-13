@@ -77,8 +77,8 @@ const review = [
 ];
 ---
 
+<ReviewSchema reviews={review} slot="head" />
 <section class="SingleTestimonialSection max-width" id={sectionId} data-has-video={hasVideo}>
-  <ReviewSchema reviews={review} slot="head" />
   <header class="header">
     <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
   </header>

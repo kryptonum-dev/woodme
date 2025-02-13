@@ -9,6 +9,7 @@ import Layout from '@/src/layouts/Layout.astro';
 import { DOMAIN } from '@/src/global/constants';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
+import BlogPageSchema, { type BlogPageSchemaProps } from '@/src/Schema/BlogPageSchema.astro';
 
 export async function getCategoryData() {
   return await sanityFetch<{ name: string; slug: string; postCount: number }[]>({
@@ -67,21 +68,22 @@ const { page, metadata } = data as typeof data & {
   page: QueryProps;
 };
 
-// const blogSchema = {
-//   name: `${metadata.title} | Strona ${currentPage}`,
-//   description: metadata?.description,
-//   url: `${page.slug}/kategoria/${category.slug}/strona/${currentPage}`,
-//   posts: page.listing.map((post) => ({
-//     name: post.name,
-//     url: `${page.slug}${post.slug}`,
-//     description: post.seo?.description,
-//     image: post.image?.asset?.url,
-//     title: post.seo?.title,
-//     datePublished: post._createdAt,
-//   })),
-// } as BlogPageSchemaProps;
+const blogSchema = {
+  name: `${metadata.title} | Strona ${currentPage}`,
+  description: metadata?.description,
+  url: `${page.slug}/kategoria/${category.slug}/strona/${currentPage}`,
+  posts: page.listing.map((post) => ({
+    name: post.name,
+    url: `${page.slug}${post.slug}`,
+    description: post.seo?.description,
+    image: post.image?.asset?.url,
+    title: post.seo?.title,
+    datePublished: post._createdAt,
+  })),
+} as BlogPageSchemaProps;
 ---
 
+<BlogPageSchema slot="head" blogPageSchema={blogSchema} />
 <Layout
   title={`${metadata.title} | Strona ${currentPage}`}
   description={metadata.description}

@@ -89,8 +89,8 @@ const reviews = testimonials.map((testimonial) => {
 });
 ---
 
+<ReviewsSchema slot="head" reviews={reviews} />
 <section class="TestimonialsSlider max-width" id={sectionId}>
-  <ReviewsSchema slot="head" reviews={reviews} />
   <Slider testimonials={clientTestimonials} index={index} client:load googleData={googleData}>
     <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />
   </Slider>
