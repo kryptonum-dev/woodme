@@ -2,6 +2,7 @@
 import type { PortableTextValue } from '@/src/components/ui/portable-text';
 import { DOMAIN } from '@/global/constants';
 import sanityFetch from '@/utils/sanity.fetch';
+import { toHTML } from '@/utils/to-html';
 
 const pathname = Astro.url.pathname.split('/').filter(Boolean)[0];
 
@@ -41,18 +42,18 @@ const faqItems = page.components
 
 if (faqItems.length === 0) return null;
 
+const answers = await Promise.all(faqItems.map(async (item) => await toHTML(item.answer)));
+
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  '@id': `${DOMAIN}/#faq/${crypto.randomUUID()}`,
-  mainEntity: faqItems.map((item) => ({
+  '@id': `${DOMAIN}/#faq`,
+  mainEntity: faqItems.map((item, index) => ({
     '@type': 'Question',
     name: item.question,
     acceptedAnswer: {
       '@type': 'Answer',
-      text: Array.isArray(item.answer)
-        ? item.answer.map((block: any) => block.children?.[0]?.text || '').join(' ')
-        : '',
+      text: answers[index],
     },
   })),
 };

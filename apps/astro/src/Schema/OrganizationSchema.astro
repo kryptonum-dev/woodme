@@ -47,6 +47,7 @@ const {
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'GeneralContractor',
+  '@id': `${DOMAIN}/#organization`,
   name: organizationSchema.name,
   description: organizationSchema.description,
   url: DOMAIN,
@@ -68,7 +69,6 @@ const schema = {
     height: '512',
     caption: organizationSchema.name,
   },
-  '@id': `${DOMAIN}/#organization`,
   ...(openHours && {
     openingHoursSpecification: {
       '@type': 'OpeningHoursSpecification',

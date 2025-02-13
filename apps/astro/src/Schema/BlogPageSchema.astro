@@ -20,7 +20,7 @@ const { name, description, url, posts } = Astro.props as BlogPageSchemaProps;
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
-  '@id': url,
+  '@id': `${DOMAIN}/#blog`,
   name,
   description,
   url,
