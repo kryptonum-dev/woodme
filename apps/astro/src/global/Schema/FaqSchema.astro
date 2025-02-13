@@ -1,8 +1,11 @@
 ---
-import type { FaqItem } from '@/src/utils/faq.fetch';
+import type { PortableTextValue } from '@/src/components/ui/portable-text';
 
 type Props = {
-  faqItems: FaqItem[];
+  faqItems: {
+    question: string;
+    answer: PortableTextValue;
+  }[];
 };
 
 const { faqItems } = Astro.props;

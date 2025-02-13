@@ -27,7 +27,7 @@ const {
   email: string;
   phone: string;
   openHours: { from: string; to: string; closedWeekends: boolean };
-  address: { addressText: string; mapLink: string };
+  address: { street: string; city: string; postalCode: string; country: string; mapLink: string };
   googleData: { rating: number; user_ratings_total: number };
 }>({
   query: `
@@ -45,14 +45,13 @@ const {
 
 const schema = {
   '@context': 'https://schema.org',
-  '@type': ['LocalBusiness', 'Manufacturer', 'HomeAndConstructionBusiness'],
+  '@type': ['Organization', 'Manufacturer', 'HomeAndConstructionBusiness'],
   name: organizationSchema.name,
   description: organizationSchema.description,
   url: DOMAIN,
   ...(email && { email: email }),
   ...(phone && { telephone: phone }),
   sameAs: [socials.facebook, socials.instagram, socials.linkedin, socials.tiktok].filter(Boolean),
-  priceRange: '$$',
   image: [
     {
       '@type': 'ImageObject',
@@ -83,10 +82,10 @@ const schema = {
   ...(address && {
     address: {
       '@type': 'PostalAddress',
-      streetAddress: address.addressText,
-      addressLocality: 'Tychy',
-      postalCode: '43-100',
-      addressCountry: 'PL',
+      streetAddress: address.street,
+      addressLocality: address.city,
+      postalCode: address.postalCode,
+      addressCountry: address.country,
     },
   }),
   ...(googleData && {

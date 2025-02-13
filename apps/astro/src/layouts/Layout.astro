@@ -31,6 +31,7 @@ const { footerBackground, faqItems, reviews, blogSchema, blogPageSchema, ...prop
   <head>
     <Head {...props} />
     <OrganizationSchema />
+    <slot name="head" />
     {faqItems && faqItems.length > 0 && <FaqSchema faqItems={faqItems} />}
     {reviews && reviews.length > 0 && <ReviewsSchema reviews={reviews} />}
     {blogSchema && <BlogPostSchema {...blogSchema} />}

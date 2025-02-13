@@ -59,7 +59,6 @@ if (!data) return Astro.rewrite('/404');
 
 const { page, metadata, faqItems } = data as typeof data & { page: QueryProps };
 
-// Fetch single review from components
 const singleReview = await fetchSingleReview(page.components);
 ---
 

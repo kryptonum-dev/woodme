@@ -120,10 +120,42 @@ export default defineType({
       title: 'Address',
       fields: [
         defineField({
-          name: 'addressText',
+          name: 'street',
           type: 'string',
-          title: 'Address Text',
+          title: 'Street',
           validation: (Rule) => Rule.required(),
+          fieldset: 'addressDetails',
+        }),
+        defineField({
+          name: 'city',
+          type: 'string',
+          title: 'City',
+          validation: (Rule) => Rule.required(),
+          fieldset: 'addressDetails',
+        }),
+        defineField({
+          name: 'postalCode',
+          type: 'string',
+          title: 'Postal Code',
+          validation: (Rule) => Rule.required(),
+          fieldset: 'addressDetails',
+        }),
+        defineField({
+          name: 'country',
+          type: 'string',
+          title: 'Country Code',
+          description: 'Use uppercase ISO 3166-1 country code (e.g., PL or POL)',
+          validation: (Rule) =>
+            Rule.required()
+              .uppercase()
+              .custom((value) => {
+                if (!value) return true;
+                if (!/^[A-Z]{2,3}$/.test(value)) {
+                  return 'Country code must be 2 or 3 uppercase letters (ISO 3166-1 Alpha-2 or Alpha-3)';
+                }
+                return true;
+              }),
+          fieldset: 'addressDetails',
         }),
         defineField({
           name: 'mapLink',
@@ -131,6 +163,13 @@ export default defineType({
           title: 'Map link',
           validation: (Rule) => Rule.required(),
         }),
+      ],
+      fieldsets: [
+        {
+          name: 'addressDetails',
+          title: 'Address Details',
+          options: { columns: 2 },
+        },
       ],
       validation: (Rule) => Rule.required(),
     }),

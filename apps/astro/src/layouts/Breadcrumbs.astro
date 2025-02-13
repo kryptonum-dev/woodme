@@ -1,5 +1,5 @@
 ---
-import { DOMAIN } from '@/global/constants';
+import BreadcrumbsSchema from '@/global/Schema/BreadcrumbsSchema.astro';
 
 type Props = {
   data?: Array<{
@@ -12,23 +12,9 @@ type Props = {
 const { data = [], firstItemType } = Astro.props;
 
 const breadcrumbsData = [{ name: 'Strona główna', path: '/' }, ...data];
-
-const schema = JSON.stringify({
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  '@id': `${DOMAIN}#breadcrumb`,
-  'itemListOrder': 'ItemListOrderAscending',
-  'numberOfItems': breadcrumbsData.length,
-  itemListElement: breadcrumbsData.map(({ name, path }, i) => ({
-    '@type': 'ListItem',
-    position: i + 1,
-    name: name,
-    item: `${DOMAIN}${path}`,
-  })),
-});
 ---
 
-<script is:inline type="application/ld+json" set:html={schema} />
+<BreadcrumbsSchema breadcrumbsData={breadcrumbsData} slot="head" />
 {breadcrumbsData.length >= 2 && !firstItemType &&   
     <style is:global lang="scss">
         main {
@@ -38,7 +24,6 @@ const schema = JSON.stringify({
         }
     </style>}
 {breadcrumbsData.length >= 2 && (
-
   <nav class="Breadcrumbs max-width" data-first-item-type={firstItemType}>
     {breadcrumbsData.map(({ name, path }, i) => {
       const isLastItem = i === breadcrumbsData.length - 1
