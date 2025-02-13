@@ -8,7 +8,6 @@ import Layout from '@/src/layouts/Layout.astro';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import Listing from '@/src/components/Project/Listing.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
-import { fetchReviews } from '@/src/utils/reviews.fetch';
 export const slugPrefix = '/realizacje/kategoria/';
 
 type CategoriesProps = { slug: string; name: string }[];
@@ -53,11 +52,9 @@ if (!data) {
 const { page, metadata } = data as typeof data & {
   page: QueryProps;
 };
-
-const reviews = await fetchReviews();
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata} reviews={reviews}>
+<Layout footerBackground={page.footerBackground} {...metadata}>
   <Breadcrumbs
     data={[
       { name: page.name, path: page.slug },

@@ -9,7 +9,6 @@ import Layout from '@/src/layouts/Layout.astro';
 import { DOMAIN } from '@/src/global/constants';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
-import { fetchReviews } from '@/src/utils/reviews.fetch';
 export async function getCategoryData() {
   return await sanityFetch<{ name: string; slug: string; postCount: number }[]>({
     query: `
@@ -66,8 +65,6 @@ if (!data) {
 const { page, metadata } = data as typeof data & {
   page: QueryProps;
 };
-
-const reviews = await fetchReviews();
 ---
 
 <Layout
@@ -76,7 +73,6 @@ const reviews = await fetchReviews();
   openGraphImage={metadata.openGraphImage}
   path={Astro.url.pathname}
   footerBackground={page.footerBackground}
-  reviews={reviews}
 >
   <Fragment slot="Head">
     {currentPage > 2 && <link rel="prev" href={`${DOMAIN}/realizacje/strona/${currentPage - 1}`} />}

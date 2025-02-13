@@ -5,8 +5,7 @@ import PortableText, { PortableTextQuery, type PortableTextValue } from '../../u
 import Slider from './Slider';
 import { portableTextToHtml } from '@/src/utils/portableText-to-html';
 import { optimizeImage } from '@/src/utils/optimize-images';
-import ReviewsSchema from '@/src/global/Schema/ReviewsSchema.astro';
-import { toPlainText } from '@/src/utils/to-plain-text';
+import ReviewsSchema from '@/src/Schema/ReviewSchema.astro';
 
 export const TestimonialsSlider_Query = `
   _type == "TestimonialsSlider" => {
@@ -85,7 +84,7 @@ const reviews = testimonials.map((testimonial) => {
     date: testimonial.date,
     name: testimonial.name,
     service: testimonial.service,
-    review: toPlainText(testimonial.review),
+    review: testimonial.review,
   };
 });
 ---

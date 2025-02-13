@@ -6,7 +6,6 @@ import { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/p
 import Layout from '@/src/layouts/Layout.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
-import { fetchReviews } from '@/src/utils/reviews.fetch';
 
 export const ITEMS_PER_PAGE = 6;
 const currentPage = 1;
@@ -38,8 +37,6 @@ const data = await fetchPageData(
   `
 );
 
-const reviews = await fetchReviews();
-
 if (!data) {
   return Astro.redirect('/404');
 }
@@ -49,7 +46,7 @@ const { page, metadata } = data as typeof data & {
 };
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata} reviews={reviews}>
+<Layout footerBackground={page.footerBackground} {...metadata}>
   <Breadcrumbs data={[{ name: page.name, path: page.slug }]} firstItemType="Projects_Page" />
   <Listing
     heading={page.heading}

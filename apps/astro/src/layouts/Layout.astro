@@ -6,22 +6,14 @@ import Footer from './Footer.astro';
 import Header from './Header.astro';
 import SmoothScroll from './smooth-scroll.astro';
 import SplashScreen from '../components/ui/SplashScreen.astro';
-import OrganizationSchema from '../global/Schema/OrganizationSchema.astro';
-import ReviewsSchema from '../global/Schema/ReviewsSchema.astro';
-import BlogPostSchema, { type BlogSchema } from '../global/Schema/BlogPostSchema.astro';
-import type { PlainReview } from '../utils/reviews.fetch';
-import type { BlogPageSchemaProps } from '../global/Schema/BlogPageSchema.astro';
-import BlogPageSchema from '../global/Schema/BlogPageSchema.astro';
-import FaqSchema from '../global/Schema/FaqSchema.astro';
+import OrganizationSchema from '@/src/Schema/OrganizationSchema.astro';
+import FaqPageSchema from '@/src/Schema/FaqPageSchema.astro';
 
 type Props = HeadProps & {
   footerBackground?: string;
-  reviews?: PlainReview[];
-  blogSchema?: BlogSchema;
-  blogPageSchema?: BlogPageSchemaProps;
 };
 
-const { footerBackground, reviews, blogSchema, blogPageSchema, ...props } = Astro.props;
+const { footerBackground, ...props } = Astro.props;
 ---
 
 <!doctype html>
@@ -29,11 +21,8 @@ const { footerBackground, reviews, blogSchema, blogPageSchema, ...props } = Astr
   <head>
     <Head {...props} />
     <OrganizationSchema />
-    <FaqSchema />
+    <FaqPageSchema />
     <slot name="head" />
-    {reviews && reviews.length > 0 && <ReviewsSchema reviews={reviews} />}
-    {blogSchema && <BlogPostSchema {...blogSchema} />}
-    {blogPageSchema && <BlogPageSchema {...blogPageSchema} />}
     <script is:inline src="https://cdn.usefathom.com/script.js" data-site="XFDBCWQI" defer></script>
     <script is:inline>
       const currentUrl = window.location.href;

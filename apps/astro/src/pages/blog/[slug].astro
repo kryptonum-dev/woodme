@@ -8,8 +8,6 @@ import Layout from '@/src/layouts/Layout.astro';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import { Hero_Query, type HeroProps } from '@/src/components/Blog/Post/Hero.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
-import { DOMAIN } from '@/src/global/constants';
-import { ArticleToPlainText } from '@/src/utils/get-estimated-reading-time';
 
 export const blogPosts = await sanityFetch<{ slug: string }[]>({
   query: `
@@ -57,18 +55,18 @@ if (!data) return Astro.rewrite('/404');
 
 const { page, metadata } = data as typeof data & { page: QueryProps };
 
-const blogSchema = {
-  title: metadata.title,
-  description: metadata.description,
-  publishDate: page.hero._createdAt as unknown as string,
-  updatedDate: page.hero._updatedAt as unknown as string,
-  content: ArticleToPlainText(page.content.content),
-  image: page.hero.image.asset.url,
-  url: `${DOMAIN}${slug}`,
-};
+// const blogSchema = {
+//   title: metadata.title,
+//   description: metadata.description,
+//   publishDate: page.hero._createdAt as unknown as string,
+//   updatedDate: page.hero._updatedAt as unknown as string,
+//   content: ArticleToPlainText(page.content.content),
+//   image: page.hero.image.asset.url,
+//   url: `${DOMAIN}${slug}`,
+// };
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata} blogSchema={blogSchema}>
+<Layout footerBackground={page.footerBackground} {...metadata}>
   <Breadcrumbs
     data={[
       { name: 'Blog', path: slugPrefix },

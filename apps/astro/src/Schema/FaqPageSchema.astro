@@ -1,6 +1,6 @@
 ---
 import type { PortableTextValue } from '@/src/components/ui/portable-text';
-import { DOMAIN } from '../constants';
+import { DOMAIN } from '@/global/constants';
 import sanityFetch from '@/utils/sanity.fetch';
 
 const pathname = Astro.url.pathname.split('/').filter(Boolean)[0];
@@ -39,24 +39,18 @@ const faqItems = page.components
   .flatMap((component) => component.faqItems || [])
   .filter((item, index, self) => index === self.findIndex((t) => t.question === item.question));
 
-
 if (faqItems.length === 0) return null;
 
-const schema = {
+const schemas = faqItems.map((item) => ({
   '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  '@id': `${DOMAIN}/#faq/${crypto.randomUUID()}`,
-  mainEntity: faqItems.map((item) => ({
-    '@type': 'Question',
-    name: item.question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: Array.isArray(item.answer)
-        ? item.answer.map((block: any) => block.children?.[0]?.text || '').join(' ')
-        : '',
-    },
-  })),
-};
+  '@type': 'Question',
+  '@id': `${DOMAIN}/#faq-question/${crypto.randomUUID()}`,
+  name: item.question,
+  acceptedAnswer: {
+    '@type': 'Answer',
+    text: Array.isArray(item.answer) ? item.answer.map((block: any) => block.children?.[0]?.text || '').join(' ') : '',
+  },
+}));
 ---
 
-<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+{schemas.map((schema) => <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />)}

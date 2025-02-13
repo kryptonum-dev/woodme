@@ -1,23 +1,25 @@
 ---
 import { DOMAIN } from '@/global/constants';
+import { toPlainText } from '../utils/to-plain-text';
+import type { PortableTextValue } from '../components/ui/portable-text';
 
 type Props = {
   reviews: {
     date: string;
     name: string;
     service: string;
-    review: string;
+    review: PortableTextValue | string;
   }[];
 };
 
 const { reviews } = Astro.props;
 
-const reviewsSchema = reviews.map((review) => ({
+const reviewSchema = reviews.map((review) => ({
   '@context': 'https://schema.org',
   '@type': 'Review',
   datePublished: review.date,
   name: `${review.service} - Opinia Klienta`,
-  reviewBody: review.review,
+  reviewBody: typeof review.review === 'string' ? review.review : toPlainText(review.review),
   author: {
     '@type': 'Person',
     name: review.name,
@@ -30,4 +32,4 @@ const reviewsSchema = reviews.map((review) => ({
 }));
 ---
 
-{reviewsSchema.map((schema) => <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />)}
+{reviewSchema.map((schema) => <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />)}
