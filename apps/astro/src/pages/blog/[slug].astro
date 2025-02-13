@@ -10,7 +10,7 @@ import { Hero_Query, type HeroProps } from '@/src/components/Blog/Post/Hero.astr
 import { fetchPageData } from '@/src/utils/fetch-page-data';
 import { ArticleToPlainText } from '@/src/utils/get-estimated-reading-time';
 import { DOMAIN } from '@/src/global/constants';
-import BlogPostSchema from '@/src/Schema/BlogPostSchema.astro';
+import BlogPostingSchema from '@/src/Schema/BlogPostingSchema.astro';
 
 export const blogPosts = await sanityFetch<{ slug: string }[]>({
   query: `
@@ -69,7 +69,7 @@ const blogSchema = {
 };
 ---
 
-<BlogPostSchema slot="head" {...blogSchema} />
+<BlogPostingSchema slot="head" {...blogSchema} />
 <Layout footerBackground={page.footerBackground} {...metadata}>
   <Breadcrumbs
     data={[
