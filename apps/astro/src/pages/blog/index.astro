@@ -1,12 +1,12 @@
 ---
 import Listing, { Listing_Query } from '@/src/components/Blog/Listing.astro';
 import Components, { Components_Query, type ComponentsProps } from '@/src/components/Components.astro';
-import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
 import { type Props as BlogCardProps } from '@/src/components/ui/BlogCard/BlogCard.astro';
 import { PortableTextQuery, type PortableTextValue } from '@/src/components/ui/portable-text';
-import type { BlogPageSchemaProps } from '@/src/global/Schema/BlogPageSchema.astro';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import Layout from '@/src/layouts/Layout.astro';
+import type { BlogPageSchemaProps } from '@/src/Schema/BlogPageSchema.astro';
+import BlogPageSchema from '@/src/Schema/BlogPageSchema.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
 
 export const ITEMS_PER_PAGE = 8;
@@ -35,8 +35,7 @@ const data = await fetchPageData(
         ${PortableTextQuery('heading')}
         ${PortableTextQuery('paragraph')}   
         ${Listing_Query({ currentPage })}
-        ${Components_Query} 
-        ${Faq_Questions_Query}
+        ${Components_Query}
     }
   `
 );
@@ -45,14 +44,14 @@ if (!data) {
   return Astro.redirect('/404');
 }
 
-const { page, metadata, faqItems } = data as typeof data & {
+const { page, metadata } = data as typeof data & {
   page: QueryProps;
 };
 
 const blogSchema = {
   name: metadata?.title,
   description: metadata?.description,
-  url: page.slug,
+  url: Astro.url.pathname,
   posts: page.listing.map((post) => ({
     name: post.name,
     url: `${page.slug}${post.slug}`,
@@ -64,7 +63,8 @@ const blogSchema = {
 } as BlogPageSchemaProps;
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems} blogPageSchema={blogSchema}>
+<BlogPageSchema slot="head" {...blogSchema} />
+<Layout footerBackground={page.footerBackground} {...metadata}>
   <Breadcrumbs data={[{ name: page.name, path: page.slug }]} firstItemType="Blog_Page" />
   <Listing
     heading={page.heading}

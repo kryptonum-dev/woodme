@@ -7,7 +7,7 @@ const {
   socials,
   OrganizationSchema: organizationSchema,
   email,
-  phone,
+  tel,
   openHours,
   address,
   googleData,
@@ -22,12 +22,13 @@ const {
       legalName?: string;
       foundingDate?: string;
       founder?: string;
+      priceRange?: number;
     };
   };
   email: string;
-  phone: string;
+  tel: string;
   openHours: { from: string; to: string; closedWeekends: boolean };
-  address: { addressText: string; mapLink: string };
+  address: { street: string; city: string; postalCode: string; country: string; mapLink: string };
   googleData: { rating: number; user_ratings_total: number };
 }>({
   query: `
@@ -35,7 +36,7 @@ const {
       socials,
       OrganizationSchema,
       email,
-      phone,
+      tel,
       openHours,
       address,
       googleData,
@@ -45,14 +46,14 @@ const {
 
 const schema = {
   '@context': 'https://schema.org',
-  '@type': ['LocalBusiness', 'Manufacturer', 'HomeAndConstructionBusiness'],
+  '@type': 'GeneralContractor',
+  '@id': `${DOMAIN}/#organization`,
   name: organizationSchema.name,
   description: organizationSchema.description,
   url: DOMAIN,
   ...(email && { email: email }),
-  ...(phone && { telephone: phone }),
+  ...(tel && { telephone: tel }),
   sameAs: [socials.facebook, socials.instagram, socials.linkedin, socials.tiktok].filter(Boolean),
-  priceRange: '$$',
   image: [
     {
       '@type': 'ImageObject',
@@ -68,7 +69,6 @@ const schema = {
     height: '512',
     caption: organizationSchema.name,
   },
-  '@id': `${DOMAIN}/#organization`,
   ...(openHours && {
     openingHoursSpecification: {
       '@type': 'OpeningHoursSpecification',
@@ -83,10 +83,10 @@ const schema = {
   ...(address && {
     address: {
       '@type': 'PostalAddress',
-      streetAddress: address.addressText,
-      addressLocality: 'Tychy',
-      postalCode: '43-100',
-      addressCountry: 'PL',
+      streetAddress: address.street,
+      addressLocality: address.city,
+      postalCode: address.postalCode,
+      addressCountry: address.country,
     },
   }),
   ...(googleData && {
@@ -102,7 +102,7 @@ const schema = {
     '@type': 'ContactPoint',
     contactType: 'customer service',
     ...(email && { email: email }),
-    ...(phone && { telephone: phone }),
+    ...(tel && { telephone: tel }),
     availableLanguage: ['pl'],
   },
   ...(organizationSchema.businessDetails?.foundingDate && {
@@ -120,6 +120,9 @@ const schema = {
       '@type': 'Person',
       name: organizationSchema.businessDetails.founder,
     },
+  }),
+  ...(organizationSchema.businessDetails?.priceRange && {
+    priceRange: '$'.repeat(organizationSchema.businessDetails.priceRange),
   }),
   areaServed: {
     '@type': 'Place',

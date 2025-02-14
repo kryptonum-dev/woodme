@@ -5,6 +5,7 @@ import { formatDate } from '@/src/utils/format-date';
 import { renderStars } from '@/src/utils/render-stars';
 import { optimizeImage } from '@/src/utils/optimize-images';
 import VideoPopup from '../ui/videoPopup/VideoPopup';
+import ReviewSchema from '@/src/Schema/ReviewSchema.astro';
 
 export const SingleTestimonialSection_Query = `
 
@@ -65,8 +66,18 @@ const thumbnail = await optimizeImage(
   274,
   343
 );
+
+const review = [
+  {
+    date: testimonial.date,
+    name: testimonial.name,
+    service: testimonial.service,
+    review: testimonial.review,
+  },
+];
 ---
 
+<ReviewSchema reviews={review} slot="head" />
 <section class="SingleTestimonialSection max-width" id={sectionId} data-has-video={hasVideo}>
   <header class="header">
     <PortableText value={heading} heading={index === 0 ? 'h1' : 'h2'} class="heading" />

@@ -10,8 +10,6 @@ import { fetchPageData } from '@/src/utils/fetch-page-data';
 import type { PortableTextValue } from '@/src/components/ui/portable-text';
 import type { Props as ProjectCardProps } from '@/src/components/ui/ProjectCard.astro';
 import type { ComponentsProps } from '@/src/components/Components.astro';
-import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
-import { fetchSingleReview } from '@/src/utils/reviews.fetch';
 
 export const projects = await sanityFetch<{ slug: string }[]>({
   query: `
@@ -50,25 +48,16 @@ const data = await fetchPageData(
       ${Hero_Query}
       ${Components_Query}
       "footerBackground": components[-1].background,
-      ${Faq_Questions_Query}
     }`,
   { slug: slug }
 );
 
 if (!data) return Astro.rewrite('/404');
 
-const { page, metadata, faqItems } = data as typeof data & { page: QueryProps };
-
-// Fetch single review from components
-const singleReview = await fetchSingleReview(page.components);
+const { page, metadata } = data as typeof data & { page: QueryProps };
 ---
 
-<Layout
-  {...metadata}
-  footerBackground={page.footerBackground}
-  faqItems={faqItems}
-  reviews={singleReview ? [singleReview] : undefined}
->
+<Layout {...metadata} footerBackground={page.footerBackground}>
   <Breadcrumbs
     data={[
       { name: 'Realizacje', path: slugPrefix },

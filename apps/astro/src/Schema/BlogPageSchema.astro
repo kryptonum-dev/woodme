@@ -1,5 +1,5 @@
 ---
-import { DOMAIN } from '../constants';
+import { DOMAIN } from '@/global/constants';
 
 export type BlogPageSchemaProps = {
   name: string;
@@ -20,7 +20,7 @@ const { name, description, url, posts } = Astro.props as BlogPageSchemaProps;
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
-  '@id': url,
+  '@id': `${DOMAIN}/#blog`,
   name,
   description,
   url,
@@ -56,6 +56,8 @@ const schema = {
     },
   }),
 };
+
+console.log(schema);
 ---
 
 <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />

@@ -105,7 +105,10 @@ type Props = {
   tel: string;
   email: string;
   address: {
-    addressText: string;
+    street: string;
+    city: string;
+    postalCode: string;
+    country: string;
     mapLink: string;
   };
 };
@@ -197,7 +200,8 @@ const svgContents = rightBox.textColumn.map(async (text) =>
       <PortableText value={addressBox.heading} heading={index === 0 ? 'h3' : 'h4'} class="boxHeading" />
       <PortableText value={addressBox.paragraph} class="boxParagraph" />
       <a class="boxLink" href={address.mapLink} target="_blank" rel="noreferrer">
-        {address.addressText}
+        {address.street}, {address.postalCode}
+        {address.city}
       </a>
       <div class="map">
         <iframe

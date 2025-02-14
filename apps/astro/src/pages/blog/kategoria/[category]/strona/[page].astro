@@ -9,8 +9,7 @@ import Layout from '@/src/layouts/Layout.astro';
 import { DOMAIN } from '@/src/global/constants';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
-import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
-import type { BlogPageSchemaProps } from '@/src/global/Schema/BlogPageSchema.astro';
+import BlogPageSchema, { type BlogPageSchemaProps } from '@/src/Schema/BlogPageSchema.astro';
 
 export async function getCategoryData() {
   return await sanityFetch<{ name: string; slug: string; postCount: number }[]>({
@@ -58,7 +57,6 @@ const data = await fetchPageData(
         ${PortableTextQuery('paragraph')}   
         ${Listing_Query({ currentPage: currentPage, currentCategorySlug: category.slug })}
         ${Components_Query}   
-        ${Faq_Questions_Query}
   `
 );
 
@@ -66,14 +64,14 @@ if (!data) {
   return Astro.redirect('/404');
 }
 
-const { page, metadata, faqItems } = data as typeof data & {
+const { page, metadata } = data as typeof data & {
   page: QueryProps;
 };
 
 const blogSchema = {
   name: `${metadata.title} | Strona ${currentPage}`,
   description: metadata?.description,
-  url: `${page.slug}/kategoria/${category.slug}/strona/${currentPage}`,
+  url: Astro.url.pathname,
   posts: page.listing.map((post) => ({
     name: post.name,
     url: `${page.slug}${post.slug}`,
@@ -85,14 +83,13 @@ const blogSchema = {
 } as BlogPageSchemaProps;
 ---
 
+<BlogPageSchema slot="head" {...blogSchema} />
 <Layout
   title={`${metadata.title} | Strona ${currentPage}`}
   description={metadata.description}
   openGraphImage={metadata.openGraphImage}
   path={Astro.url.pathname}
   footerBackground={page.footerBackground}
-  faqItems={faqItems}
-  blogPageSchema={blogSchema}
 >
   <Fragment slot="Head">
     {currentPage > 2 && <link rel="prev" href={`${DOMAIN}/blog/strona/${currentPage - 1}`} />}

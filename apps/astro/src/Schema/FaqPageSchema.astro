@@ -1,0 +1,62 @@
+---
+import type { PortableTextValue } from '@/src/components/ui/portable-text';
+import { DOMAIN } from '@/global/constants';
+import sanityFetch from '@/utils/sanity.fetch';
+import { toHTML } from '@/utils/to-html';
+
+const pathname = Astro.url.pathname.split('/').filter(Boolean)[0];
+
+const { slug: _slug } = Astro.params;
+
+const slug = `/${pathname}${_slug ? `/${_slug}` : ''}`;
+
+const page = await sanityFetch<{
+  components: {
+    _type: string;
+    faqItems: {
+      question: string;
+      answer: PortableTextValue;
+    }[];
+  }[];
+}>({
+  query: `
+    *[slug.current == $slug][0] {
+      components[] {
+        _type,
+        faqItems[]-> {
+          question,
+          answer
+        }
+      }
+    }
+  `,
+  params: { slug },
+});
+
+if (!page?.components) return null;
+
+const faqItems = page.components
+  .filter((component) => component._type === 'Faq')
+  .flatMap((component) => component.faqItems || [])
+  .filter((item, index, self) => index === self.findIndex((t) => t.question === item.question));
+
+if (faqItems.length === 0) return null;
+
+const answers = await Promise.all(faqItems.map(async (item) => await toHTML(item.answer)));
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': `${DOMAIN}/#faq`,
+  mainEntity: faqItems.map((item, index) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: answers[index],
+    },
+  })),
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />

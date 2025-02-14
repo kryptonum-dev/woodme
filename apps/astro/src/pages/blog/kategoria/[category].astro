@@ -8,8 +8,7 @@ import Layout from '@/src/layouts/Layout.astro';
 import Breadcrumbs from '@/src/layouts/Breadcrumbs.astro';
 import Listing from '@/src/components/Blog/Listing.astro';
 import { fetchPageData } from '@/src/utils/fetch-page-data';
-import { Faq_Questions_Query } from '@/src/components/global/Faq/Faq.astro';
-import BlogPageSchema, { type BlogPageSchemaProps } from '@/src/global/Schema/BlogPageSchema.astro';
+import BlogPageSchema, { type BlogPageSchemaProps } from '@/src/Schema/BlogPageSchema.astro';
 
 export const slugPrefix = '/blog/kategoria/';
 
@@ -46,7 +45,6 @@ const data = await fetchPageData(
         ${PortableTextQuery('paragraph')}   
         ${Listing_Query({ currentPage: 1, currentCategorySlug: categorySlug })}
         ${Components_Query} 
-        ${Faq_Questions_Query}
     }
   `
 );
@@ -55,14 +53,14 @@ if (!data) {
   return Astro.redirect('/404');
 }
 
-const { page, metadata, faqItems } = data as typeof data & {
+const { page, metadata } = data as typeof data & {
   page: QueryProps;
 };
 
 const blogSchema = {
-  name: `${metadata?.title} - Kategoria: ${currentCategory.name}`,
+  name: metadata?.title,
   description: metadata?.description,
-  url: `${page.slug}/kategoria/${currentCategory.slug}`,
+  url: Astro.url.pathname,
   posts: page.listing.map((post) => ({
     name: post.name,
     url: `${page.slug}${post.slug}`,
@@ -74,8 +72,8 @@ const blogSchema = {
 } as BlogPageSchemaProps;
 ---
 
-<Layout footerBackground={page.footerBackground} {...metadata} faqItems={faqItems} blogPageSchema={blogSchema}>
-  <BlogPageSchema slot="schema" {...blogSchema} />
+<BlogPageSchema slot="head" {...blogSchema} />
+<Layout footerBackground={page.footerBackground} {...metadata}>
   <Breadcrumbs
     data={[
       { name: page.name, path: page.slug },
