@@ -112,6 +112,12 @@ export default defineType({
           title: 'TikTok',
           validation: (Rule) => Rule.uri({ scheme: ['https'] }).error('Provide a valid URL (starting with https://)'),
         }),
+        defineField({
+          name: 'pinterest',
+          type: 'url',
+          title: 'Pinterest',
+          validation: (Rule) => Rule.uri({ scheme: ['https'] }).error('Provide a valid URL (starting with https://)'),
+        }),
       ],
     }),
     defineField({
