@@ -11,7 +11,7 @@
     "astro": "astro"
   },
   "engines": {
-    "node": ">=20"
+    "node": "20.x"
   },
   "dependencies": {
     "@astrojs/check": "0.9.4",
